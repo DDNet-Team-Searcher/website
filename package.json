@@ -1,0 +1,13 @@
+{
+  "name": "ddnet-team-searcher",
+  "scripts": {
+    "client": "pnpm run --dir packages/client",
+    "server": "pnpm run --dir packages/server",
+    "dev:client": "pnpm run client dev",
+    "dev:server": "pnpm run server start:dev",
+    "dev": "concurrently 'pnpm:dev:*'"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}

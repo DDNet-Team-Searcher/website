@@ -1,0 +1,140 @@
+
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id Int @id @default(autoincrement())
+    username String @db.VarChar(255)
+    email String @db.VarChar(255) @unique
+    password String @db.VarChar(255)
+    avatar String? @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    tier Int @db.SmallInt
+    verified Boolean @default(false)
+    happenings Happening[]
+    interestedHappenings InterestedHappening[]
+    reviews Review[] @relation(name: "reviews")
+    reviwedUsers Review[] @relation(name: "reviewed")
+    followers Follower[] @relation(name: "followers")
+    following Follower[] @relation(name: "following")
+    reportedUsers Report[] @relation(name: "reportedUsers")
+    reports Report[] @relation(name: "reports")
+    bannedUsers Ban[] @relation(name: "bannedUsers")
+    bans Ban[] @relation(name: "bans")
+}
+
+model Role {
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(50)
+    color String @db.VarChar(24) @default("#ffffff")
+    url String
+
+    canBan Boolean @default(false)
+    canManageRoles Boolean @default(false)
+    canDeleteHappenings Boolean @default(false)
+    canManagePosts Boolean @default(false)
+
+}
+
+model Server {
+    id Int @id @default(autoincrement())
+    pid Int?
+    file String? @db.VarChar(255)
+    password String?
+    ip String @db.VarChar(255)
+    port Int
+    happening Happening?
+}
+
+enum Place {
+    HERE
+    THERE
+}
+
+enum Status {
+    NotStarted
+    Happening
+    Finished
+}
+
+enum HappeningType {
+    Run
+    Event
+}
+
+model Happening {
+    id Int @id @default(autoincrement())
+    author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId Int
+    place Place
+    title String?
+    mapName String @db.VarChar(255)
+    teamSize Int? @db.SmallInt
+    description String?
+    status Status @default(NotStarted)
+    server Server? @relation(fields: [serverId], references: [id])
+    serverId Int? @unique
+    startAt DateTime
+    endAt DateTime?
+    thumbnail String? @db.VarChar(255)
+    type HappeningType
+    interestedPlayers InterestedHappening[]
+}
+
+model InterestedHappening {
+    id Int @id @default(autoincrement())
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
+    happening Happening @relation(fields: [happeningId], references: [id], onDelete: Cascade)
+    happeningId Int
+    inTeam Boolean @default(false)
+}
+
+model Review {
+    id Int @id @default(autoincrement())
+    author User @relation(fields: [authorId], references: [id], name: "reviews", onDelete: Cascade)
+    authorId Int
+    reviewsUser User @relation(fields: [reviewedUserId], references: [id], name: "reviewed", onDelete: Cascade)
+    reviewedUserId Int
+    review String?
+    rate Int @db.SmallInt
+}
+
+model Follower {
+    id Int @id @default(autoincrement())
+    follower User @relation(fields: [followerId], references: [id], name: "following", onDelete: Cascade)
+    followerId Int
+    following User @relation(fields: [followingId], references: [id], name: "followers", onDelete: Cascade)
+    followingId Int
+    createdAt DateTime @default(now())
+}
+
+model Report {
+    id Int @id @default(autoincrement())
+    author User @relation(fields: [authorId], references: [id], name: "reportedUsers", onDelete: Cascade)
+    authorId Int
+    reportedUser User @relation(fields: [reportedUserId], references: [id], name: "reports", onDelete: Cascade)
+    reportedUserId Int
+    report String @db.VarChar(255)
+}
+
+model Ban {
+    id Int @id @default(autoincrement())
+    author User @relation(fields: [authorId], references: [id], name: "bannedUsers", onDelete: Cascade)
+    authorId Int
+    user User @relation(fields: [userId], references: [id], name: "bans", onDelete: Cascade)
+    userId Int
+    reason String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    banned Boolean @default(true)
+}
