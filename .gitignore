@@ -8,3 +8,6 @@ packages/server/dist
 packages/server/prisma/migrations
 packages/server/public
 !packages/server/public/.gitkeep
+
+naked-tees
+hentai
