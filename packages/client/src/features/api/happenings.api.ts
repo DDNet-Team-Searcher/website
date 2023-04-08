@@ -7,6 +7,7 @@ import {
     GetAllEventsResponse,
     GetAllRunsResponse,
     GetInterestedUsersResponse,
+    GetReviewsResponse,
 } from '@/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
@@ -95,6 +96,19 @@ export const happeningsApi = createApi({
                 method: 'PUT',
             }),
         }),
+        getReviews: build.query<GetReviewsResponse, number>({
+            query: (happeningId) => `/${happeningId}/reviews`
+        }),
+        createReview: build.mutation<
+            string,
+            { happeningId: number; userId: number, data: { text: null | string, rate: number } }
+        >({
+            query: ({ happeningId, userId, data }) => ({
+                url: `/${happeningId}/reviews/${userId}`,
+                method: 'POST',
+                body: data
+            }),
+        }),
     }),
 });
 
@@ -109,4 +123,6 @@ export const {
     useGetAllEventsQuery,
     useGetHappeningInterestedPlayersQuery,
     useUpdateIsPlayerInTeamMutation,
+    useGetReviewsQuery,
+    useCreateReviewMutation
 } = happeningsApi;

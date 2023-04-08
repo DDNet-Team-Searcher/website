@@ -1,5 +1,6 @@
 import { Event, Run } from './Happenings.type';
 import { Response as ApiResponse } from './Response.type';
+import { Review } from './Review.type';
 
 export type RegisterUserRequest = {
     username: string;
@@ -66,3 +67,5 @@ export type GetInterestedUsersResponse = ApiResponse<
     },
     null
 >;
+
+export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;

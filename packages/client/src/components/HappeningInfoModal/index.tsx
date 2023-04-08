@@ -6,8 +6,9 @@ import classNames from 'classnames';
 import { Event, Happenings, Run, Status } from '@/types/Happenings.type';
 import { HappeningStartTime } from '../HappeningStartTime';
 import { HappeningPlace } from '../HappeningPlace';
-import { useGetHappeningInterestedPlayersQuery, useUpdateIsPlayerInTeamMutation } from '@/features/api/happenings.api';
+import { useGetHappeningInterestedPlayersQuery, useGetReviewsQuery, useUpdateIsPlayerInTeamMutation } from '@/features/api/happenings.api';
 import { InterestedPlayer } from './InterestedPlayer';
+import { Review } from './Review';
 // import { useGetHappeningReviewsQuery } from "../../../api/reviews-api"
 // import { Review } from "./Review"
 
@@ -33,6 +34,7 @@ export const HappeningInfoModal = ({
     const { data: interestedPlayers, isSuccess: interestedPlayersSuccess, refetch: refetchInterestedPlayers } = useGetHappeningInterestedPlayersQuery(happening?.id || 0);
     const [updateIsPlayerInTeam] = useUpdateIsPlayerInTeamMutation();
     const authedUserId = useAppSelector((state) => state.user.user.id);
+    const {data: reviews, isSuccess: reviewsSuccess} = useGetReviewsQuery(happeningId || 0);
     let isUserInTeam: number | null = null;
 
     if (happeningId && interestedPlayers?.status === 'success') {
@@ -155,15 +157,16 @@ export const HappeningInfoModal = ({
                                 happening={happening}
                                 onChange={inputCb}
                                 user={user}
+                                alreadyReviewed={reviews?.status==='success'&&!!reviews?.data?.reviews.find(review => review.reviewedUser.id === user.user.id)}
                             />
                         ))}
                     </ul>
                 </div>
-                {/* <div className="transition-all pr-3 duration-500 max-w-full w-full max-h-[450px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#3F362B] [&::-webkit-scrollbar-thumb]:bg-[#89745A] [&::-webkit-scrollbar-thumb]:rounded-[10px] overflow-y-scroll shrink-0 relative" style={{right: `${slideNum * 100}%`}}>
-                    {reviews?.data && reviews.data.map((review, id) => (
+                {<div className="transition-all pr-3 duration-500 max-w-full w-full max-h-[450px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#3F362B] [&::-webkit-scrollbar-thumb]:bg-[#89745A] [&::-webkit-scrollbar-thumb]:rounded-[10px] overflow-y-scroll shrink-0 relative" style={{right: `${slideNum * 100}%`}}>
+                    {reviews?.status === 'success' && reviews.data.reviews.map((review, id) => (
                         <Review key={id} review={review} />
                     ))}
-                </div> */}
+                </div>}
             </div>
             <div
                 className={

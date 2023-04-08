@@ -10,6 +10,7 @@ import { TextareaWithLabel } from '@/components/ui/TextareaWithLabel';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/Input';
 import { RadioInput } from '@/components/ui/RadioInput';
+import { useCreateReviewMutation } from '@/features/api/happenings.api';
 // import { CreateReviewForm } from '../../../../types/CreateReviewForm.type';
 // import { composeValidators } from '../../../../utils/composeValidators';
 // import { required } from '../../../../utils/validators/required';
@@ -20,7 +21,7 @@ type OwnProps = {
     happening: Run | Event;
     authedUserId: number;
     onChange: (...args: Array<any>) => () => void;
-    // reviews: Array<Review>;
+    alreadyReviewed: boolean;
 };
 
 export const InterestedPlayer = ({
@@ -28,27 +29,20 @@ export const InterestedPlayer = ({
     happening,
     authedUserId,
     onChange,
-    // reviews,
+    alreadyReviewed
 }: OwnProps) => {
     const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
-    // const [createReview] = useCreateReviewMutation();
-
-    // const initialValues: CreateReviewForm = {
-    //     happeningId: happening.id,
-    //     reviewedUserId: user.id,
-    //     rate: null,
-    //     text: '',
-    // };
+    const [createReview] = useCreateReviewMutation();
     const defaultValues = {
         rate: null as null | string,
         text: ''
     };
 
-    const { handleSubmit, register } = useForm({ defaultValues });
+    const { handleSubmit, register, formState: { errors } } = useForm({ defaultValues });
 
-    const onSubmit = (values: typeof defaultValues) => {
-
-    }
+    // const onSubmit = (values: typeof defaultValues) => {
+    //
+    // }
     // const validateRateField = (value: string | number | null) =>
     //     composeValidators(value, [required]);
     //
@@ -64,11 +58,20 @@ export const InterestedPlayer = ({
     //     return errors;
     // };
 
-    // const onSubmit = async (values: CreateReviewForm) => {
-    //     try {
-    //         await createReview(values);
-    //     } catch (e) { }
-    // };
+    const onSubmit = async (values: typeof defaultValues) => {
+        try {
+            await createReview({
+                happeningId: happening.id,
+                userId: user.user.id,
+                data: {
+                    text: !!values.text ? values.text : null,
+                    rate: parseInt(values.rate!)
+                }
+            }).unwrap();
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <li
@@ -99,13 +102,8 @@ export const InterestedPlayer = ({
                             'group-hover:!hidden':
                                 isReviewFormVisible ||
                                 user.user.id === authedUserId ||
-                                happening.status !== Status.Finished
-                            // reviews.find(
-                            //     (review) =>
-                            //         review.reviewedUser.id == user.id &&
-                            //         review.author.id == authedUserId,
-                            // ),
-                            // false
+                                happening.status !== Status.Finished ||
+                                alreadyReviewed
                         },
                     )}
                     onClick={() => setIsReviewFormVisible(true)}
@@ -115,6 +113,7 @@ export const InterestedPlayer = ({
                 </Button>
             </div>
             <form
+                onSubmit={handleSubmit(onSubmit)}
                 className={classNames(
                     'p-2.5',
                     { hidden: !isReviewFormVisible },
@@ -132,7 +131,7 @@ export const InterestedPlayer = ({
                             className="flex [&:not(:first-child)]:ml-5 items-center"
                             key={id}
                         >
-                        <RadioInput register={register('rate')} title='' subtitle='' id={'lol'}/>
+                            <RadioInput register={register('rate')} value={num}  title='' subtitle='' id={'lol'} />
                             {/*
                             <Field
                                 id={id.toString()}
@@ -153,8 +152,8 @@ export const InterestedPlayer = ({
                     <p
                         className={classNames(
                             'ml-5 text-error text-[12px]',
-                            // { hidden: !!!errors.rate },
-                            // { block: !!errors?.rate },
+                            { hidden: !!!errors.rate?.message },
+                            { block: !!errors.rate?.message },
                         )}
                     >
                         &#60;--- you have to choose smth here
@@ -170,6 +169,7 @@ export const InterestedPlayer = ({
                     name="text"
                 />
                 */}
+                <TextareaWithLabel register={register('text')} label="Describe your teammate however you want" className={{ container: "mt-3" }} placeholder="This mf killed my before fkcing finish. -1000 social credit" />
                 <div className="flex mt-4 justify-end">
                     <Button
                         styleType="bordered"
