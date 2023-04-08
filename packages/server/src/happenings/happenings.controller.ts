@@ -3,11 +3,13 @@ import {
     Controller,
     Delete,
     Get,
+    InternalServerErrorException,
     Param,
     Post,
     Put,
     Req,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -17,7 +19,10 @@ import { HappeningsService } from './happenings.service';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { Protected } from 'src/decorators/protected.decorator';
+import { AuthorGuard } from 'src/guards/author.guard';
+import { Author } from 'src/decorators/author.decorator';
 
+@UseGuards(AuthorGuard)
 @Controller()
 export class HappeningsController {
     constructor(private readonly happeningsService: HappeningsService) { }
@@ -106,6 +111,7 @@ export class HappeningsController {
     }
 
     @Protected()
+    @Author('happening')
     @Get('/:id/start')
     async startHappening(@Req() req) {
         try {
@@ -119,6 +125,7 @@ export class HappeningsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
