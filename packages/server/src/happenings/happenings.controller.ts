@@ -49,6 +49,7 @@ export class HappeningsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -107,6 +108,7 @@ export class HappeningsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -130,6 +132,7 @@ export class HappeningsController {
     }
 
     @Protected()
+    @Author('happening')
     @Get('/:id/end')
     async endHappening(@Req() req) {
         try {
@@ -141,10 +144,12 @@ export class HappeningsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
     @Protected()
+    @Author('happening')
     @Delete('/:id/delete')
     async deleteHappening(@Req() req) {
         try {
@@ -158,6 +163,7 @@ export class HappeningsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -233,6 +239,9 @@ export class HappeningsController {
                 status: 'success',
                 data: null,
             };
-        } catch (e) { }
+        } catch (e) {
+            console.log(e);
+            throw new InternalServerErrorException();
+        }
     }
 }

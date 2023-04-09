@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, InternalServerErrorException, Param, Post, Req } from '@nestjs/common';
 import { Protected } from 'src/decorators/protected.decorator';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { ReviewsService } from './reviews.service';
@@ -20,6 +20,7 @@ export class ReviewsController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -48,7 +49,7 @@ export class ReviewsController {
             };
         } catch (e) {
             console.log("We're fucked");
-            console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 }
