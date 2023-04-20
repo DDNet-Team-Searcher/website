@@ -5,6 +5,7 @@ import {
     ForbiddenException,
     Get,
     InternalServerErrorException,
+    Param,
     Post,
     Req,
     Res,
@@ -113,8 +114,15 @@ export class UsersController {
         };
     }
 
-    @Get('/test')
-    async test() {
-        throw new ForbiddenException();
+    @Get('/profile/:id')
+    async getUserProfile(@Param('id') id: string) {
+        const profile = await this.usersService.getUserProfile(parseInt(id));
+
+        return {
+            status: 'success',
+            data: {
+                profile
+            }
+        };
     }
 }

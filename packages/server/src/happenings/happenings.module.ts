@@ -9,5 +9,6 @@ import { HappeningsService } from './happenings.service';
     ],
     controllers: [HappeningsController],
     providers: [HappeningsService],
+    exports: [HappeningsService]
 })
 export class HappeningsModule {}

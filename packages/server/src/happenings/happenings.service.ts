@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Happening, InterestedHappening } from '@prisma/client';
+import { Happening, HappeningType, InterestedHappening, Status } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
@@ -125,6 +125,7 @@ export class HappeningsService {
                 description: true,
                 status: true,
                 startAt: true,
+                createdAt: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -141,6 +142,8 @@ export class HappeningsService {
                 server: {
                     select: {
                         ip: true,
+                        password: true,
+                        port: true,
                     },
                 },
                 author: {
@@ -170,6 +173,7 @@ export class HappeningsService {
                 description: true,
                 endAt: true,
                 thumbnail: true,
+                createdAt: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -186,6 +190,8 @@ export class HappeningsService {
                 server: {
                     select: {
                         ip: true,
+                        password: true,
+                        port: true,
                     },
                 },
                 author: {
@@ -212,6 +218,7 @@ export class HappeningsService {
                 description: true,
                 status: true,
                 startAt: true,
+                createdAt: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -228,6 +235,8 @@ export class HappeningsService {
                 server: {
                     select: {
                         ip: true,
+                        password: true,
+                        port: true,
                     },
                 },
                 author: {
@@ -256,6 +265,7 @@ export class HappeningsService {
                 description: true,
                 endAt: true,
                 thumbnail: true,
+                createdAt: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -272,6 +282,8 @@ export class HappeningsService {
                 server: {
                     select: {
                         ip: true,
+                        password: true,
+                        port: true,
                     },
                 },
                 author: {
@@ -281,6 +293,118 @@ export class HappeningsService {
                         avatar: true,
                     },
                 },
+            },
+        });
+    }
+
+    async getRecentRuns(id: number, runsCount = 5): Promise<null | Run[]> {
+        return await this.prismaService.happening.findMany({
+            where: {
+                type: 'Run',
+                authorId: id,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            take: runsCount,
+            select: {
+                id: true,
+                place: true,
+                mapName: true,
+                teamSize: true,
+                description: true,
+                status: true,
+                startAt: true,
+                createdAt: true,
+                interestedPlayers: {
+                    select: {
+                        inTeam: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        interestedPlayers: true,
+                    },
+                },
+                server: {
+                    select: {
+                        ip: true,
+                        password: true,
+                        port: true,
+                    },
+                },
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        avatar: true,
+                    },
+                },
+            },
+        });
+    }
+
+    async getRecentEvents(
+        id: number,
+        eventsCount = 5,
+    ): Promise<null | Event[]> {
+        return await this.prismaService.happening.findMany({
+            where: {
+                type: 'Event',
+                authorId: id,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            take: eventsCount,
+            select: {
+                id: true,
+                title: true,
+                place: true,
+                mapName: true,
+                status: true,
+                startAt: true,
+                description: true,
+                endAt: true,
+                thumbnail: true,
+                createdAt: true,
+                interestedPlayers: {
+                    select: {
+                        inTeam: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        interestedPlayers: true,
+                    },
+                },
+                server: {
+                    select: {
+                        ip: true,
+                        password: true,
+                        port: true,
+                    },
+                },
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        avatar: true,
+                    },
+                },
+            },
+        });
+    }
+
+    async countLastFinishedHappenings(
+        authorId: number,
+        type: HappeningType,
+    ): Promise<number> {
+        return this.prismaService.happening.count({
+            where: {
+                authorId,
+                type,
+                status: Status.Finished
             },
         });
     }
@@ -313,20 +437,21 @@ export class HappeningsService {
     }
 
     async updateIsPlayerInTeam(happeningId: number, userId: number) {
-        const {id, inTeam} = await this.prismaService.interestedHappening.findFirst({
-            where: {
-                happeningId,
-                userId
-            }
-        });
+        const { id, inTeam } =
+            await this.prismaService.interestedHappening.findFirst({
+                where: {
+                    happeningId,
+                    userId,
+                },
+            });
 
         return await this.prismaService.interestedHappening.update({
             where: {
-                id
+                id,
             },
             data: {
-                inTeam: !inTeam
-            }
+                inTeam: !inTeam,
+            },
         });
     }
 }

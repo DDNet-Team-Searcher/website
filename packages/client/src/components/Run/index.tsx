@@ -35,7 +35,6 @@ export const Run = ({ className, onClick, run }: OwnProps) => {
         startAt,
         status,
         teamSize,
-        // connect_string
         interestedPlayers: interested,
         author: { avatar, username, id: authorId },
         _count: { interestedPlayers },

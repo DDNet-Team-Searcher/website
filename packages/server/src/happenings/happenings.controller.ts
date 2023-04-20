@@ -21,6 +21,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
+import { computeConnectString } from 'src/utils/computedFields';
+import { HappeningWithConnectString } from 'src/types/HappeningWithConnectString.type';
+import { Event, Run } from 'src/types/Happenings.type';
 
 @UseGuards(AuthorGuard)
 @Controller()
@@ -189,10 +192,20 @@ export class HappeningsController {
     @Get('/runs')
     async getRuns(@Req() req) {
         const runs = await this.happeningsService.getAllRuns(req.user.id);
+        const res: (Run | HappeningWithConnectString<Run>)[] = [];
+
+        for (let run of runs) {
+            if (run.server) {
+                res.push(computeConnectString(run));
+            } else {
+                res.push(run);
+            }
+        }
+
         return {
             status: 'success',
             data: {
-                runs,
+                runs: res,
             },
         };
     }
@@ -201,10 +214,20 @@ export class HappeningsController {
     @Get('/events')
     async getEvents(@Req() req) {
         const events = await this.happeningsService.getAllEvents(req.user.id);
+        const res: (Event | HappeningWithConnectString<Event>)[] = [];
+
+        for (let event of events) {
+            if (event.server) {
+                res.push(computeConnectString(event));
+            } else {
+                res.push(event);
+            }
+        }
+
         return {
             status: 'success',
             data: {
-                events,
+                events: res,
             },
         };
     }

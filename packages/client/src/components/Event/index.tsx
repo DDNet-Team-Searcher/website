@@ -38,7 +38,6 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
         interestedPlayers: interested,
         author: { id: authorId, username, avatar },
         _count: { interestedPlayers },
-        // connect_string,
         thumbnail,
     } = event;
 

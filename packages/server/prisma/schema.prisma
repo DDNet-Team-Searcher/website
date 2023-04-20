@@ -30,6 +30,7 @@ model User {
     reports Report[] @relation(name: "reports")
     bannedUsers Ban[] @relation(name: "bannedUsers")
     bans Ban[] @relation(name: "bans")
+    roles Role[]
 }
 
 model Role {
@@ -37,6 +38,8 @@ model Role {
     name String @db.VarChar(50)
     color String @db.VarChar(24) @default("#ffffff")
     url String
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
 
     canBan Boolean @default(false)
     canManageRoles Boolean @default(false)
@@ -89,6 +92,8 @@ model Happening {
     type HappeningType
     interestedPlayers InterestedHappening[]
     reviews Review[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
 }
 
 model InterestedHappening {
@@ -102,9 +107,9 @@ model InterestedHappening {
 
 model Review {
     id Int @id @default(autoincrement())
-    author User @relation(fields: [authorId], references: [id], name: "reviews", onDelete: Cascade)
+    author User @relation(fields: [authorId], references: [id], name: "reviewed", onDelete: Cascade)
     authorId Int
-    reviewedUser User @relation(fields: [reviewedUserId], references: [id], name: "reviewed", onDelete: Cascade)
+    reviewedUser User @relation(fields: [reviewedUserId], references: [id], name: "reviews", onDelete: Cascade)
     reviewedUserId Int
     happening Happening @relation(fields: [happeningId], references: [id], onDelete: Cascade)
     happeningId Int

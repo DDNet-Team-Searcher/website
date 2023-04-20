@@ -1,5 +1,6 @@
 import { setCredentails, setIsAuthed } from '@/store/slices/user';
 import {
+    GetProfile,
     LoginUserRequest,
     LoginUserResponse,
     RegisterUserRequest,
@@ -26,7 +27,7 @@ export const usersAPI = createApi({
                 body,
             }),
         }),
-        getCredentials: build.query<{data: any}, void>({
+        getCredentials: build.query<{ data: any }, void>({
             query: () => `/credentials`,
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
@@ -42,7 +43,15 @@ export const usersAPI = createApi({
                 }
             },
         }),
+        getProfile: build.query<GetProfile, number>({
+            query: (userId) => `/profile/${userId}`,
+        }),
     }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useGetCredentialsQuery } = usersAPI;
+export const {
+    useRegisterMutation,
+    useLoginMutation,
+    useGetCredentialsQuery,
+    useLazyGetProfileQuery,
+} = usersAPI;

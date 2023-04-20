@@ -1,4 +1,5 @@
 import { Event, Run } from './Happenings.type';
+import { Profile } from './Profile.type';
 import { Response as ApiResponse } from './Response.type';
 import { Review } from './Review.type';
 
@@ -69,3 +70,5 @@ export type GetInterestedUsersResponse = ApiResponse<
 >;
 
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
+
+export type GetProfile = ApiResponse<{ profile: Profile }, null>

@@ -18,7 +18,7 @@ type ResError = {
     message: string;
 };
 
-type GetSuccess<T> = T extends Success<infer U> ? Success<U> : never;
+export type GetSuccess<T> = T extends Success<infer U> ? Success<U> : never;
 
 export type GetFail<T> = T extends Fail<infer U> ? Fail<U> : never;
 

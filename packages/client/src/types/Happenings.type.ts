@@ -10,14 +10,14 @@ export enum Happenings {
 
 export type Place = 'HERE' | 'THERE';
 
-export type Run = {
+type HappeningCommon = {
     id: number;
     place: Place;
     mapName: string;
-    teamSize: number;
-    status: Status;
     description: string;
     startAt: string;
+    status: Status;
+    createdAt: string;
     interestedPlayers: {
         inTeam: boolean;
     }[]; // this thing means if a user is interested in a run, is there's an object in an array then it's true
@@ -25,8 +25,8 @@ export type Run = {
         interestedPlayers: number;
     };
     server: {
-        ip: string;
-    };
+        connectString: string;
+    } | null;
     author: {
         id: number;
         username: string;
@@ -34,28 +34,12 @@ export type Run = {
     };
 };
 
-export type Event = {
-    id: number;
-    place: Place;
-    mapName: string;
+export type Run = HappeningCommon & {
+    teamSize: number;
+};
+
+export type Event = HappeningCommon & {
     title: string;
     thumbnail: string | null;
     endAt: string | null;
-    status: Status;
-    description: string;
-    startAt: string;
-    interestedPlayers: {
-        inTeam: boolean;
-    }[];
-    _count: {
-        interestedPlayers: number;
-    };
-    server: {
-        ip: string;
-    };
-    author: {
-        id: number;
-        username: string;
-        avatar: string | null;
-    };
 };

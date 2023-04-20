@@ -1,12 +1,11 @@
 import { Place, Status } from '@prisma/client';
 
-export type Run = {
+type HappeningCommon = {
     id: number;
     place: Place;
     mapName: string;
-    teamSize: number;
     status: Status;
-    startAt: Date;
+    createdAt: Date;
     interestedPlayers: {
         inTeam: boolean;
     }[];
@@ -15,34 +14,22 @@ export type Run = {
     };
     server: {
         ip: string;
+        port: number;
+        password: string;
     };
     author: {
         id: number;
         username: string;
         avatar: string | null;
     };
+    startAt: Date;
 };
 
-export type Event = {
-    id: number;
-    place: Place;
-    mapName: string;
+export type Run = HappeningCommon & {
+    teamSize: number;
+};
+
+export type Event = HappeningCommon & {
     thumbnail: string | null;
     endAt: Date | null;
-    status: Status;
-    startAt: Date;
-    interestedPlayers: {
-        inTeam: boolean;
-    }[];
-    _count: {
-        interestedPlayers: number;
-    };
-    server: {
-        ip: string;
-    };
-    author: {
-        id: number;
-        username: string;
-        avatar: string | null;
-    };
 };
