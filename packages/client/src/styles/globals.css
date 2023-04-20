@@ -1,10 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body, html {
     font-family: Inter;
     min-height: 100%;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+    --app-primary-1: #F6A740;
+    --app-success: #46C46E;
+    --app-error: #ED4245;
+}

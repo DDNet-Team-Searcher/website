@@ -27,11 +27,11 @@ export const HappeningStartTime: React.FC<EventStartTimeProps> = ({
             <CalendarIcon
                 color={
                     status === Status.NotStarted
-                        ? 'var(--app-color)'
+                        ? 'var(--app-primary-1)'
                         : status === Status.Happening
-                            ? 'var(--app-green)'
+                            ? 'var(--app-success)'
                             : status === Status.Finished
-                                ? 'red'
+                                ? 'var(--app-error)'
                                 : ''
                 }
             />

@@ -149,7 +149,7 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
                         <Avatar src={null} username={username} />
                     </Link>
                     <div className="bg-primary-3 text-high-emphasis px-[7px] py-[3px] rounded-full flex items-center ml-2.5">
-                        <img src="run-people.svg" />
+                        <img src="/run-people.svg" />
                         <span className="text-[12px] ml-1">
                             {interestedPlayers}
                         </span>
@@ -251,8 +251,8 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
                                 className="mr-2.5"
                                 src={
                                     isUserInterestedInEvent
-                                        ? 'check-mark.png'
-                                        : 'run-bell.svg'
+                                        ? '/check-mark.png'
+                                        : '/run-bell.svg'
                                 }
                             />
                             Interested

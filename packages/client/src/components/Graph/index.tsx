@@ -13,6 +13,7 @@ import {
 import { Line } from 'react-chartjs-2'
 import { useAppDispatch } from '@/utils/hooks/hooks'
 import { getUserStats } from '@/store/slices/user'
+// import { getUserStats } from '@/store/slices/app'
 
 type OwnProps = {
     username: string;
