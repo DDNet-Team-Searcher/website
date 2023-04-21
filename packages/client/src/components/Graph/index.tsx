@@ -13,14 +13,13 @@ import {
 import { Line } from 'react-chartjs-2'
 import { useAppDispatch } from '@/utils/hooks/hooks'
 import { getUserStats } from '@/store/slices/user'
-// import { getUserStats } from '@/store/slices/app'
 
 type OwnProps = {
     username: string;
 }
 
 export const Graph = ({ username }: OwnProps) => {
-    const [fetchedData, setFecthedData] = useState()
+    const [fetchedData, setFecthedData] = useState<null | [string, number, number][]>()
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -55,17 +54,13 @@ export const Graph = ({ username }: OwnProps) => {
         },
     }
 
-    //FIXME: Do types here =]
-
     const data = {
-        //@ts-ignore
-        labels: fetchedData?.rows?.map(row => row[0]),
+        labels: fetchedData?.map(row => row[0]),
         datasets: [
             {
                 fill: true,
                 label: `${username}'s points`,
-                //@ts-ignore
-                data: fetchedData?.rows?.map(row => row[2]),
+                data: fetchedData?.map(row => row[2]),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
