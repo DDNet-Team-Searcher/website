@@ -18,8 +18,8 @@ export const ClockIcon = ({ color = '#000', className }: OwnProps) => {
                 fill={color}
             />
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M9 0.25C4.16751 0.25 0.25 4.16751 0.25 9C0.25 13.8325 4.16751 17.75 9 17.75C13.8325 17.75 17.75 13.8325 17.75 9C17.75 4.16751 13.8325 0.25 9 0.25ZM1.75 9C1.75 4.99594 4.99594 1.75 9 1.75C13.0041 1.75 16.25 4.99594 16.25 9C16.25 13.0041 13.0041 16.25 9 16.25C4.99594 16.25 1.75 13.0041 1.75 9Z"
                 fill={color}
             />

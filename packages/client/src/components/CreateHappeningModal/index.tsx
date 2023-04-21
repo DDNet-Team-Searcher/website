@@ -14,18 +14,6 @@ import { InputWithLabel } from "../ui/InputWithLabel";
 import { Modal } from "../ui/Modal";
 import { RadioInput } from "../ui/RadioInput";
 import { TextareaWithLabel } from "../ui/TextareaWithLabel";
-// import { Button } from "../../../components/ui/Button"
-// import { Modal } from "../../../components/ui/Modal"
-// import { setIsCreateEventModalHidden, setIsCreateRunModalHidden } from "../../../store/slices/app"
-// import { hint } from "../../../store/slices/hints"
-// import { CreateEventForm } from "../../../types/CreateEventForm.type"
-// import { CreateRunForm } from "../../../types/CreateRunForm.type"
-// import { composeValidators } from "../../../utils/composeValidators"
-// import { useAppDispatch, useAppSelector } from "../../../utils/hooks/hooks"
-// import { required } from "../../../utils/validators/required"
-// import { InputWithLabel } from "../InputWithLabel"
-// import { RadioInput } from "../RadioInput"
-// import { TextareaWithLabel } from "../TextareaWithLabel"
 
 type OwnProps = {
     isVisible: boolean;
@@ -33,37 +21,11 @@ type OwnProps = {
     type: 'run' | 'event';
 }
 
-// const gimmeInitialValues = <T extends string = "run" | "event">(type: T): T extends "run" ? CreateRunForm : CreateEventForm => {
-//     if (type == "run") {
-//         return {
-//             place: null,
-//             mapName: "",
-//             teamSize: "",
-//             runStartDate: new Date().toISOString().substring(0, 10),
-//             runStartTime: new Date().toLocaleTimeString(navigator.language, { hour12: false }).substring(0, 5),
-//             description: ""
-//         } as T extends "run" ? CreateRunForm : CreateEventForm
-//     } else {
-//         return {
-//             place: null,
-//             mapName: "",
-//             teamSize: "",
-//             eventStartDate: new Date().toISOString().substring(0, 10),
-//             eventStartTime: new Date().toLocaleTimeString(navigator.language, { hour12: false }).substring(0, 5),
-//             eventEndDate: "",
-//             eventEndTime: "",
-//             description: "",
-//             thumbnail: ""
-//         } as T extends "run" ? CreateRunForm : CreateEventForm
-//     }
-// }
-
 export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => {
     const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true)
     const [createRun] = useCreateRunMutation()
     const [createEvent] = useCreateEventMutation()
     const dispatch = useAppDispatch()
-    // const availableMaps = useAppSelector(state => state.app.maps)
     const ref = useRef<null | HTMLInputElement>(null)
     const [isEndFieldsVisible, setIsEndFieldsVisible] = useState(false);
     const defaultValues = {
@@ -84,69 +46,6 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
         defaultValues
     });
 
-    // type Happening = CreateEventForm | CreateRunForm
-
-    // const initialValues = gimmeInitialValues(type)
-
-    // const validatePlaceField = (value: string | number | null) => composeValidators(value, [required])
-    // const validateTeamsizeField = (value: string | number) => composeValidators(value, [required])
-    // const validateMapNameField = (value: string | number) => composeValidators(value, [required])
-    //
-    // const validation = (values: Happening) => {
-    //     const errors: { [key in keyof Partial<CreateRunForm>]: any } = {}
-    //
-    //     const placeField = validatePlaceField(values.place)
-    //     const teamSizeField = validateTeamsizeField(values.teamSize)
-    //     const mapNameField = validateMapNameField(values.mapName)
-    //
-    //     if (placeField) errors.place = placeField
-    //     if (teamSizeField) errors.teamSize = teamSizeField
-    //     if (mapNameField) errors.mapName = mapNameField
-    //
-    //     if (!Object.keys(errors).length) setIsSubmitButtonDisabled(false)
-    //     else setIsSubmitButtonDisabled(true)
-    //
-    //     return errors
-    // }
-
-    // const onSubmit = async (values: Happening, { resetForm }: FormikHelpers<Happening>) => {
-    //     try {
-    //         let res
-    //
-    //         if (type == "run") { // I will send a run
-    //             res = await createRun(values as CreateRunForm).unwrap()
-    //
-    //             dispatch(setIsCreateRunModalHidden(true))
-    //         } else { // I will send an event
-    //             const formData = new FormData()
-    //
-    //             Object.keys(values).map((key) => {
-    //                 formData.append(key, values[key as keyof Happening] || "")
-    //             })
-    //
-    //             res = await createEvent(formData).unwrap()
-    //
-    //             dispatch(setIsCreateEventModalHidden(true))
-    //         }
-    //
-    //         // resetForm()
-    //
-    //         if (typeof res.data === "string") {
-    //             dispatch(hint({ type: "success", text: res.data }))
-    //         } else {
-    //             // idk what to do here xD
-    //         }
-    //     } catch (err: any) {
-    //         if ("data" in err) {
-    //             if (typeof err.data === "string") {
-    //                 dispatch(hint({ type: "error", text: err.data }))
-    //             } else {
-    //                 // show an error above fields
-    //             }
-    //         }
-    //     }
-    // }
-
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsEndFieldsVisible(e.target.checked)
     }
@@ -166,7 +65,7 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
                     description: string | null;
                     endAt?: string;
                 };
-                // console.log(values.place === "HERE" ? 0 : 1);
+
                 const eventData: EventDataT = {
                     place: values.place === "HERE" ? 0 : 1,
                     title: values.title,
@@ -255,34 +154,20 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
                         <p className="text-xl mt-5" style={{ "margin": "40px 0 0" }}>Where's your {type}?</p>
                         <p className={"text-sm mt-1 text-high-emphasis"}>So noone gets lost on where to go?</p>
 
-                        {['THERE', 'HERE'].map(val => (
-                            <div className="flex items-center py-[5px] px-2.5 rounded-[5px] bg-primary-3 mt-5">
-                                <RadioInput title={"Our own servers."} value="HERE" subtitle={"You will have less change to get ddosed."} id={val} register={register('place')} className={{ wrapper: "mt-5" }} />
-                                <label htmlFor={val} className={classNames("ml-2.5 grow-[1]")}>
-                                    {/*
-                                    <p className={"font-medium"}>{title}</p>
-                                    <p className={"text-[12px] text-medium-emphasis"}>{subtitle}</p>
-                                    */}
-                                    <p className={"font-medium"}>{"LOL"}</p>
-                                    <p className={"text-[12px] text-medium-emphasis"}>KEK</p>
+                        {inputs.map((val, id) => (
+                            <div className="flex items-center py-[5px] px-2.5 rounded-[5px] bg-primary-3 mt-5" key={id}>
+                                <RadioInput title={"Our own servers."} value="HERE" subtitle={"You will have less change to get ddosed."} id={val.value} register={register('place')} className={{ wrapper: "mt-5" }} />
+                                <label htmlFor={val.value} className={classNames("ml-2.5 grow-[1]")}>
+                                    <p className={"font-medium"}>{val.title}</p>
+                                    <p className={"text-[12px] text-medium-emphasis"}>{val.subtitle}</p>
                                 </label>
                             </div>
                         ))}
-                        {/*
-                        <RadioInput title={"Somewhere else."} value="THERE" subtitle={"You can get team and go play on official DDnet servers."} id="other" register={register('place')} className={{ wrapper: "mt-5" }} />
-                        <RadioInput title={"Our own servers."} value="HERE" subtitle={"You will have less change to get ddosed."} id="own" register={register('place')} className={{ wrapper: "mt-5" }} />
-                        */}
                     </div>
                     <div>
                         <p className={"text-xl mt-5"}>Tell us more about your {type}</p>
                         <p className={"text-sm mt-1 text-high-emphasis"}>Fill fields down below!</p>
                         <div className="flex justify-between mt-4">
-                            {/*<<Field className="max-w-[256px] w-full" name="mapName" label="map name" datalist={availableMaps.map(map => map.name)}
-                                id="mapName" placeholder={"Map you're gonna play?"} required component={InputWithLabel} />
-                            <Field className="max-w-[256px] w-full" name="teamSize" label="team size" type={"number"} id="teamSize"
-                                placeholder={"What team size do you want?"} required
-                                component={InputWithLabel} />
-                                */}
                             {type === 'event' ?
                                 <InputWithLabel className={{ container: "max-w-[256px]" }} register={register('title')} label="event title" placeholder="How would you name event?" required />
                                 :
@@ -295,11 +180,6 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
                             }
                         </div>
                         <div className="flex justify-between mt-4 w-full">
-                            {/*<Field className="max-w-[256px] w-full" name={`${type}StartDate`} label={`${type} start date`} type={"date"} id={`${type}StartDate`}
-                                required component={InputWithLabel} />
-                            <Field className="max-w-[256px] w-full" name={`${type}StartTime`} pattern="[0-9]{2}:[0-9]{2}" label={`${type} start time`}
-                                type={"time"} id={`${type}StartTime`} required component={InputWithLabel} />
-                                */}
                             <InputWithLabel className={{ container: "max-w-[256px]" }} register={register('startDate')} label="start date" required type="date" />
                             <InputWithLabel className={{ container: "max-w-[256px]" }} register={register('startTime')} label="start time" required type="time" pattern="[0-9]{2}:[0-9]{2}" />
                         </div>
@@ -312,35 +192,15 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
                     }
                     {type == "event" && isEndFieldsVisible &&
                         <div className="flex justify-between mt-4">
-                            {/*
-                            <Field className="max-w-[256px] w-full" name="eventEndDate" label="event end date" type={"date"} id="eventEndDate"
-                                required component={InputWithLabel} />
-                            <Field className="max-w-[256px] w-full" name="eventEndTime" pattern="[0-9]{2}:[0-9]{2}" label="event end time"
-                                type={"time"} id="eventEndTime" required component={InputWithLabel} />
-                                */}
                             <InputWithLabel className={{ container: "max-w-[256px]" }} register={register('endDate')} label="end date" required type="date" />
                             <InputWithLabel className={{ container: "max-w-[256px]" }} register={register('endTime')} label="end time" required type="time" pattern="[0-9]{2}:[0-9]{2}" />
                         </div>
                     }
-                    {/*
-                    <Field label={"description"} className="mt-5 [&_textarea]:resize-none" name={"description"}
-                        placeholder={"Here you can describe a teammate of dream, are weebs people or whatever you want"}
-                        component={TextareaWithLabel} />
-                        */}
                     <TextareaWithLabel className={{ container: "mt-5" }} register={register('description')} label="Description" placeholder="Here you can describe a teammate of dream, are weebs people or whatever you want" />
                     {type == "event" &&
                         <div>
                             <div>
                                 <label htmlFor="coverImage" className="uppercase mt-[15px] text-[12px]">Cover image</label>
-                                {/*
-                                <Field component={({ form: { setFieldValue } }: any) => {
-                                    return <input ref={ref} id="coverImage" onChange={(e) => {
-                                        if (e?.target?.files?.length) {
-                                            setFieldValue("thumbnail", e.target.files[0])
-                                        }
-                                    }} type="file" style={{ display: "none" }} />
-                                }} />
-                                */}
                                 <input {...register('thumbnail', {
                                     onChange: (e) => {
                                         if (e?.target?.files?.length) {

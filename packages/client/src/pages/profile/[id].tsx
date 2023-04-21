@@ -41,7 +41,7 @@ export default function Profile() {
                 });
             } catch (e) {
                 console.log(e);
-                }
+            }
         }
     }, [id]);
 
@@ -80,13 +80,14 @@ export default function Profile() {
                             </p>
                             <div className="flex flex-wrap">
                                 {profile.roles &&
-                                    profile.roles.map((role) => (
+                                    profile.roles.map((role, id) => (
                                         <div
                                             className="mr-3 mt-2 p-1.5 rounded-[5px]"
                                             style={{
                                                 backgroundColor: `${role.color}1A`,
                                                 border: `1px solid ${role.color}`,
                                             }}
+                                            key={id}
                                         >
                                             {role.url && (
                                                 <img
@@ -154,11 +155,12 @@ export default function Profile() {
                             {profile.username}'s last events
                         </h2>
                         <div className="w-full flex justify-around flex-wrap">
-                            {profile.happenings.events.map((event) => (
+                            {profile.happenings.events.map((event, id) => (
                                 <Event
                                     className="mt-5"
                                     onClick={() => { }}
                                     event={event}
+                                    key={id}
                                 />
                             ))}
                         </div>
@@ -168,11 +170,12 @@ export default function Profile() {
                             {profile.username}'s last runs
                         </h2>
                         <div className="max-w-[80%] w-full mx-auto flex flex-wrap justify-around">
-                            {profile.happenings.runs.map((run) => (
+                            {profile.happenings.runs.map((run, id) => (
                                 <Run
                                     className="mt-5"
                                     onClick={() => { }}
                                     run={run}
+                                    key={id}
                                 />
                             ))}
                         </div>
@@ -186,13 +189,19 @@ export default function Profile() {
                         </h2>
                         <div>
                             {profile.reviews.map(
-                                ({
-                                    review,
-                                    rate,
-                                    createdAt,
-                                    author: { avatar, username },
-                                }) => (
-                                    <div className="flex mt-12 max-w-[600px] w-full mx-auto">
+                                (
+                                    {
+                                        review,
+                                        rate,
+                                        createdAt,
+                                        author: { avatar, username },
+                                    },
+                                    id,
+                                ) => (
+                                    <div
+                                        className="flex mt-12 max-w-[600px] w-full mx-auto"
+                                        key={id}
+                                    >
                                         <div>
                                             <Avatar
                                                 size={50}
@@ -209,10 +218,11 @@ export default function Profile() {
                                                     {rate &&
                                                         new Array(rate)
                                                             .fill(rate)
-                                                            .map((_) => (
+                                                            .map((_, id) => (
                                                                 <img
                                                                     className="max-w-7 h-7 [&:not(:first-child)]:-ml-3"
                                                                     src="/default-tee.png"
+                                                                    key={id}
                                                                 />
                                                             ))}
                                                 </div>
