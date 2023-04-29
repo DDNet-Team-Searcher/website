@@ -61,6 +61,7 @@ importers:
     specifiers:
       '@nestjs/cli': ^9.0.0
       '@nestjs/common': ^9.0.0
+      '@nestjs/config': ^2.3.1
       '@nestjs/core': ^9.0.0
       '@nestjs/jwt': ^10.0.2
       '@nestjs/platform-express': ^9.0.0
@@ -104,6 +105,7 @@ importers:
       uuid: ^9.0.0
     dependencies:
       '@nestjs/common': 9.3.9_welcnyot5bzd5wa2aovbkxpi4i
+      '@nestjs/config': 2.3.1_jrq2rdgfp2sx67wmylmrqliwxe
       '@nestjs/core': 9.3.9_xe7ojjjtntdb7ly3mn5o66wx6q
       '@nestjs/jwt': 10.0.2_@nestjs+common@9.3.9
       '@nestjs/platform-express': 9.3.9_77foi4w27ghy47yutmnzv7krjy
@@ -1039,6 +1041,22 @@ packages:
       rxjs: 7.8.0
       tslib: 2.5.0
       uid: 2.0.1
+
+  /@nestjs/config/2.3.1_jrq2rdgfp2sx67wmylmrqliwxe:
+    resolution: {integrity: sha512-Ckzel0NZ9CWhNsLfE1hxfDuxJuEbhQvGxSlmZ1/X8awjRmAA/g3kT6M1+MO1SHj1wMtPyUfd9WpwkiqFbiwQgA==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      reflect-metadata: ^0.1.13
+      rxjs: ^6.0.0 || ^7.2.0
+    dependencies:
+      '@nestjs/common': 9.3.9_welcnyot5bzd5wa2aovbkxpi4i
+      dotenv: 16.0.3
+      dotenv-expand: 10.0.0
+      lodash: 4.17.21
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.0
+      uuid: 9.0.0
+    dev: false
 
   /@nestjs/core/9.3.9_xe7ojjjtntdb7ly3mn5o66wx6q:
     resolution: {integrity: sha512-9g1A1G9eirLXEpH21rc6dKb08zHc2+adhCRz8NW39hbejcsxxD72FApJzt4QBQAKvu862ixt/tdpStnFT7lOSw==}
@@ -2974,6 +2992,16 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+
+  /dotenv-expand/10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /dotenv/16.0.3:
+    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /ecdsa-sig-formatter/1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
