@@ -1,5 +1,6 @@
-#DDnet Team Searcher
-##Uuuuh. That's my second try to do something cool =]
+# DDnet Team Searcher
+![alt text](images/logo.png)
+## Uuuuh. That's my second try to do something cool =]
 
 I'm making this thing because it's one of the hardest problems in the game. You simply cant find anybody to play with. And on this website(if i finish it) you will be able to find homies.
 
