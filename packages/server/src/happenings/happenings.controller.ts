@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Inject,
     InternalServerErrorException,
     Param,
     Post,
@@ -28,7 +29,9 @@ import { Event, Run } from 'src/types/Happenings.type';
 @UseGuards(AuthorGuard)
 @Controller()
 export class HappeningsController {
-    constructor(private readonly happeningsService: HappeningsService) { }
+    constructor(
+        private readonly happeningsService: HappeningsService,
+    ) {}
 
     @Protected()
     @Post('/create/run')

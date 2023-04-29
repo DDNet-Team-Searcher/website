@@ -22,9 +22,11 @@ export class AuthGuard implements CanActivate {
 
         if (isProtected) {
             const request = context.switchToHttp().getRequest();
+
             try {
-                const data: { id: number } = this.jwtService.verify(request.cookies['token']);
-                console.log('AUTH GUARD', data);
+                const data: { id: number } = this.jwtService.verify(
+                    request.cookies['token'],
+                );
                 request.user = data;
             } catch (e) {
                 throw new ForbiddenException();

@@ -104,13 +104,15 @@ export class UsersController {
     @SetMetadata('protected', true)
     @Get('/credentials')
     async getAuthedUserData(@Req() req: Request & { user: { id: number } }) {
-        const { password, ...user } = await this.usersService.getUserById(
+        const credentials = await this.usersService.getUserCredentials(
             req.user.id,
         );
 
         return {
             status: 'success',
-            data: user,
+            data: {
+                user: credentials
+            },
         };
     }
 

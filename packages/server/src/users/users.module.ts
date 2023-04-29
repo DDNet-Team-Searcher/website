@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 import { HappeningsModule } from 'src/happenings/happenings.module';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
     imports: [
+        AuthModule,
         PrismaModule,
-        JwtModule.register({
-            secret: 'my-very-secret-secret',
-        }),
-        HappeningsModule
+        HappeningsModule,
+        NotificationsModule
     ],
     controllers: [UsersController],
     providers: [UsersService],
-    exports: [JwtModule]
 })
 export class UsersModule { }

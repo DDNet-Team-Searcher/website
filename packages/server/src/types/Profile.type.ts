@@ -1,12 +1,12 @@
-import { Role } from '@prisma/client';
-import { Event, Run } from './Happenings.type';
+import type { Role, RolesOnUsers} from '@prisma/client';
+import type { Event, Run } from './Happenings.type';
 
 export type Profile = {
     id: number;
     username: string;
     avatar: string | null;
     createdAt: Date;
-    roles: Role[]; //TODO: WHAT'S THE TYPE OF IT?
+    roles: {role: Role}[]; //TODO: WHAT'S THE TYPE OF IT?
     tier: number;
     verified: boolean;
     reviews: {

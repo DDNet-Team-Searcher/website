@@ -34,7 +34,7 @@ export const usersAPI = createApi({
                     const { data } = await queryFulfilled;
 
                     if (data.data) {
-                        dispatch(setCredentails(data.data));
+                        dispatch(setCredentails(data.data.user));
                         dispatch(setIsAuthed(true));
                     }
                 } catch (e) {

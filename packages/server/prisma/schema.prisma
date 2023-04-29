@@ -26,26 +26,35 @@ model User {
     reviwedUsers Review[] @relation(name: "reviewed")
     followers Follower[] @relation(name: "followers")
     following Follower[] @relation(name: "following")
+    notifications Notification[]
     reportedUsers Report[] @relation(name: "reportedUsers")
     reports Report[] @relation(name: "reports")
     bannedUsers Ban[] @relation(name: "bannedUsers")
     bans Ban[] @relation(name: "bans")
-    roles Role[]
+    roles RolesOnUsers[]
 }
 
 model Role {
     id Int @id @default(autoincrement())
     name String @db.VarChar(50)
     color String @db.VarChar(24) @default("#ffffff")
-    url String
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId Int
+    url String?
+    users RolesOnUsers[]
 
     canBan Boolean @default(false)
     canManageRoles Boolean @default(false)
     canDeleteHappenings Boolean @default(false)
     canManagePosts Boolean @default(false)
 
+}
+
+model RolesOnUsers {
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId Int
+    role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    roleId Int
+
+    @@id([userId, roleId])
 }
 
 model Server {
@@ -72,6 +81,14 @@ enum Status {
 enum HappeningType {
     Run
     Event
+}
+
+enum NotificationType {
+    Followage
+    InterestedInHappening
+    AddedInTeam
+    RemovedFromTeam
+    MadeAnAccountPOG
 }
 
 model Happening {
@@ -124,6 +141,16 @@ model Follower {
     followerId Int
     following User @relation(fields: [followingId], references: [id], name: "followers", onDelete: Cascade)
     followingId Int
+    createdAt DateTime @default(now())
+}
+
+model Notification {
+    id Int @id @default(autoincrement())
+    user User @relation(fields: [userId], references: [id])
+    userId Int
+    notification Json
+    type NotificationType
+    seen Boolean @default(false)
     createdAt DateTime @default(now())
 }
 

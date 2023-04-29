@@ -1,23 +1,23 @@
-import { Notification } from "./Notification.type";
+import type { Notification } from '@prisma/client';
 
 export type User = {
     id: number;
     username: string;
     email: string;
     tier: number;
-    createdAt: number;
-    updatedAt: number;
+    createdAt: Date;
+    updatedAt: Date;
     verified: boolean;
     avatar: string | null;
     notifications: Notification[];
     _count: { unreadNotifications: number };
-    perimissions: {
+    permissions: {
         canBan: boolean;
         canDeleteHappenings: boolean;
         canManageRoles: boolean;
         canManagePosts: boolean;
     };
-    banned: {
+    bans: {
         isBanned: boolean;
         reason: string | null;
     };

@@ -1,13 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { Happening, HappeningType, InterestedHappening, Status } from '@prisma/client';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import {
+    Happening,
+    HappeningType,
+    InterestedHappening,
+    NotificationType,
+    Status,
+} from '@prisma/client';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
 
 @Injectable()
-export class HappeningsService {
-    constructor(private readonly prismaService: PrismaService) { }
+export class HappeningsService implements OnModuleInit {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly notificationsService: NotificationsService,
+    ) { }
 
     async createRun(data: CreateRunDTO & { authorId: number }) {
         return await this.prismaService.happening.create({
@@ -91,12 +101,27 @@ export class HappeningsService {
         isInterested: boolean,
     ) {
         if (isInterested) {
-            return await this.prismaService.interestedHappening.create({
+            const author = await this.prismaService.happening.findFirst({
+                where: {
+                    id: happeningId,
+                },
+                select: {
+                    authorId: true,
+                },
+            });
+
+            await this.prismaService.interestedHappening.create({
                 data: {
                     userId,
                     happeningId,
                 },
             });
+
+            await this.notificationsService.sendNotification(
+                author.authorId,
+                NotificationType.InterestedInHappening,
+                { happeningId, userId },
+            );
         } else {
             const data = await this.isUserInterestedHappening({
                 userId,
@@ -404,7 +429,7 @@ export class HappeningsService {
             where: {
                 authorId,
                 type,
-                status: Status.Finished
+                status: Status.Finished,
             },
         });
     }
@@ -453,5 +478,9 @@ export class HappeningsService {
                 inTeam: !inTeam,
             },
         });
+    }
+
+    async onModuleInit() {
+        //do something here...
     }
 }

@@ -1,4 +1,5 @@
 import { Response } from '@/types/DDstats.type';
+import { Notification } from '@/types/Notification.type';
 import { Nullable } from '@/types/Nullable.type';
 import { User } from '@/types/User.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -18,11 +19,15 @@ const initialState: AppState = {
         updatedAt: null,
         verified: null,
         avatar: null,
+        notifications: [],
         perimissions: {
             canBan: null,
             canDeleteHappenings: null,
             canManageRoles: null,
             canManagePosts: null,
+        },
+        _count: {
+            unreadNotifications: null,
         },
         banned: {
             isBanned: null,
@@ -66,9 +71,31 @@ export const userSlice = createSlice({
         setIsAuthed(state, action: PayloadAction<boolean>) {
             state.isAuthed = action.payload;
         },
+        addNotification(state, action: PayloadAction<Notification>) {
+            if (state.user._count.unreadNotifications !== null) {
+                state.user._count.unreadNotifications++;
+            }
+            state.user.notifications.unshift(action.payload);
+        },
+        setNotificationSeen(state, action: PayloadAction<number>) {
+            state.user.notifications.map((notification) => {
+                if (notification.id === action.payload) {
+                    notification.seen = true;
+                    if (state.user._count.unreadNotifications) {
+                        state.user._count.unreadNotifications--;
+                    }
+                }
+                return notification;
+            });
+        },
     },
 });
 
-export const { setIsAuthed, setCredentails } = userSlice.actions;
+export const {
+    setIsAuthed,
+    setCredentails,
+    addNotification,
+    setNotificationSeen,
+} = userSlice.actions;
 
 export default userSlice.reducer;
