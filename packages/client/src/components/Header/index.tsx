@@ -125,7 +125,7 @@ export const Header = () => {
                                     ? 'bordered'
                                     : 'filled'
                             }
-                            className={'p-1'}
+                            className={'p-[4px]'}
                             onClick={() =>
                                 setIsSelectionMenuHidden(
                                     !isCreateSelectionMenuHidden,
@@ -138,7 +138,7 @@ export const Header = () => {
                             ref={ref}
                             data-id="header"
                             className={classNames(
-                                'absolute l-0 min-w-[max(100%,200px)] bg-primary-2 top-[125%] rounded-[10px]',
+                                'absolute l-0 z-[1] min-w-[max(100%,200px)] bg-primary-2 top-[125%] rounded-[10px]',
                                 { hidden: isCreateSelectionMenuHidden },
                             )}
                         >
