@@ -34,7 +34,6 @@ export default function Authed() {
         });
 
         socket.on('notification', (notification: Notification) => {
-            alert('I GOT A NOTIFICATION');
             dispatch(addNotification(notification));
         });
     }, []);

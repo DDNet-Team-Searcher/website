@@ -8,6 +8,30 @@ export enum NotificationType {
     MadeAnAccountPOG = 'MadeAnAccountPOG',
 }
 
+export type NotificationJson<T = NotificationType> = T extends Extract<
+    NotificationType,
+    'Followage'
+>
+    ? {
+          userId: number;
+      }
+    : T extends Extract<NotificationType, 'AddedInTeam'>
+    ? {
+          happeningId: number;
+      }
+    : T extends Extract<NotificationType, 'RemovedFromTeam'>
+    ? {
+          happeningId: number;
+      }
+    : T extends Extract<NotificationType, 'InterestedInHappening'>
+    ? {
+          userId: number;
+          happeningId: number;
+      }
+    : T extends Extract<NotificationType, 'MadeAnAccountPOG'>
+    ? {}
+    : never;
+
 type Author = {
     author: {
         username: string;
@@ -25,13 +49,15 @@ type Happening = {
 
 type Common<T extends NotificationType> = {
     id: number;
-    notification: {}; //FIXME: Im lazy ass and i dont want to fuck with this type >:(
+    notification: NotificationJson<T>;
     type: T;
     createdAt: string;
     seen: boolean;
 };
 
-//TODO: Maybe fix this shit, hello?
 export type Notification =
+    | (Common<NotificationType.Followage> & Author & Happening)
     | (Common<NotificationType.InterestedInHappening> & Author & Happening)
-    | (Common<NotificationType.AddedInTeam> & Happening);
+    | (Common<NotificationType.AddedInTeam> & Author & Happening)
+    | (Common<NotificationType.RemovedFromTeam> & Author & Happening)
+    | Common<NotificationType.MadeAnAccountPOG>;

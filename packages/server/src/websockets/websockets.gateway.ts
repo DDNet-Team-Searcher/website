@@ -1,9 +1,10 @@
 import { JwtService } from '@nestjs/jwt';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { Protected } from 'src/decorators/protected.decorator';
 import { WSAuthMiddleware } from 'src/middlewares/ws-auth.middleware';
+import { AuthSocket } from 'src/types/AuthSocket.type';
 
 @WebSocketGateway({
     cors: {
@@ -17,20 +18,18 @@ export class WebsocketsGateway implements NestGateway {
     server: Server;
     users: Map<number, string> = new Map();
 
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(private readonly jwtService: JwtService) { }
 
     afterInit(server: Server) {
         const middleware = WSAuthMiddleware(this.jwtService);
         server.use(middleware);
     }
 
-    handleConnection(client: Socket) {
-        //@ts-ignore
+    handleConnection(client: AuthSocket) {
         this.users.set(client.user.id, client.id);
     }
 
-    handleDisconnect(client: Socket) {
-        //@ts-ignore
+    handleDisconnect(client: AuthSocket) {
         this.users.delete(client.user.id);
     }
 

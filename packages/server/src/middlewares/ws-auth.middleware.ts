@@ -1,14 +1,8 @@
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction } from 'express';
-import { Socket } from 'socket.io';
+import { AuthSocket } from 'src/types/AuthSocket.type';
 
-type AuthSocket = Socket & {
-    user: {
-        id: number;
-    };
-};
-
-const parseCookies = (cookieString: string) => {
+const parseCookies = (cookieString: string): { [key: string]: string } => {
     const cookies = {};
     if (!cookieString) {
         return cookies;
@@ -21,6 +15,7 @@ const parseCookies = (cookieString: string) => {
         const cookieValue = parts[1].trim();
         cookies[cookieName] = cookieValue;
     }
+
     return cookies;
 };
 
@@ -28,8 +23,7 @@ export const WSAuthMiddleware = (jwtService: JwtService) => {
     return async (client: AuthSocket, next: NextFunction) => {
         try {
             const data: { id: number } = jwtService.verify(
-                //@ts-ignore
-                parseCookies(client.handshake.headers.cookie).token,
+                parseCookies(client.handshake.headers.cookie)?.token,
             );
             client.user = data;
             next();
