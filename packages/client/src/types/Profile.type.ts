@@ -8,6 +8,7 @@ export type Profile = {
     roles: any[]; //TODO: WHAT'S THE TYPE OF IT?
     tier: number;
     verified: boolean;
+    isFollowing: boolean;
     reviews: {
         id: number;
         review: string;

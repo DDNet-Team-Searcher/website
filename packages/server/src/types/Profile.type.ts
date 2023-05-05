@@ -24,6 +24,7 @@ export type Profile = {
         events: Event[];
         runs: Run[];
     };
+    isFollowing: boolean;
     _count: {
         followers: number;
         following: number;

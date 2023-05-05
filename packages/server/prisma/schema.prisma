@@ -136,12 +136,13 @@ model Review {
 }
 
 model Follower {
-    id Int @id @default(autoincrement())
     follower User @relation(fields: [followerId], references: [id], name: "following", onDelete: Cascade)
     followerId Int
     following User @relation(fields: [followingId], references: [id], name: "followers", onDelete: Cascade)
     followingId Int
     createdAt DateTime @default(now())
+
+    @@id([followerId, followingId])
 }
 
 model Notification {

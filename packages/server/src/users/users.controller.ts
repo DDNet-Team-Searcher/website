@@ -2,11 +2,11 @@ import {
     BadRequestException,
     Body,
     Controller,
-    ForbiddenException,
     Get,
     InternalServerErrorException,
     Param,
     Post,
+    Put,
     Req,
     Res,
     SetMetadata,
@@ -17,6 +17,7 @@ import { RegisterUserDTO } from './dto/register-user.dto';
 import { UsersService } from './users.service';
 import * as argon2 from 'argon2';
 import { Request, Response } from 'express';
+import { Protected } from 'src/decorators/protected.decorator';
 
 @Controller()
 export class UsersController {
@@ -116,9 +117,10 @@ export class UsersController {
         };
     }
 
+    @Protected()
     @Get('/profile/:id')
-    async getUserProfile(@Param('id') id: string) {
-        const profile = await this.usersService.getUserProfile(parseInt(id));
+    async getUserProfile(@Param('id') id: string, @Req() req) {
+        const profile = await this.usersService.getUserProfile(req.user.id, parseInt(id));
 
         return {
             status: 'success',
@@ -126,5 +128,16 @@ export class UsersController {
                 profile
             }
         };
+    }
+
+    @Protected()
+    @Put('/user/:id/follow')
+    async follow(@Param('id') id: string, @Req() req) {
+        await this.usersService.follow(req.user.id, parseInt(id));
+
+        return {
+            status: 'success',
+            data: null
+        }
     }
 }

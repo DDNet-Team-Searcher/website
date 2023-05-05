@@ -46,6 +46,12 @@ export const usersAPI = createApi({
         getProfile: build.query<GetProfile, number>({
             query: (userId) => `/profile/${userId}`,
         }),
+        followUser: build.mutation<{}, number>({
+            query: (userId) => ({
+                url: `user/${userId}/follow`,
+                method: 'PUT',
+            }),
+        }),
     }),
 });
 
@@ -54,4 +60,5 @@ export const {
     useLoginMutation,
     useGetCredentialsQuery,
     useLazyGetProfileQuery,
+    useFollowUserMutation
 } = usersAPI;

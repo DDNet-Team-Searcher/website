@@ -13,8 +13,8 @@ export class UsersService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly happeningService: HappeningsService,
-        private readonly notificationsService: NotificationsService
-    ) {}
+        private readonly notificationsService: NotificationsService,
+    ) { }
 
     async isUserExists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
@@ -72,7 +72,8 @@ export class UsersService {
                 },
             });
 
-        const notifications = await this.notificationsService.getUserNotifications(id);
+        const notifications =
+            await this.notificationsService.getUserNotifications(id);
 
         const res = {
             ...credentials,
@@ -89,7 +90,7 @@ export class UsersService {
         });
     }
 
-    async getUserProfile(id: number): Promise<null | Profile> {
+    async getUserProfile(userId: number, id: number): Promise<null | Profile> {
         const profile = await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -145,6 +146,8 @@ export class UsersService {
                 HappeningType.Event,
             );
 
+        const isFollowing = await this.isFollowing(userId, id);
+
         return {
             ...profile,
             happenings: {
@@ -156,6 +159,40 @@ export class UsersService {
                 playedRuns,
                 playedEvents,
             },
+            isFollowing
         };
+    }
+
+    async isFollowing(followerId: number, followingId: number) {
+        const bool = await this.prismaService.follower.count({
+            where: {
+                followerId,
+                followingId,
+            },
+        });
+
+        return Boolean(bool);
+    }
+
+    async follow(followerId: number, followingId: number) {
+        if (await this.isFollowing(followerId, followingId)) {
+            // unfollow
+            return await this.prismaService.follower.delete({
+                where: {
+                    followerId_followingId: {
+                        followerId,
+                        followingId,
+                    },
+                },
+            });
+        } else {
+            //follow
+            return await this.prismaService.follower.create({
+                data: {
+                    followerId,
+                    followingId,
+                },
+            });
+        }
     }
 }

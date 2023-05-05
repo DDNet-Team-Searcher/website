@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import { Run } from '@/components/Run';
 import { Event } from '@/components/Event';
 import { useRouter } from 'next/router';
-import { useLazyGetProfileQuery } from '@/features/api/users.api';
+import {
+    useFollowUserMutation,
+    useLazyGetProfileQuery,
+} from '@/features/api/users.api';
 import { VerifiedIcon } from '@/components/ui/Icons/Verified';
 import { Profile as ProfileT } from '@/types/Profile.type';
 import { Graph } from '@/components/Graph';
@@ -13,6 +16,7 @@ import { PeopleIcon } from '@/components/ui/Icons/People';
 import { ClockIcon } from '@/components/ui/Icons/Clock';
 import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
+import { Button } from '@/components/ui/Button';
 
 export default function Profile() {
     const {
@@ -20,6 +24,7 @@ export default function Profile() {
     } = useRouter();
     const dispatch = useAppDispatch();
     const [fetchProfile] = useLazyGetProfileQuery();
+    const [followUser] = useFollowUserMutation();
     const [profile, setProfile] = useState<null | ProfileT>();
     const authedUserId = useAppSelector((state) => state.user.user.id);
     const sameUser = authedUserId === parseInt(id as string);
@@ -31,7 +36,7 @@ export default function Profile() {
         );
     }, [profile]);
 
-    useEffect(() => {
+    const refetchUserProfile = () => {
         if (id) {
             try {
                 fetchProfile(parseInt(id as string)).then((res) => {
@@ -43,6 +48,10 @@ export default function Profile() {
                 console.log(e);
             }
         }
+    }
+
+    useEffect(() => {
+        refetchUserProfile();
     }, [id]);
 
     const startDateWithWeekday = new Date(
@@ -52,6 +61,15 @@ export default function Profile() {
         month: 'long',
         year: 'numeric',
     });
+
+    const follow = async () => {
+        try {
+            if (profile) {
+                followUser(profile.id);
+                refetchUserProfile();
+            }
+        } catch (e) { }
+    };
 
     return (
         <>
@@ -127,7 +145,15 @@ export default function Profile() {
                                 className={classNames('flex mt-5', {
                                     hidden: sameUser,
                                 })}
-                            ></div>
+                            >
+                                <Button
+                                    className="max-w-[120px] w-full !block text-center"
+                                    onClick={follow}
+                                    styleType={'filled'}
+                                >
+                                    {profile.isFollowing ? 'Unfollow' : 'Follow'}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                     <ul className="flex justify-between mt-[100px]">
