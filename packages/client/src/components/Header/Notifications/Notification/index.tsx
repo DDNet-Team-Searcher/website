@@ -41,13 +41,19 @@ export const Notification = ({ notification }: OwnProps) => {
                     {notification.type ===
                         NotificationType.InterestedInHappening ? (
                         <>
-                            {notification.author.username} is interested in your
-                            {notification.happening.type === Happenings.Event
+                            {notification.author.username || 'deleted user'} is
+                            interested in your
+                            {notification.happening?.type === Happenings.Event
                                 ? ` '${notification.happening.title}' `
-                                : ` '${notification.happening.mapName}' `}
-                            {notification.happening.type === Happenings.Event
+                                : notification.happening?.type ===
+                                    Happenings.Run
+                                    ? ` '${notification.happening.mapName}' `
+                                    : ' deleted '}
+                            {notification.happening?.type === Happenings.Event
                                 ? 'event'
-                                : 'run'}
+                                : notification.happening?.type === Happenings.Run
+                                    ? 'run'
+                                    : 'happening'}
                             :D
                         </>
                     ) : (

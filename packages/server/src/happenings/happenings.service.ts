@@ -11,6 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
+import * as fs from "node:fs";
 
 @Injectable()
 export class HappeningsService implements OnModuleInit {
@@ -70,13 +71,24 @@ export class HappeningsService implements OnModuleInit {
                 status: 'Finished',
             },
         });
+
     }
 
     async deleteHappening(id: number): Promise<Happening> {
-        return await this.prismaService.happening.delete({
+        const happening = await this.prismaService.happening.delete({
             where: {
                 id,
             },
+        });
+
+        return new Promise<Happening>((resolve, reject) => {
+            if (happening.thumbnail) {
+                fs.unlink(`public/${happening.thumbnail}`, (err) => {
+                    if (err) reject(err);
+                    resolve(happening);
+                })
+            }
+            resolve(happening);
         });
     }
 
