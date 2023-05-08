@@ -6,8 +6,8 @@ packages/client/.next
 packages/server/node_modules
 packages/server/dist
 packages/server/prisma/migrations
-packages/server/public
-!packages/server/public/.gitkeep
+packages/server/public/*
+!packages/server/public/avatars/.gitkeep
 
 naked-tees
 hentai

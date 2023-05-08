@@ -1,8 +1,6 @@
 import { useAppSelector } from '@/utils/hooks/hooks';
 import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
-// import Authed from './_authed';
-// import Guest from './_guest';
 const Authed = dynamic(() => import('./_authed'));
 const Guest = dynamic(() => import('./_guest'));
 

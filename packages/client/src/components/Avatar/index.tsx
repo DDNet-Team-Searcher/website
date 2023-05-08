@@ -32,7 +32,7 @@ export const Avatar: React.FC<OwnProps> = ({
                     {username[0]}
                 </p>
             ) : (
-                <img src={src} />
+                <img className='w-full h-full rounded-full object-cover' src={src} />
             )}
         </div>
     );

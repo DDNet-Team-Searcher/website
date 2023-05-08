@@ -10,6 +10,8 @@ import {
     Req,
     Res,
     SetMetadata,
+    UploadedFile,
+    UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDTO } from './dto/login-user.dto';
@@ -18,13 +20,14 @@ import { UsersService } from './users.service';
 import * as argon2 from 'argon2';
 import { Request, Response } from 'express';
 import { Protected } from 'src/decorators/protected.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller()
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) { }
+    ) {}
 
     @Post('/register')
     async register(@Body() data: RegisterUserDTO) {
@@ -102,6 +105,29 @@ export class UsersController {
         };
     }
 
+    @Protected()
+    @Post('/profile/avatar')
+    @UseInterceptors(FileInterceptor('avatar'))
+    async updateAvatar(
+        @UploadedFile() avatar: Express.Multer.File,
+        @Req() req,
+    ) {
+        try {
+            const filename = await this.usersService.updateAvatar(req.user.id, avatar);
+
+            return {
+                status: 'success',
+                data: `${req.protocol}://${process.env.HOST}${
+                    process.env.PORT === '80'
+                        ? process.env.PORT
+                        : `:${process.env.PORT}`
+                }${process.env.AVATAR_PATH}/${filename}`,
+            };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     @SetMetadata('protected', true)
     @Get('/credentials')
     async getAuthedUserData(@Req() req: Request & { user: { id: number } }) {
@@ -112,7 +138,7 @@ export class UsersController {
         return {
             status: 'success',
             data: {
-                user: credentials
+                user: credentials,
             },
         };
     }
@@ -120,13 +146,16 @@ export class UsersController {
     @Protected()
     @Get('/profile/:id')
     async getUserProfile(@Param('id') id: string, @Req() req) {
-        const profile = await this.usersService.getUserProfile(req.user.id, parseInt(id));
+        const profile = await this.usersService.getUserProfile(
+            req.user.id,
+            parseInt(id),
+        );
 
         return {
             status: 'success',
             data: {
-                profile
-            }
+                profile,
+            },
         };
     }
 
@@ -137,7 +166,7 @@ export class UsersController {
 
         return {
             status: 'success',
-            data: null
-        }
+            data: null,
+        };
     }
 }

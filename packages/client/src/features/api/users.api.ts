@@ -43,6 +43,13 @@ export const usersAPI = createApi({
                 }
             },
         }),
+        updateAvatar: build.mutation<{}, FormData>({
+            query: (body) => ({
+                url: `/profile/avatar`,
+                method: 'POST',
+                body
+            }),
+        }),
         getProfile: build.query<GetProfile, number>({
             query: (userId) => `/profile/${userId}`,
         }),
@@ -59,6 +66,7 @@ export const {
     useRegisterMutation,
     useLoginMutation,
     useGetCredentialsQuery,
+    useUpdateAvatarMutation,
     useLazyGetProfileQuery,
-    useFollowUserMutation
+    useFollowUserMutation,
 } = usersAPI;

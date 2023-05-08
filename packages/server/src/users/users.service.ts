@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Profile } from 'src/types/Profile.type';
 import { User } from 'src/types/User.type';
 import { computePersmissions } from 'src/utils/computedFields';
+import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 
 @Injectable()
@@ -56,11 +57,6 @@ export class UsersService {
                         },
                     },
                 },
-                // notifications: {
-                //     orderBy: {
-                //         createdAt: 'desc',
-                //     },
-                // },
             },
         });
 
@@ -77,6 +73,10 @@ export class UsersService {
 
         const res = {
             ...credentials,
+            avatar: `http://${process.env.HOST}${process.env.PORT === '80'
+                ? process.env.PORT
+                : `:${process.env.PORT}`
+                }${process.env.AVATAR_PATH}/${credentials.avatar}`,
             notifications,
             _count: { unreadNotifications: unreadNotificationsCount },
         };
@@ -159,7 +159,7 @@ export class UsersService {
                 playedRuns,
                 playedEvents,
             },
-            isFollowing
+            isFollowing,
         };
     }
 
@@ -194,5 +194,30 @@ export class UsersService {
                 },
             });
         }
+    }
+
+    async updateAvatar(id: number, avatar: Express.Multer.File) {
+        const filename = await createFile(avatar, FileTypeEnum.Avatar);
+        const oldAvatar = await this.prismaService.user.findFirst({
+            where: {
+                id
+            },
+            select: {
+                avatar: true
+            }
+        });
+
+        if (oldAvatar.avatar) await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
+
+        await this.prismaService.user.update({
+            where: {
+                id,
+            },
+            data: {
+                avatar: filename,
+            },
+        });
+
+        return filename;
     }
 }
