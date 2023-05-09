@@ -131,9 +131,7 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
         // dispatch(setEditingHappeningType("event"))
     };
 
-    const thumbnailUrl = thumbnail
-        ? `http://localhost:8080/public/${thumbnail}`
-        : `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
+    const thumbnailUrl = thumbnail || `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
 
     return (
         <div

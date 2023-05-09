@@ -17,8 +17,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
 import { HappeningsService } from './happenings.service';
-import * as fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
@@ -67,38 +65,11 @@ export class HappeningsController {
         @Req() req,
         @Body() data: CreateEvenDTO,
     ) {
-        let thumbnail: string | null = null;
-        const res = (file: Express.Multer.File) =>
-            new Promise<string>((resolve, reject) => {
-                //TODO: Move this thing out of the controller. Maybe create a separate service for it or smth
-                const filename = uuidv4() + '.' + file.mimetype.split('/')[1];
-
-                fs.writeFile(
-                    './public/' + filename,
-                    file.buffer,
-                    async (err) => {
-                        if (err === null) {
-                            resolve(filename);
-                        }
-
-                        reject();
-                    },
-                );
-            });
-
-        if (file) {
-            try {
-                thumbnail = await res(file);
-            } catch (e) {
-                console.log("UH OH, seems like you're fucked");
-            }
-        }
-
         try {
             const { id } = await this.happeningsService.createEvent({
                 ...data,
-                thumbnail,
-                authorId: req.user.id as number,
+                thumbnail: file,
+                authorId: req.user.id,
             });
 
             const event = await this.happeningsService.getEventById(

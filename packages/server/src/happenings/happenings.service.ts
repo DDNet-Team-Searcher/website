@@ -11,7 +11,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
-import * as fs from "node:fs";
+import * as fs from 'node:fs';
+import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 
 @Injectable()
 export class HappeningsService implements OnModuleInit {
@@ -38,11 +39,21 @@ export class HappeningsService implements OnModuleInit {
     }
 
     async createEvent(
-        data: CreateEvenDTO & { authorId: number; thumbnail: string | null },
+        data: CreateEvenDTO & {
+            authorId: number;
+            thumbnail: Express.Multer.File | null;
+        },
     ) {
+        let filename = null;
+
+        if (data.thumbnail) {
+            filename = await createFile(data.thumbnail, FileTypeEnum.Happening);
+        }
+
         return await this.prismaService.happening.create({
             data: {
                 ...data,
+                thumbnail: filename,
                 place: data.place ? 'THERE' : 'HERE',
                 endAt: new Date(data.endAt),
                 startAt: new Date(data.startAt),
@@ -71,7 +82,6 @@ export class HappeningsService implements OnModuleInit {
                 status: 'Finished',
             },
         });
-
     }
 
     async deleteHappening(id: number): Promise<Happening> {
@@ -81,15 +91,11 @@ export class HappeningsService implements OnModuleInit {
             },
         });
 
-        return new Promise<Happening>((resolve, reject) => {
-            if (happening.thumbnail) {
-                fs.unlink(`public/${happening.thumbnail}`, (err) => {
-                    if (err) reject(err);
-                    resolve(happening);
-                })
-            }
-            resolve(happening);
-        });
+        if (happening.thumbnail) {
+            await deleteFile(happening.thumbnail, FileTypeEnum.Happening);
+        }
+
+        return happening;
     }
 
     async isUserInterestedHappening({
@@ -195,7 +201,7 @@ export class HappeningsService implements OnModuleInit {
     }
 
     async getEventById(eventId: number, userId: number): Promise<Event | null> {
-        return await this.prismaService.happening.findFirst({
+        const event = await this.prismaService.happening.findFirst({
             where: {
                 type: 'Event',
                 id: eventId,
@@ -240,6 +246,16 @@ export class HappeningsService implements OnModuleInit {
                 },
             },
         });
+
+        return {
+            ...event,
+            thumbnail: event.thumbnail
+                ? `http://${process.env.HOST}${process.env.PORT === '80'
+                    ? process.env.PORT
+                    : `:${process.env.PORT}`
+                }${process.env.HAPPENING_PATH}/${event.thumbnail}`
+                : null,
+        };
     }
 
     async getAllRuns(id: number): Promise<Run[]> {
@@ -288,7 +304,7 @@ export class HappeningsService implements OnModuleInit {
     }
 
     async getAllEvents(id: number): Promise<Event[]> {
-        return await this.prismaService.happening.findMany({
+        const events = await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
             },
@@ -332,6 +348,17 @@ export class HappeningsService implements OnModuleInit {
                 },
             },
         });
+
+        for (const event of events) {
+            event.thumbnail =
+                event.thumbnail ? `http://${process.env.HOST}${process.env.PORT === '80'
+                    ? process.env.PORT
+                    : `:${process.env.PORT}`
+                    }${process.env.HAPPENING_PATH}/${event.thumbnail}`
+                    : null;
+        }
+
+        return events;
     }
 
     async getRecentRuns(id: number, runsCount = 5): Promise<null | Run[]> {

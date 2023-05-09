@@ -10,6 +10,9 @@ packages/server/public/*
 !packages/server/public/avatars
 packages/server/public/avatars/*
 !packages/server/public/avatars/.gitkeep
+!packages/server/public/happenings
+packages/server/public/happenings/*
+!packages/server/public/happenings/.gitkeep
 
 naked-tees
 hentai

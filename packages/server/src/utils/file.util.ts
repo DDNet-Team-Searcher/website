@@ -4,10 +4,12 @@ import * as path from 'path';
 
 const fileType = {
     avatar: process.env.AVATAR_PATH,
+    happening: process.env.HAPPENING_PATH,
 };
 
 export enum FileTypeEnum {
     Avatar = 'avatar',
+    Happening = 'happening',
 }
 
 export async function createFile(file: Express.Multer.File, type: string) {
