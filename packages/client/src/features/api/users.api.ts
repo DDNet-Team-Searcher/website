@@ -5,6 +5,10 @@ import {
     LoginUserResponse,
     RegisterUserRequest,
     RegisterUserResponse,
+    UpdateEmailRequest,
+    UpdateEmailRespone,
+    UpdateUsernameRequest,
+    UpdateUsernameResponse,
 } from '@/types/api.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '.';
@@ -50,9 +54,16 @@ export const usersAPI = createApi({
                 body
             }),
         }),
-        updateUsername: build.mutation({
+        updateUsername: build.mutation<UpdateUsernameRequest, UpdateUsernameResponse>({
             query: (body) => ({
                 url: `/profile/username`,
+                method: 'POST',
+                body
+            })
+        }),
+        updateEmail: build.mutation<UpdateEmailRequest, UpdateEmailRespone>({
+            query: (body) => ({
+                url: `/profile/email`,
                 method: 'POST',
                 body
             })
@@ -75,6 +86,7 @@ export const {
     useGetCredentialsQuery,
     useUpdateAvatarMutation,
     useUpdateUsernameMutation,
+    useUpdateEmailMutation,
     useLazyGetProfileQuery,
     useFollowUserMutation,
 } = usersAPI;

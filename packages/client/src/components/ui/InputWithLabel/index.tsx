@@ -12,6 +12,7 @@ interface OwnProps {
     };
     register: UseFormRegisterReturn;
     errors?: FieldErrors;
+    type?: string;
 }
 
 export const InputWithLabel = ({

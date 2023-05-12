@@ -71,6 +71,18 @@ export type GetInterestedUsersResponse = ApiResponse<
 
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
-export type GetProfile = ApiResponse<{ profile: Profile }, null>
+export type GetProfile = ApiResponse<{ profile: Profile }, null>;
 
-export type UpdateUsernameResponse = ApiResponse<null, { password: string }>;
+export type UpdateUsernameRequest = {
+    password: string;
+    username: string;
+};
+
+export type UpdateUsernameResponse = ApiResponse<null, UpdateUsernameRequest>;
+
+export type UpdateEmailRequest = {
+    password: string;
+    email: string;
+};
+
+export type UpdateEmailRespone = ApiResponse<null, UpdateEmailRequest>;

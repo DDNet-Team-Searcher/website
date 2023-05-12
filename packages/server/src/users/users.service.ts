@@ -246,4 +246,28 @@ export class UsersService {
             return false;
         }
     }
+
+    async updateEmail(
+        id: number,
+        data: { email: string; password: string },
+    ) {
+        const { password } = await this.prismaService.user.findFirst({
+            where: {
+                id,
+            },
+        });
+
+        if (await argon2.verify(password, data.password)) {
+            await this.prismaService.user.update({
+                where: { id },
+                data: {
+                    email: data.email,
+                },
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

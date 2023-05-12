@@ -1,4 +1,5 @@
 import { Avatar } from '@/components/Avatar';
+import { ChangeEmailModal } from '@/components/ChangeEmailModal';
 import { ChangeUsernameModal } from '@/components/ChangeUsernameModal';
 import { DeleteAccountModal } from '@/components/DeleteAccountModal';
 import { SettingsLayout } from '@/components/SettingsLayout';
@@ -12,9 +13,11 @@ export default function Account() {
     const [updateAvatar] = useUpdateAvatarMutation();
     const [isChangeUsernameModalVisible, setIsChangeUsernameModalVisible] =
         useState(false);
+    const [isChangeEmailModalVisible, setIsChangeEmailModalVisible] =
+        useState(false);
     const [isDeleteAccountModalVisible, setIsDeleteAccountModalVisible] =
         useState(false);
-    const user = useAppSelector(state => state.user.user);
+    const user = useAppSelector((state) => state.user.user);
 
     const changeAvatar = () => {
         ref.current?.click();
@@ -38,6 +41,10 @@ export default function Account() {
         setIsChangeUsernameModalVisible(true);
     };
 
+    const changeEmail = () => {
+        setIsChangeEmailModalVisible(true);
+    };
+
     const deleteAccount = () => {
         setIsDeleteAccountModalVisible(true);
     };
@@ -48,13 +55,21 @@ export default function Account() {
                 visible={isChangeUsernameModalVisible}
                 onClose={() => setIsChangeUsernameModalVisible(false)}
             />
+            <ChangeEmailModal
+                visible={isChangeEmailModalVisible}
+                onClose={() => setIsChangeEmailModalVisible(false)}
+            />
             <DeleteAccountModal
                 visible={isDeleteAccountModalVisible}
                 onClose={() => setIsDeleteAccountModalVisible(false)}
             />
             <div className="flex items-center">
                 <div className="relative">
-                    <Avatar src={user.avatar} username={user.username || ''} size={200} />
+                    <Avatar
+                        src={user.avatar}
+                        username={user.username || ''}
+                        size={200}
+                    />
                     <input
                         ref={ref}
                         type="file"
@@ -75,7 +90,9 @@ export default function Account() {
                             <p className="uppercase font-semibold text-[12px] text-medium-emphasis">
                                 username
                             </p>
-                            <p className="text-high-emphasis">{user.username}</p>
+                            <p className="text-high-emphasis">
+                                {user.username}
+                            </p>
                         </div>
                         <Button
                             styleType={'filled'}
@@ -92,7 +109,11 @@ export default function Account() {
                             </p>
                             <p className="text-high-emphasis">{user.email}</p>
                         </div>
-                        <Button styleType={'filled'} className="text-sm">
+                        <Button
+                            styleType={'filled'}
+                            onClick={changeEmail}
+                            className="text-sm"
+                        >
                             Edit
                         </Button>
                     </div>

@@ -23,6 +23,7 @@ import { Request, Response } from 'express';
 import { Protected } from 'src/decorators/protected.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeUsernameDTO } from './dto/change-username.dto';
+import { ChangeEmailDTO } from './dto/change-email.dto';
 
 @Controller()
 export class UsersController {
@@ -138,6 +139,35 @@ export class UsersController {
     async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO) {
         try {
             const isSuccess = await this.usersService.updateUsername(
+                req.user.id,
+                data,
+            );
+
+            if (isSuccess) {
+                return {
+                    status: 'success',
+                    data: null,
+                };
+            } else {
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: { password: 'Passwords are not the same' },
+                });
+            }
+        } catch (e) {
+            if (e instanceof HttpException) {
+                throw e;
+            } else {
+                throw new InternalServerErrorException();
+            }
+        }
+    }
+
+    @Protected()
+    @Post('/profile/email')
+    async updateEmail(@Req() req, @Body() data: ChangeEmailDTO) {
+        try {
+            const isSuccess = await this.usersService.updateEmail(
                 req.user.id,
                 data,
             );
