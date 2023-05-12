@@ -8,6 +8,7 @@ import { User } from 'src/types/User.type';
 import { computePersmissions } from 'src/utils/computedFields';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -74,8 +75,8 @@ export class UsersService {
         const res = {
             ...credentials,
             avatar: `http://${process.env.HOST}${process.env.PORT === '80'
-                ? process.env.PORT
-                : `:${process.env.PORT}`
+                    ? process.env.PORT
+                    : `:${process.env.PORT}`
                 }${process.env.AVATAR_PATH}/${credentials.avatar}`,
             notifications,
             _count: { unreadNotifications: unreadNotificationsCount },
@@ -200,14 +201,15 @@ export class UsersService {
         const filename = await createFile(avatar, FileTypeEnum.Avatar);
         const oldAvatar = await this.prismaService.user.findFirst({
             where: {
-                id
+                id,
             },
             select: {
-                avatar: true
-            }
+                avatar: true,
+            },
         });
 
-        if (oldAvatar.avatar) await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
+        if (oldAvatar.avatar)
+            await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
 
         await this.prismaService.user.update({
             where: {
@@ -219,5 +221,29 @@ export class UsersService {
         });
 
         return filename;
+    }
+
+    async updateUsername(
+        id: number,
+        data: { username: string; password: string },
+    ) {
+        const { password } = await this.prismaService.user.findFirst({
+            where: {
+                id,
+            },
+        });
+
+        if (await argon2.verify(password, data.password)) {
+            await this.prismaService.user.update({
+                where: { id },
+                data: {
+                    username: data.username,
+                },
+            });
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

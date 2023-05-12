@@ -72,3 +72,5 @@ export type GetInterestedUsersResponse = ApiResponse<
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
 export type GetProfile = ApiResponse<{ profile: Profile }, null>
+
+export type UpdateUsernameResponse = ApiResponse<null, { password: string }>;

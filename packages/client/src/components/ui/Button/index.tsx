@@ -9,6 +9,8 @@ type OwnProps = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     tabIndex?: number;
     disabled?: boolean;
+    id?: string;
+    form?: string;
 };
 
 export const Button: React.FC<PropsWithChildren<OwnProps>> = ({
@@ -38,6 +40,7 @@ export const Button: React.FC<PropsWithChildren<OwnProps>> = ({
             type={type}
             style={style || {}}
             onClick={onClick}
+            {...props}
         >
             {props.children}
         </button>

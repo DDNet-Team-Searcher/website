@@ -3,6 +3,7 @@ import {
     Body,
     Controller,
     Get,
+    HttpException,
     InternalServerErrorException,
     Param,
     Post,
@@ -21,6 +22,7 @@ import * as argon2 from 'argon2';
 import { Request, Response } from 'express';
 import { Protected } from 'src/decorators/protected.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ChangeUsernameDTO } from './dto/change-username.dto';
 
 @Controller()
 export class UsersController {
@@ -113,7 +115,10 @@ export class UsersController {
         @Req() req,
     ) {
         try {
-            const filename = await this.usersService.updateAvatar(req.user.id, avatar);
+            const filename = await this.usersService.updateAvatar(
+                req.user.id,
+                avatar,
+            );
 
             return {
                 status: 'success',
@@ -125,6 +130,35 @@ export class UsersController {
             };
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    @Protected()
+    @Post('/profile/username')
+    async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO) {
+        try {
+            const isSuccess = await this.usersService.updateUsername(
+                req.user.id,
+                data,
+            );
+
+            if (isSuccess) {
+                return {
+                    status: 'success',
+                    data: null,
+                };
+            } else {
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: { password: 'Passwords are not the same' },
+                });
+            }
+        } catch (e) {
+            if (e instanceof HttpException) {
+                throw e;
+            } else {
+                throw new InternalServerErrorException();
+            }
         }
     }
 

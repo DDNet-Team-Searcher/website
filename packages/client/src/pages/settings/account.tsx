@@ -75,7 +75,7 @@ export default function Account() {
                             <p className="uppercase font-semibold text-[12px] text-medium-emphasis">
                                 username
                             </p>
-                            <p className="text-high-emphasis">MilkeeyCat</p>
+                            <p className="text-high-emphasis">{user.username}</p>
                         </div>
                         <Button
                             styleType={'filled'}
@@ -90,7 +90,7 @@ export default function Account() {
                             <p className="uppercase font-semibold text-[12px] text-medium-emphasis">
                                 email
                             </p>
-                            <p className="text-high-emphasis">deez@nuts.com</p>
+                            <p className="text-high-emphasis">{user.email}</p>
                         </div>
                         <Button styleType={'filled'} className="text-sm">
                             Edit

@@ -50,6 +50,13 @@ export const usersAPI = createApi({
                 body
             }),
         }),
+        updateUsername: build.mutation({
+            query: (body) => ({
+                url: `/profile/username`,
+                method: 'POST',
+                body
+            })
+        }),
         getProfile: build.query<GetProfile, number>({
             query: (userId) => `/profile/${userId}`,
         }),
@@ -67,6 +74,7 @@ export const {
     useLoginMutation,
     useGetCredentialsQuery,
     useUpdateAvatarMutation,
+    useUpdateUsernameMutation,
     useLazyGetProfileQuery,
     useFollowUserMutation,
 } = usersAPI;
