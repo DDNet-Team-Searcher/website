@@ -270,4 +270,28 @@ export class UsersService {
             return false;
         }
     }
+
+    async updatePassword(
+        id: number,
+        data: { old: string; new: string },
+    ) {
+        const { password } = await this.prismaService.user.findFirst({
+            where: {
+                id,
+            },
+        });
+
+        if (await argon2.verify(password, data.old)) {
+            await this.prismaService.user.update({
+                where: { id },
+                data: {
+                    password: await argon2.hash(data.new),
+                },
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

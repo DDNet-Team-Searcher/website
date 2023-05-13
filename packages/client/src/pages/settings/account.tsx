@@ -1,5 +1,6 @@
 import { Avatar } from '@/components/Avatar';
 import { ChangeEmailModal } from '@/components/ChangeEmailModal';
+import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { ChangeUsernameModal } from '@/components/ChangeUsernameModal';
 import { DeleteAccountModal } from '@/components/DeleteAccountModal';
 import { SettingsLayout } from '@/components/SettingsLayout';
@@ -14,6 +15,8 @@ export default function Account() {
     const [isChangeUsernameModalVisible, setIsChangeUsernameModalVisible] =
         useState(false);
     const [isChangeEmailModalVisible, setIsChangeEmailModalVisible] =
+        useState(false);
+    const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] =
         useState(false);
     const [isDeleteAccountModalVisible, setIsDeleteAccountModalVisible] =
         useState(false);
@@ -45,6 +48,10 @@ export default function Account() {
         setIsChangeEmailModalVisible(true);
     };
 
+    const changePassword = () => {
+        setIsChangePasswordModalVisible(true);
+    };
+
     const deleteAccount = () => {
         setIsDeleteAccountModalVisible(true);
     };
@@ -58,6 +65,10 @@ export default function Account() {
             <ChangeEmailModal
                 visible={isChangeEmailModalVisible}
                 onClose={() => setIsChangeEmailModalVisible(false)}
+            />
+            <ChangePasswordModal
+                visible={isChangePasswordModalVisible}
+                onClose={() => setIsChangePasswordModalVisible(false)}
             />
             <DeleteAccountModal
                 visible={isDeleteAccountModalVisible}
@@ -123,7 +134,7 @@ export default function Account() {
                 <p className="text-xl text-high-emphasis">
                     Password and Authentication
                 </p>
-                <Button styleType="filled" className="text-sm mt-5">
+                <Button styleType="filled" onClick={changePassword} className="text-sm mt-5">
                     Change Password
                 </Button>
             </div>

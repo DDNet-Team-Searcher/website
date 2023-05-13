@@ -7,6 +7,8 @@ import {
     RegisterUserResponse,
     UpdateEmailRequest,
     UpdateEmailRespone,
+    UpdatePasswordRequest,
+    UpdatePasswordResponse,
     UpdateUsernameRequest,
     UpdateUsernameResponse,
 } from '@/types/api.type';
@@ -54,16 +56,23 @@ export const usersAPI = createApi({
                 body
             }),
         }),
-        updateUsername: build.mutation<UpdateUsernameRequest, UpdateUsernameResponse>({
+        updateUsername: build.mutation<UpdateUsernameResponse, UpdateUsernameRequest>({
             query: (body) => ({
                 url: `/profile/username`,
                 method: 'POST',
                 body
             })
         }),
-        updateEmail: build.mutation<UpdateEmailRequest, UpdateEmailRespone>({
+        updateEmail: build.mutation<UpdateEmailRespone, UpdateEmailRequest>({
             query: (body) => ({
                 url: `/profile/email`,
+                method: 'POST',
+                body
+            })
+        }),
+        updatePassword: build.mutation<UpdatePasswordResponse, UpdatePasswordRequest>({
+            query: (body) => ({
+                url: `/profile/password`,
                 method: 'POST',
                 body
             })
@@ -87,6 +96,7 @@ export const {
     useUpdateAvatarMutation,
     useUpdateUsernameMutation,
     useUpdateEmailMutation,
+    useUpdatePasswordMutation,
     useLazyGetProfileQuery,
     useFollowUserMutation,
 } = usersAPI;

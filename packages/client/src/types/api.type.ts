@@ -86,3 +86,10 @@ export type UpdateEmailRequest = {
 };
 
 export type UpdateEmailRespone = ApiResponse<null, UpdateEmailRequest>;
+
+export type UpdatePasswordRequest = {
+    old: string;
+    new: string;
+};
+
+export type UpdatePasswordResponse = ApiResponse<null, UpdatePasswordRequest>;

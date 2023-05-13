@@ -24,13 +24,14 @@ import { Protected } from 'src/decorators/protected.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeUsernameDTO } from './dto/change-username.dto';
 import { ChangeEmailDTO } from './dto/change-email.dto';
+import { ChangePasswordDTO } from './dto/change-password.dto';
 
 @Controller()
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) {}
+    ) { }
 
     @Post('/register')
     async register(@Body() data: RegisterUserDTO) {
@@ -123,11 +124,10 @@ export class UsersController {
 
             return {
                 status: 'success',
-                data: `${req.protocol}://${process.env.HOST}${
-                    process.env.PORT === '80'
+                data: `${req.protocol}://${process.env.HOST}${process.env.PORT === '80'
                         ? process.env.PORT
                         : `:${process.env.PORT}`
-                }${process.env.AVATAR_PATH}/${filename}`,
+                    }${process.env.AVATAR_PATH}/${filename}`,
             };
         } catch (e) {
             console.log(e);
@@ -191,6 +191,36 @@ export class UsersController {
             }
         }
     }
+
+    @Protected()
+    @Post('/profile/password')
+    async updatePassword(@Req() req, @Body() data: ChangePasswordDTO) {
+        try {
+            const isSuccess = await this.usersService.updatePassword(
+                req.user.id,
+                data,
+            );
+
+            if (isSuccess) {
+                return {
+                    status: 'success',
+                    data: null,
+                };
+            } else {
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: { old: 'Passwords are not the same' },
+                });
+            }
+        } catch (e) {
+            if (e instanceof HttpException) {
+                throw e;
+            } else {
+                throw new InternalServerErrorException();
+            }
+        }
+    }
+
 
     @SetMetadata('protected', true)
     @Get('/credentials')
