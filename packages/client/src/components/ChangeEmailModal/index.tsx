@@ -1,11 +1,13 @@
 import { useUpdateEmailMutation } from '@/features/api/users.api';
 import { UpdateEmailRespone } from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
+import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/Button';
 import { InputWithLabel } from '../ui/InputWithLabel';
 import { Modal } from '../ui/Modal';
+import { updateEmail as updateEmailInStore } from '@/store/slices/user';
 
 type OwnProps = {
     visible: boolean;
@@ -13,6 +15,7 @@ type OwnProps = {
 };
 
 export const ChangeEmailModal = ({ visible, onClose }: OwnProps) => {
+    const dispatch = useAppDispatch();
     const [updateEmail] = useUpdateEmailMutation();
 
     const defaultValues = {
@@ -25,6 +28,7 @@ export const ChangeEmailModal = ({ visible, onClose }: OwnProps) => {
         setError,
         register,
         formState: { errors },
+        reset,
     } = useForm({
         defaultValues,
     });
@@ -32,6 +36,9 @@ export const ChangeEmailModal = ({ visible, onClose }: OwnProps) => {
     const onSubmit = async (data: typeof defaultValues) => {
         try {
             await updateEmail(data).unwrap();
+            dispatch(updateEmailInStore(data.email));
+            reset();
+            onClose();
         } catch (err) {
             const error = (err as FetchBaseQueryError)
                 .data as ExcludeSuccess<UpdateEmailRespone>;
@@ -52,7 +59,7 @@ export const ChangeEmailModal = ({ visible, onClose }: OwnProps) => {
         <Modal onClose={onClose} visible={visible}>
             <div className="p-5">
                 <p className="text-3xl text-center text-high-emphasis font-semibold">
-                    Change your email 
+                    Change your email
                 </p>
                 <p className="text-xs text-center text-medium-emphasis mt-4">
                     Enter a new email and your passord

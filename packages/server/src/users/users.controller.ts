@@ -124,10 +124,12 @@ export class UsersController {
 
             return {
                 status: 'success',
-                data: `${req.protocol}://${process.env.HOST}${process.env.PORT === '80'
-                        ? process.env.PORT
-                        : `:${process.env.PORT}`
-                    }${process.env.AVATAR_PATH}/${filename}`,
+                data: {
+                    avatar: `${req.protocol}://${process.env.HOST}${process.env.PORT === '80'
+                            ? process.env.PORT
+                            : `:${process.env.PORT}`
+                        }${process.env.AVATAR_PATH}/${filename}`,
+                },
             };
         } catch (e) {
             console.log(e);
@@ -220,7 +222,6 @@ export class UsersController {
             }
         }
     }
-
 
     @SetMetadata('protected', true)
     @Get('/credentials')

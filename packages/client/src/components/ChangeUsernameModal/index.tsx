@@ -1,11 +1,13 @@
 import { useUpdateUsernameMutation } from '@/features/api/users.api';
 import { UpdateUsernameResponse } from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
+import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/Button';
 import { InputWithLabel } from '../ui/InputWithLabel';
 import { Modal } from '../ui/Modal';
+import { updateUsername as updateUsernameInStore } from '@/store/slices/user';
 
 type OwnProps = {
     visible: boolean;
@@ -13,6 +15,7 @@ type OwnProps = {
 };
 
 export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
+    const dispatch = useAppDispatch();
     const [updateUsername] = useUpdateUsernameMutation();
 
     const defaultValues = {
@@ -20,13 +23,22 @@ export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
         password: '',
     };
 
-    const { handleSubmit, setError, register, formState: { errors } } = useForm({
+    const {
+        handleSubmit,
+        setError,
+        register,
+        formState: { errors },
+        reset,
+    } = useForm({
         defaultValues,
     });
 
     const onSubmit = async (data: typeof defaultValues) => {
         try {
             await updateUsername(data).unwrap();
+            dispatch(updateUsernameInStore(data.username));
+            reset();
+            onClose();
         } catch (err) {
             const error = (err as FetchBaseQueryError)
                 .data as ExcludeSuccess<UpdateUsernameResponse>;
@@ -35,9 +47,7 @@ export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
                 if (Object.keys(error.data)) {
                     Object.keys(error.data).map((key) => {
                         setError(key as keyof typeof error.data, {
-                            message: error.data[
-                                key as keyof typeof error.data
-                            ],
+                            message: error.data[key as keyof typeof error.data],
                         });
                     });
                 }

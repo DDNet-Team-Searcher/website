@@ -73,6 +73,8 @@ export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
 export type GetProfile = ApiResponse<{ profile: Profile }, null>;
 
+export type UpdateAvatarResponse = ApiResponse<{ avatar: string | null }, { avatar: string }>;
+
 export type UpdateUsernameRequest = {
     password: string;
     username: string;

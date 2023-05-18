@@ -88,6 +88,15 @@ export const userSlice = createSlice({
                 return notification;
             });
         },
+        updateAvatar(state, action: PayloadAction<string | null>) {
+            state.user.avatar = action.payload;
+        },
+        updateUsername(state, action: PayloadAction<string>) {
+            state.user.username = action.payload;
+        },
+        updateEmail(state, action: PayloadAction<string>) {
+            state.user.email = action.payload;
+        }
     },
 });
 
@@ -96,6 +105,9 @@ export const {
     setCredentails,
     addNotification,
     setNotificationSeen,
+    updateAvatar,
+    updateUsername,
+    updateEmail
 } = userSlice.actions;
 
 export default userSlice.reducer;

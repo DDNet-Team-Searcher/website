@@ -6,10 +6,12 @@ import { DeleteAccountModal } from '@/components/DeleteAccountModal';
 import { SettingsLayout } from '@/components/SettingsLayout';
 import { Button } from '@/components/ui/Button';
 import { useUpdateAvatarMutation } from '@/features/api/users.api';
-import { useAppSelector } from '@/utils/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
+import { updateAvatar as updateAvatarInStore } from '@/store/slices/user';
 
 export default function Account() {
+    const dispatch = useAppDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const [updateAvatar] = useUpdateAvatarMutation();
     const [isChangeUsernameModalVisible, setIsChangeUsernameModalVisible] =
@@ -33,7 +35,10 @@ export default function Account() {
 
                 formData.append('avatar', e.target?.files[0]);
 
-                await updateAvatar(formData);
+                const res = await updateAvatar(formData).unwrap();
+                if (res.status === 'success') {
+                    dispatch(updateAvatarInStore(res.data.avatar));
+                }
             }
         } catch (e) {
             console.log(e);
@@ -134,7 +139,11 @@ export default function Account() {
                 <p className="text-xl text-high-emphasis">
                     Password and Authentication
                 </p>
-                <Button styleType="filled" onClick={changePassword} className="text-sm mt-5">
+                <Button
+                    styleType="filled"
+                    onClick={changePassword}
+                    className="text-sm mt-5"
+                >
                     Change Password
                 </Button>
             </div>

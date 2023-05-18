@@ -5,6 +5,7 @@ import {
     LoginUserResponse,
     RegisterUserRequest,
     RegisterUserResponse,
+    UpdateAvatarResponse,
     UpdateEmailRequest,
     UpdateEmailRespone,
     UpdatePasswordRequest,
@@ -49,7 +50,7 @@ export const usersAPI = createApi({
                 }
             },
         }),
-        updateAvatar: build.mutation<{}, FormData>({
+        updateAvatar: build.mutation<UpdateAvatarResponse, FormData>({
             query: (body) => ({
                 url: `/profile/avatar`,
                 method: 'POST',
