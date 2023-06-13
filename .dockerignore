@@ -1,0 +1,15 @@
+node_modules
+
+packages/client/node_modules
+packages/client/.next
+
+packages/server/node_modules
+packages/server/dist
+packages/server/prisma/migrations
+packages/server/public/*
+!packages/server/public/avatars
+packages/server/public/avatars/*
+!packages/server/public/avatars/.gitkeep
+!packages/server/public/happenings
+packages/server/public/happenings/*
+!packages/server/public/happenings/.gitkeep

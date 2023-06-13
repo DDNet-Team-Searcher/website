@@ -7,7 +7,7 @@ type OwnProps = {
 };
 
 export const RouteGuard = ({ children }: OwnProps) => {
-    const publicUrls = ['/', '/login'];
+    const publicUrls = ['/', '/login', '/register'];
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
     const router = useRouter();
 

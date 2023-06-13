@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: "postgres:latest"
+    environment:
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: root 
+      POSTGRES_DB: ddts
+    # ports:
+    #   - "5432:5432"
+    volumes:
+      - db-data:/deez
+  web:
+    build: .
+    depends_on: 
+      - db
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+
+volumes:
+  db-data:
