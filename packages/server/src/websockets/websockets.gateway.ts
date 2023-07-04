@@ -34,8 +34,10 @@ export class WebsocketsGateway implements NestGateway {
     }
 
     sendNotification(userId: number, notification: Object) {
-        this.server
-            .to(this.users.get(userId))
-            .emit('notification', notification);
+        if (this.users.has(userId)) {
+            this.server
+                .to(this.users.get(userId)!)
+                .emit('notification', notification);
+        }
     }
 }

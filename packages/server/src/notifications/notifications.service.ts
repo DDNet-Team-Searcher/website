@@ -42,7 +42,7 @@ export class NotificationsService {
             notification.type === NotificationType.RemovedFromTeam
         ) {
             const { authorId, ...happeningInfo } =
-                await this.prismaService.happening.findFirst({
+                (await this.prismaService.happening.findFirst({
                     where: {
                         id: notification.notification.happeningId,
                     },
@@ -52,19 +52,19 @@ export class NotificationsService {
                         title: true,
                         type: true,
                     },
-                });
+                }))!; //NOTE: this is fine
 
             notification.happening = happeningInfo;
 
-            const author = await this.prismaService.user.findFirst({
+            const author = (await this.prismaService.user.findFirst({
                 where: {
                     id: authorId,
                 },
-            });
+            }))!; //NOTE: this is fine
 
             notification.author = author;
         } else if (notification.type === NotificationType.Followage) {
-            const author = await this.prismaService.user.findFirst({
+            const author = (await this.prismaService.user.findFirst({
                 where: {
                     id: notification.notification.userId,
                 },
@@ -72,13 +72,13 @@ export class NotificationsService {
                     username: true,
                     avatar: true,
                 },
-            });
+            }))!; //NOTE: this is fine
 
             notification.author = author;
         } else if (
             notification.type === NotificationType.InterestedInHappening
         ) {
-            const happeningInfo = await this.prismaService.happening.findFirst({
+            const happeningInfo = (await this.prismaService.happening.findFirst({
                 where: {
                     id: notification.notification.happeningId,
                 },
@@ -87,11 +87,11 @@ export class NotificationsService {
                     title: true,
                     type: true,
                 },
-            });
+            }))!; //NOTE: this is fine
 
             notification.happening = happeningInfo;
 
-            const author = await this.prismaService.user.findFirst({
+            const author = (await this.prismaService.user.findFirst({
                 where: {
                     id: notification.notification.userId,
                 },
@@ -99,7 +99,7 @@ export class NotificationsService {
                     username: true,
                     avatar: true,
                 },
-            });
+            }))!; //NOTE: this is fine
 
             notification.author = author;
         }
@@ -118,7 +118,7 @@ export class NotificationsService {
             },
         });
 
-        const res = [];
+        const res: Notification[] = [];
 
         for (let notification of notifications) {
             res.push(await this.getNotificationById(notification.id));

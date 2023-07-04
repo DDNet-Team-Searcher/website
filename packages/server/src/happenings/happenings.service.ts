@@ -1,9 +1,10 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
     Happening,
     HappeningType,
     InterestedHappening,
     NotificationType,
+    Place,
     Status,
 } from '@prisma/client';
 import { NotificationsService } from 'src/notifications/notifications.service';
@@ -16,7 +17,7 @@ import { GameServersService } from 'src/gamerservers/gameservers.service';
 import { ServersService } from 'src/servers/servers.service';
 
 @Injectable()
-export class HappeningsService implements OnModuleInit {
+export class HappeningsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
@@ -47,7 +48,7 @@ export class HappeningsService implements OnModuleInit {
             thumbnail: Express.Multer.File | null;
         },
     ) {
-        let filename = null;
+        let filename: string | null = null;
 
         if (data.thumbnail) {
             filename = await createFile(data.thumbnail, FileTypeEnum.Happening);
@@ -58,13 +59,14 @@ export class HappeningsService implements OnModuleInit {
                 ...data,
                 thumbnail: filename,
                 place: data.place ? 'THERE' : 'HERE',
-                endAt: new Date(data.endAt),
+                endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
                 type: 'Event',
             },
         });
     }
 
+    //@ts-ignore FIXME: Function lacks ending return statement and return type does not include 'undefined'.
     async startHappening(id: number): Promise<Happening> {
         const happeningPlace = await this.getHappeningPlace(id);
 
@@ -79,12 +81,12 @@ export class HappeningsService implements OnModuleInit {
                         mapName: true,
                     },
                 })
-            ).mapName;
+            )!.mapName;
 
             if (serverId) {
-                const serverData = await this.serversService.getServerData(
+                const serverData = (await this.serversService.getServerData(
                     serverId,
-                );
+                ))!; //NOTE: this is fine
                 const { port, password } =
                     await this.gameServersService.startServer(serverId, {
                         mapName,
@@ -129,9 +131,9 @@ export class HappeningsService implements OnModuleInit {
                         serverId: true,
                     },
                 })
-            ).serverId;
+            )!.serverId;
 
-            await this.gameServersService.shutdownServer(serverId, id);
+            await this.gameServersService.shutdownServer(serverId!, id);
 
             return await this.prismaService.happening.update({
                 where: {
@@ -169,7 +171,7 @@ export class HappeningsService implements OnModuleInit {
         return happening;
     }
 
-    async getHappeningPlace(id: number) {
+    async getHappeningPlace(id: number): Promise<Place | null> {
         return (
             await this.prismaService.happening.findFirst({
                 where: {
@@ -179,7 +181,7 @@ export class HappeningsService implements OnModuleInit {
                     place: true,
                 },
             })
-        ).place;
+        )?.place || null;
     }
 
     async isUserInterestedHappening({
@@ -203,14 +205,14 @@ export class HappeningsService implements OnModuleInit {
         isInterested: boolean,
     ) {
         if (isInterested) {
-            const author = await this.prismaService.happening.findFirst({
+            const author = (await this.prismaService.happening.findFirst({
                 where: {
                     id: happeningId,
                 },
                 select: {
                     authorId: true,
                 },
-            });
+            }))!; //NOTE: ThIs Is FiNe
 
             await this.prismaService.interestedHappening.create({
                 data: {
@@ -225,10 +227,10 @@ export class HappeningsService implements OnModuleInit {
                 { happeningId, userId },
             );
         } else {
-            const data = await this.isUserInterestedHappening({
+            const data = (await this.isUserInterestedHappening({
                 userId,
                 happeningId,
-            });
+            }))!; //NOTE: ThIs Is FiNe
 
             return await this.prismaService.interestedHappening.delete({
                 where: {
@@ -329,15 +331,19 @@ export class HappeningsService implements OnModuleInit {
             },
         });
 
-        return {
-            ...event,
-            thumbnail: event.thumbnail
-                ? `http://${process.env.HOST}${process.env.PORT === '80'
-                    ? process.env.PORT
-                    : `:${process.env.PORT}`
-                }${process.env.HAPPENING_PATH}/${event.thumbnail}`
-                : null,
-        };
+        if (event) {
+            return {
+                ...event,
+                thumbnail: event.thumbnail
+                    ? `http://${process.env.HOST}${process.env.PORT === '80'
+                        ? process.env.PORT
+                        : `:${process.env.PORT}`
+                    }${process.env.HAPPENING_PATH}/${event.thumbnail}`
+                    : null,
+            }
+        }
+
+        return null;
     }
 
     async getAllRuns(id: number): Promise<Run[]> {
@@ -443,7 +449,7 @@ export class HappeningsService implements OnModuleInit {
         return events;
     }
 
-    async getRecentRuns(id: number, runsCount = 5): Promise<null | Run[]> {
+    async getRecentRuns(id: number, runsCount = 5): Promise<Run[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Run',
@@ -492,7 +498,7 @@ export class HappeningsService implements OnModuleInit {
     async getRecentEvents(
         id: number,
         eventsCount = 5,
-    ): Promise<null | Event[]> {
+    ): Promise<Event[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
@@ -582,12 +588,12 @@ export class HappeningsService implements OnModuleInit {
 
     async updateIsPlayerInTeam(happeningId: number, userId: number) {
         const { id, inTeam } =
-            await this.prismaService.interestedHappening.findFirst({
+            (await this.prismaService.interestedHappening.findFirst({
                 where: {
                     happeningId,
                     userId,
                 },
-            });
+            }))!; //NOTE: this is fine
 
         return await this.prismaService.interestedHappening.update({
             where: {
@@ -597,11 +603,6 @@ export class HappeningsService implements OnModuleInit {
                 inTeam: !inTeam,
             },
         });
-    }
-
-    async onModuleInit() {
-        //do something here...
-        //i have no idea what i have to do here lmao
     }
 
     async upcomingHappenings(n: number) {

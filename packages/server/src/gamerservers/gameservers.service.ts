@@ -76,7 +76,7 @@ export class GameServersService implements OnModuleInit {
         data: { mapName: string; id: number },
     ): Promise<{ port: number; password: string }> {
         return new Promise((res) => {
-            const socket = this.sockets.get(serverId);
+            const socket = this.sockets.get(serverId) as Socket;
 
             socket.write(
                 Buffer.from(
@@ -105,7 +105,7 @@ export class GameServersService implements OnModuleInit {
 
     shutdownServer(serverId: number, happeningId: number) {
         return new Promise<void>((res) => {
-            const socket = this.sockets.get(serverId);
+            const socket = this.sockets.get(serverId) as Socket;
 
             socket.write(
                 Buffer.from(

@@ -18,18 +18,18 @@ async function bootstrap() {
                 const res = {};
 
                 error.map((err) => {
-                    res[err.property] = Object.values(err.constraints)[0];
+                    res[err.property] = Object.values(err.constraints!)[0];
                 });
 
                 throw new BadRequestException({
                     status: 'fail',
-                    data: res
+                    data: res,
                 });
             },
         }),
     );
 
     app.setGlobalPrefix('/api');
-    await app.listen(process.env.PORT);
+    await app.listen(process.env.PORT || 8080);
 }
 bootstrap();

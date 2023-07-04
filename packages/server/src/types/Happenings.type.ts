@@ -21,7 +21,7 @@ type HappeningCommon = {
 };
 
 export type Run = HappeningCommon & {
-    teamSize: number;
+    teamSize: number | null;
 };
 
 export type Event = HappeningCommon & {

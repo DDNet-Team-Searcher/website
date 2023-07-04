@@ -87,9 +87,10 @@ export class UsersController {
             });
         }
 
-        const { password, ...user } = await this.usersService.getUserByEmail(
+        const { password, ...user } = (await this.usersService.getUserByEmail(
             data.email,
-        );
+        ))!; //NOTE: this is fine
+
 
         if (!(await argon2.verify(password, data.password))) {
             throw new BadRequestException({
@@ -126,8 +127,8 @@ export class UsersController {
                 status: 'success',
                 data: {
                     avatar: `${req.protocol}://${process.env.HOST}${process.env.PORT === '80'
-                            ? process.env.PORT
-                            : `:${process.env.PORT}`
+                        ? process.env.PORT
+                        : `:${process.env.PORT}`
                         }${process.env.AVATAR_PATH}/${filename}`,
                 },
             };

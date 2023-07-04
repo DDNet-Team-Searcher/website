@@ -33,7 +33,7 @@ export class UsersService {
     }
 
     async getUserCredentials(id: number): Promise<User> {
-        const credentials = await this.prismaService.user.findFirst({
+        const credentials = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
@@ -59,7 +59,7 @@ export class UsersService {
                     },
                 },
             },
-        });
+        }))!; //NOTE: this is fine
 
         const unreadNotificationsCount =
             await this.prismaService.notification.count({
@@ -74,10 +74,12 @@ export class UsersService {
 
         const res = {
             ...credentials,
-            avatar: credentials.avatar ? (`http://${process.env.HOST}${process.env.PORT === '80'
-                ? process.env.PORT
-                : `:${process.env.PORT}`
-                }${process.env.AVATAR_PATH}/${credentials.avatar}`) : null,
+            avatar: credentials?.avatar
+                ? `http://${process.env.HOST}${process.env.PORT === '80'
+                    ? process.env.PORT
+                    : `:${process.env.PORT}`
+                }${process.env.AVATAR_PATH}/${credentials.avatar}`
+                : null,
             notifications,
             _count: { unreadNotifications: unreadNotificationsCount },
         };
@@ -92,7 +94,7 @@ export class UsersService {
     }
 
     async getUserProfile(userId: number, id: number): Promise<null | Profile> {
-        const profile = await this.prismaService.user.findFirst({
+        const profile = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
@@ -131,7 +133,7 @@ export class UsersService {
                     },
                 },
             },
-        });
+        }))!; //NOTE: this is fine
 
         const runs = await this.happeningService.getRecentRuns(id);
         const events = await this.happeningService.getRecentEvents(id);
@@ -156,7 +158,7 @@ export class UsersService {
                 events,
             },
             _count: {
-                ...profile._count,
+                ...profile?._count,
                 playedRuns,
                 playedEvents,
             },
@@ -199,14 +201,14 @@ export class UsersService {
 
     async updateAvatar(id: number, avatar: Express.Multer.File) {
         const filename = await createFile(avatar, FileTypeEnum.Avatar);
-        const oldAvatar = await this.prismaService.user.findFirst({
+        const oldAvatar = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
             select: {
                 avatar: true,
             },
-        });
+        }))!;
 
         if (oldAvatar.avatar)
             await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
@@ -227,11 +229,11 @@ export class UsersService {
         id: number,
         data: { username: string; password: string },
     ) {
-        const { password } = await this.prismaService.user.findFirst({
+        const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
-        });
+        }))!;
 
         if (await argon2.verify(password, data.password)) {
             await this.prismaService.user.update({
@@ -247,15 +249,12 @@ export class UsersService {
         }
     }
 
-    async updateEmail(
-        id: number,
-        data: { email: string; password: string },
-    ) {
-        const { password } = await this.prismaService.user.findFirst({
+    async updateEmail(id: number, data: { email: string; password: string }) {
+        const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
-        });
+        }))!;
 
         if (await argon2.verify(password, data.password)) {
             await this.prismaService.user.update({
@@ -271,15 +270,12 @@ export class UsersService {
         }
     }
 
-    async updatePassword(
-        id: number,
-        data: { old: string; new: string },
-    ) {
-        const { password } = await this.prismaService.user.findFirst({
+    async updatePassword(id: number, data: { old: string; new: string }) {
+        const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
-        });
+        }))!;
 
         if (await argon2.verify(password, data.old)) {
             await this.prismaService.user.update({

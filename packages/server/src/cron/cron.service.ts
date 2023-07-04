@@ -52,7 +52,9 @@ export class CronService implements OnModuleInit {
             await this.happeningsService.startHappening(happening.id);
 
             this.queue.dequeue();
-            this.queue.enqueue(await this.happeningsService.nthUpcomingHappenings(10));
+
+            const upcomingHappening = await this.happeningsService.nthUpcomingHappenings(10);
+            if(upcomingHappening) this.queue.enqueue(upcomingHappening);
 
             await this.check();
         }

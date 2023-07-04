@@ -11,7 +11,7 @@ export type Profile = {
     verified: boolean;
     reviews: {
         id: number;
-        review: string;
+        review: string | null;
         rate: number;
         createdAt: Date;
         author: {
