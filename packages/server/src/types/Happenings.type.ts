@@ -12,11 +12,6 @@ type HappeningCommon = {
     _count: {
         interestedPlayers: number;
     };
-    server: {
-        ip: string;
-        port: number;
-        password: string;
-    };
     author: {
         id: number;
         username: string;

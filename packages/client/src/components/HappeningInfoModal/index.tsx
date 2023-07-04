@@ -55,8 +55,8 @@ export const HappeningInfoModal = ({
     const copyConnectData = async () => {
         //TODO: Right now coping server data thing doesnt work :D
 
-        if (happening.server?.connectString) {
-            await navigator.clipboard.writeText(happening.server?.connectString);
+        if (happening?.connectString) {
+            await navigator.clipboard.writeText(happening?.connectString);
             alert(
                 'The needed thing was copied in your clipboard. Now just open client, press F1, paste this stuff and have a nice game!',
             );

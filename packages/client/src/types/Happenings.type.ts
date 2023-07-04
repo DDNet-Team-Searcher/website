@@ -24,9 +24,7 @@ type HappeningCommon = {
     _count: {
         interestedPlayers: number;
     };
-    server: {
-        connectString: string;
-    } | null;
+    connectString: string | null;
     author: {
         id: number;
         username: string;

@@ -59,12 +59,10 @@ model RolesOnUsers {
 
 model Server {
     id Int @id @default(autoincrement())
-    pid Int?
-    file String? @db.VarChar(255)
-    password String?
     ip String @db.VarChar(255)
     port Int
-    happening Happening?
+    happenings Happening[] 
+    serversRunningMax Int 
 }
 
 enum Place {
@@ -102,7 +100,8 @@ model Happening {
     description String?
     status Status @default(NotStarted)
     server Server? @relation(fields: [serverId], references: [id])
-    serverId Int? @unique
+    serverId Int?
+    connectString String?
     startAt DateTime
     endAt DateTime?
     thumbnail String? @db.VarChar(255)

@@ -1,20 +1,5 @@
 import type { Role } from '@prisma/client';
-import type { Event, Run } from 'src/types/Happenings.type';
-import type { HappeningWithConnectString } from 'src/types/HappeningWithConnectString.type';
 import type { User } from 'src/types/User.type';
-
-export const computeConnectString = <T extends Run | Event>(
-    data: T,
-): HappeningWithConnectString<T> => {
-    const { ip, port, password } = data.server;
-
-    return {
-        ...data,
-        server: {
-            connectString: `password "${password}"; connect ${ip}:${port}`,
-        },
-    };
-};
 
 export const computePersmissions = (
     data: Omit<User, 'permissions' | 'bans'> & {

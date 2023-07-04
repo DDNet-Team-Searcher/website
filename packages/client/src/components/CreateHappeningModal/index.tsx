@@ -53,7 +53,6 @@ export const CreateHappeningModal = ({ type, isVisible, onClose }: OwnProps) => 
     const onSubmit = async (values: typeof defaultValues) => {
         console.log(type)
         if (type === 'event') {
-            console.log(values)
             try {
                 const endAt = values.endDate + ' ' + values.endTime;
                 type EventDataT = {

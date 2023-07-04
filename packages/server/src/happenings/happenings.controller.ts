@@ -3,7 +3,6 @@ import {
     Controller,
     Delete,
     Get,
-    Inject,
     InternalServerErrorException,
     Param,
     Post,
@@ -20,7 +19,7 @@ import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
-import { computeConnectString } from 'src/utils/computedFields';
+// import { computeConnectString } from 'src/utils/computedFields';
 import { HappeningWithConnectString } from 'src/types/HappeningWithConnectString.type';
 import { Event, Run } from 'src/types/Happenings.type';
 
@@ -29,7 +28,7 @@ import { Event, Run } from 'src/types/Happenings.type';
 export class HappeningsController {
     constructor(
         private readonly happeningsService: HappeningsService,
-    ) {}
+    ) { }
 
     @Protected()
     @Post('/create/run')
@@ -168,18 +167,18 @@ export class HappeningsController {
         const runs = await this.happeningsService.getAllRuns(req.user.id);
         const res: (Run | HappeningWithConnectString<Run>)[] = [];
 
-        for (let run of runs) {
-            if (run.server) {
-                res.push(computeConnectString(run));
-            } else {
-                res.push(run);
-            }
-        }
+        // for (let run of runs) {
+        //     if (run.server) {
+        //         res.push(computeConnectString(run));
+        //     } else {
+        // res.push(run);
+        //     }
+        // }
 
         return {
             status: 'success',
             data: {
-                runs: res,
+                runs,
             },
         };
     }
@@ -190,18 +189,18 @@ export class HappeningsController {
         const events = await this.happeningsService.getAllEvents(req.user.id);
         const res: (Event | HappeningWithConnectString<Event>)[] = [];
 
-        for (let event of events) {
-            if (event.server) {
-                res.push(computeConnectString(event));
-            } else {
-                res.push(event);
-            }
-        }
+        // for (let event of events) {
+        //     if (event.server) {
+        //         res.push(computeConnectString(event));
+        //     } else {
+        //         res.push(event);
+        //     }
+        // }
 
         return {
             status: 'success',
             data: {
-                events: res,
+                events,
             },
         };
     }

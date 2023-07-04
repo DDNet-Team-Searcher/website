@@ -6,7 +6,7 @@ const Guest = dynamic(() => import('./_guest'));
 
 export default function Home() {
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
-    console.log("Authed", isAuthed);
+
     if(!!isAuthed) {
         return <Authed/>;
     } else if(isAuthed === false) {
@@ -20,8 +20,6 @@ export default function Home() {
 export const getServerSideProps: GetServerSideProps<{ test: true }> = async (
     ctx,
 ) => {
-    console.log(ctx.query);
-
     return {
         props: {
             test: true,

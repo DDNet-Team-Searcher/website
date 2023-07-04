@@ -10,6 +10,8 @@ import { ReviewsModule } from './reviews/reviews.module';
 import * as path from 'path';
 import { WebsocketsModule } from './websockets/websockets.module';
 import { AuthModule } from './auth/auth.module';
+import { GameServersModule } from './gamerservers/gameservers.module';
+import { CronModule } from './cron/cron.module';
 
 @Module({
     imports: [
@@ -33,7 +35,9 @@ import { AuthModule } from './auth/auth.module';
                 ],
             },
         ]),
-        WebsocketsModule
+        WebsocketsModule,
+        GameServersModule,
+        CronModule
     ],
     controllers: [AppController],
     providers: [

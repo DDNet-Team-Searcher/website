@@ -11,14 +11,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
-import * as fs from 'node:fs';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
+import { GameServersService } from 'src/gamerservers/gameservers.service';
+import { ServersService } from 'src/servers/servers.service';
 
 @Injectable()
 export class HappeningsService implements OnModuleInit {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
+        private readonly gameServersService: GameServersService,
+        private readonly serversService: ServersService,
     ) { }
 
     async createRun(data: CreateRunDTO & { authorId: number }) {
@@ -63,25 +66,93 @@ export class HappeningsService implements OnModuleInit {
     }
 
     async startHappening(id: number): Promise<Happening> {
-        return await this.prismaService.happening.update({
-            where: {
-                id,
-            },
-            data: {
-                status: 'Happening',
-            },
-        });
+        const happeningPlace = await this.getHappeningPlace(id);
+
+        if (happeningPlace === 'HERE') {
+            const serverId = await this.serversService.findEmptyServer();
+            const mapName = (
+                await this.prismaService.happening.findFirst({
+                    where: {
+                        id,
+                    },
+                    select: {
+                        mapName: true,
+                    },
+                })
+            ).mapName;
+
+            if (serverId) {
+                const serverData = await this.serversService.getServerData(
+                    serverId,
+                );
+                const { port, password } =
+                    await this.gameServersService.startServer(serverId, {
+                        mapName,
+                        id,
+                    });
+
+                return await this.prismaService.happening.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        status: 'Happening',
+                        serverId,
+                        connectString: `connect ${serverData.ip}:${port}; password ${password}`,
+                    },
+                });
+            }
+        } else {
+            return await this.prismaService.happening.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status: 'Happening',
+                },
+            });
+        }
+
+        // all servers are full 😭
+        //TODO: return something here?
     }
 
     async endHappening(id: number): Promise<Happening> {
-        return await this.prismaService.happening.update({
-            where: {
-                id,
-            },
-            data: {
-                status: 'Finished',
-            },
-        });
+        const happeningPlace = await this.getHappeningPlace(id);
+        if (happeningPlace == "HERE") {
+            const serverId = (
+                await this.prismaService.happening.findFirst({
+                    where: {
+                        id,
+                    },
+                    select: {
+                        serverId: true,
+                    },
+                })
+            ).serverId;
+
+            await this.gameServersService.shutdownServer(serverId, id);
+
+            return await this.prismaService.happening.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status: 'Finished',
+                    serverId: null,
+                    connectString: null,
+                },
+            });
+        } else {
+            return await this.prismaService.happening.update({
+                where: {
+                    id,
+                },
+                data: {
+                    status: 'Finished',
+                },
+            });
+        }
     }
 
     async deleteHappening(id: number): Promise<Happening> {
@@ -96,6 +167,19 @@ export class HappeningsService implements OnModuleInit {
         }
 
         return happening;
+    }
+
+    async getHappeningPlace(id: number) {
+        return (
+            await this.prismaService.happening.findFirst({
+                where: {
+                    id,
+                },
+                select: {
+                    place: true,
+                },
+            })
+        ).place;
     }
 
     async isUserInterestedHappening({
@@ -185,7 +269,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -233,7 +316,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -272,6 +354,7 @@ export class HappeningsService implements OnModuleInit {
                 status: true,
                 startAt: true,
                 createdAt: true,
+                connectString: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -288,7 +371,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -319,6 +401,7 @@ export class HappeningsService implements OnModuleInit {
                 endAt: true,
                 thumbnail: true,
                 createdAt: true,
+                connectString: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -335,7 +418,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -350,12 +432,12 @@ export class HappeningsService implements OnModuleInit {
         });
 
         for (const event of events) {
-            event.thumbnail =
-                event.thumbnail ? `http://${process.env.HOST}${process.env.PORT === '80'
+            event.thumbnail = event.thumbnail
+                ? `http://${process.env.HOST}${process.env.PORT === '80'
                     ? process.env.PORT
                     : `:${process.env.PORT}`
-                    }${process.env.HAPPENING_PATH}/${event.thumbnail}`
-                    : null;
+                }${process.env.HAPPENING_PATH}/${event.thumbnail}`
+                : null;
         }
 
         return events;
@@ -393,7 +475,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -445,7 +526,6 @@ export class HappeningsService implements OnModuleInit {
                 server: {
                     select: {
                         ip: true,
-                        password: true,
                         port: true,
                     },
                 },
@@ -521,5 +601,38 @@ export class HappeningsService implements OnModuleInit {
 
     async onModuleInit() {
         //do something here...
+        //i have no idea what i have to do here lmao
+    }
+
+    async upcomingHappenings(n: number) {
+        return await this.prismaService.happening.findMany({
+            where: {
+                status: 'NotStarted',
+            },
+            orderBy: {
+                startAt: 'asc',
+            },
+            select: {
+                id: true,
+                startAt: true,
+            },
+            take: n,
+        });
+    }
+
+    async nthUpcomingHappenings(n: number) {
+        return await this.prismaService.happening.findFirst({
+            where: {
+                status: 'NotStarted',
+            },
+            orderBy: {
+                startAt: 'asc',
+            },
+            select: {
+                id: true,
+                startAt: true,
+            },
+            skip: n,
+        });
     }
 }
