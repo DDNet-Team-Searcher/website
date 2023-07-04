@@ -74,10 +74,10 @@ export class UsersService {
 
         const res = {
             ...credentials,
-            avatar: `http://${process.env.HOST}${process.env.PORT === '80'
-                    ? process.env.PORT
-                    : `:${process.env.PORT}`
-                }${process.env.AVATAR_PATH}/${credentials.avatar}`,
+            avatar: credentials.avatar ? (`http://${process.env.HOST}${process.env.PORT === '80'
+                ? process.env.PORT
+                : `:${process.env.PORT}`
+                }${process.env.AVATAR_PATH}/${credentials.avatar}`) : null,
             notifications,
             _count: { unreadNotifications: unreadNotificationsCount },
         };
