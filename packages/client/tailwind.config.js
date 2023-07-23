@@ -32,9 +32,9 @@ module.exports = {
             'primary-2': '#26221D',
             'primary-3': '#383129',
 
-            'high-emphasis': 'rgba(255, 255, 255, .87)',
-            'medium-emphasis': 'rgba(255, 255, 255, .6)',
-            'low-emphasis': 'rgba(255, 255, 255, .38)',
+            'high-emphasis': 'var(--high-emphasis)',
+            'medium-emphasis': 'var(--medium-emphasis)',
+            'low-emphasis': 'var(--low-emphasis)',
 
             success: 'var(--app-success)',
             error: 'var(--app-error)',

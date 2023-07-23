@@ -5,7 +5,7 @@ export type Profile = {
     username: string;
     avatar: string | null;
     createdAt: Date;
-    roles: any[]; //TODO: WHAT'S THE TYPE OF IT?
+    roles: any[]; //FIXME: WHAT'S THE TYPE OF IT?
     tier: number;
     verified: boolean;
     isFollowing: boolean;

@@ -1,7 +1,8 @@
-import { Event, Run } from './Happenings.type';
-import { Profile } from './Profile.type';
-import { Response as ApiResponse } from './Response.type';
-import { Review } from './Review.type';
+import type { Event, Run } from './Happenings.type';
+import type { Profile } from './Profile.type';
+import type { Response as ApiResponse } from './Response.type';
+import type { Review } from './Review.type';
+import type { SearchResult } from './SearchResult.type';
 
 export type RegisterUserRequest = {
     username: string;
@@ -73,7 +74,10 @@ export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
 export type GetProfile = ApiResponse<{ profile: Profile }, null>;
 
-export type UpdateAvatarResponse = ApiResponse<{ avatar: string | null }, { avatar: string }>;
+export type UpdateAvatarResponse = ApiResponse<
+    { avatar: string | null },
+    { avatar: string }
+>;
 
 export type UpdateUsernameRequest = {
     password: string;
@@ -95,3 +99,16 @@ export type UpdatePasswordRequest = {
 };
 
 export type UpdatePasswordResponse = ApiResponse<null, UpdatePasswordRequest>;
+
+export type SearchQueryRequest = {
+    query: string;
+    page: number;
+};
+
+export type SearchQueryResponse = ApiResponse<
+    {
+        results: SearchResult[];
+        next: boolean;
+    },
+    SearchQueryRequest
+>;

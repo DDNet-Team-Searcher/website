@@ -6,6 +6,7 @@ import appReducer from './slices/app';
 import hintsReducer from './slices/hints';
 import happeningsReducer from './slices/happenings';
 import userReducer from './slices/user';
+import { searchApi } from '@/features/api/search.api';
 
 export const store = configureStore({
     reducer: {
@@ -16,12 +17,14 @@ export const store = configureStore({
         [happeningsApi.reducerPath]: happeningsApi.reducer,
         [usersAPI.reducerPath]: usersAPI.reducer,
         [notificationsApi.reducerPath]: notificationsApi.reducer,
+        [searchApi.reducerPath]: searchApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(usersAPI.middleware)
             .concat(happeningsApi.middleware)
-            .concat(notificationsApi.middleware),
+            .concat(notificationsApi.middleware)
+            .concat(searchApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

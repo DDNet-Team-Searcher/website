@@ -12,9 +12,12 @@ import {
 } from '@/store/slices/app';
 import { CreateHappeningModal } from '../CreateHappeningModal';
 import { Notifications } from './Notifications';
+import { SearchIcon } from '../ui/Icons/Search';
+import { useRouter } from 'next/router';
 
 export const Header = () => {
     const ref = useRef<null | HTMLDivElement>(null);
+    const inputRef = useRef<null | HTMLInputElement>(null);
     const notificationRef = useRef<null | HTMLDivElement>(null);
     const [isCreateSelectionMenuHidden, setIsSelectionMenuHidden] =
         useState(true);
@@ -30,6 +33,7 @@ export const Header = () => {
     const unreadNotificationsCount = useAppSelector(
         (state) => state.user.user._count.unreadNotifications,
     );
+    const router = useRouter();
 
     const onOutsideClick = () => {
         setIsSelectionMenuHidden(true);
@@ -63,6 +67,13 @@ export const Header = () => {
         setIsCreateModalVisible(false);
     };
 
+    const search = (e: any) => {
+        e.preventDefault();
+        if (ref) {
+            router.push(`/search?query=${inputRef.current?.value}`);
+        }
+    };
+
     return (
         <header
             className={classNames('py-5 w-full z-[1] bg-[rgba(0,0,0,.36)]', {
@@ -74,7 +85,7 @@ export const Header = () => {
                 onClose={onCreateHappeningModalClose}
                 type={currentHappening as 'run' | 'event'}
             />
-            <div className="flex justify-between items-end max-w-[1110px] mx-auto">
+            <div className="flex items-end max-w-[1110px] mx-auto">
                 <Link href={'/'}>
                     <img
                         src="/logo.png"
@@ -112,13 +123,27 @@ export const Header = () => {
                 </div>
                 <div
                     className={classNames({
-                        'flex items-center': isAuthed,
+                        'flex grow items-center': isAuthed,
                         hidden: !isAuthed,
                     })}
                 >
-                    {' '}
+                    <div className="flex grow justify-center">
+                        <div className="relative">
+                            <form onSubmit={search}>
+                                <input
+                                    ref={inputRef}
+                                    placeholder="Deez nuts"
+                                    className="rounded-full bg-primary-3 px-5 py-1 text-high-emphasis placeholder:text-low-emphasis"
+                                />
+                                <SearchIcon
+                                    color="var(--high-emphasis)"
+                                    className="absolute top-[50%] translate-y-[-50%] right-5"
+                                />
+                            </form>
+                        </div>
+                    </div>
                     {/* authed user part */}
-                    <div className="relative">
+                    <div className="relative ml-auto">
                         <Button
                             styleType={
                                 isCreateSelectionMenuHidden

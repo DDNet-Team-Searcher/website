@@ -4,13 +4,17 @@
 @tailwind components;
 @tailwind utilities;
 
-body, html {
+body,
+html {
     font-family: Inter;
     min-height: 100%;
 }
 
 :root {
-    --app-primary-1: #F6A740;
-    --app-success: #46C46E;
-    --app-error: #ED4245;
+    --app-primary-1: #f6a740;
+    --app-success: #46c46e;
+    --app-error: #ed4245;
+    --high-emphasis: rgba(255, 255, 255, 0.87);
+    --medium-emphasis: rgba(255, 255, 255, 0.6);
+    --low-emphasis: rgba(255, 255, 255, 0.38);
 }

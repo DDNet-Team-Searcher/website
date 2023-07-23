@@ -12,6 +12,7 @@ import { WebsocketsModule } from './websockets/websockets.module';
 import { AuthModule } from './auth/auth.module';
 import { GameServersModule } from './gamerservers/gameservers.module';
 import { CronModule } from './cron/cron.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { CronModule } from './cron/cron.module';
                 ],
             },
         ]),
+        SearchModule,
         WebsocketsModule,
         GameServersModule,
         CronModule

@@ -93,6 +93,36 @@ export class UsersService {
         });
     }
 
+    /*
+        * userId - id of user youre trying to find
+        * id - if of user who is looking for it
+    */
+    async searchUserById(userId: number, id: number) {
+        return (await this.prismaService.user.findFirst({
+            where: {
+                id,
+            },
+            select: {
+                id: true,
+                username: true,
+                avatar: true,
+                roles: {
+                    select: {
+                        role: true,
+                    },
+                },
+                tier: true,
+                verified: true,
+                _count: {
+                    select: {
+                        followers: true,
+                        following: true,
+                    },
+                },
+            },
+        }))!; //NOTE: this is fine
+    }
+
     async getUserProfile(userId: number, id: number): Promise<null | Profile> {
         const profile = (await this.prismaService.user.findFirst({
             where: {

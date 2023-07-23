@@ -40,7 +40,7 @@ const initialState: AppState = {
 export const getUserStats = (username: string) => {
     return async () => {
         const req = await fetch(
-            `https://ddstats.org/ddnet-693575f.json?sql=SELECT+*%2C+SUM%28Points%29+FROM%0D%0A%28SELECT+race.Timestamp%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${encodeURI(
+            `https://db.ddstats.org/ddnet-693575f.json?sql=SELECT+*%2C+SUM%28Points%29+FROM%0D%0A%28SELECT+race.Timestamp%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${encodeURI(
                 username,
             )}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+strftime%28%22%25Y%22%2C+Timestamp%29`,
         );
@@ -54,7 +54,7 @@ export const getUserStats = (username: string) => {
 export const getUserFavoriteServer = (username: string) => {
     return async (): Promise<string | undefined> => {
         const req = await fetch(
-            `https://ddstats.org/ddnet-0f28546.json?sql=SELECT+Server+FROM%0D%0A%28SELECT+race.Timestamp%2C+race.Server%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${username}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+Server+ORDER+BY+COUNT%28Server%29+DESC+LIMIT+1`,
+            `https://db.ddstats.org/ddnet-0f28546.json?sql=SELECT+Server+FROM%0D%0A%28SELECT+race.Timestamp%2C+race.Server%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${username}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+Server+ORDER+BY+COUNT%28Server%29+DESC+LIMIT+1`
         );
 
         return await ((await req.json()) as Response<[[string]]>).rows[0][0];
