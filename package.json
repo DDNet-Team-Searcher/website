@@ -5,7 +5,8 @@
     "server": "pnpm run --dir packages/server",
     "dev:client": "pnpm run client dev",
     "dev:server": "pnpm run server start:dev",
-    "dev": "concurrently 'pnpm:dev:*'"
+    "dev": "concurrently 'pnpm:dev:*'",
+    "test": "pnpm run server test"
   },
   "devDependencies": {
     "concurrently": "^7.6.0"

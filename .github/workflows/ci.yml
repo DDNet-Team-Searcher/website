@@ -1,0 +1,26 @@
+name: ci
+
+on: [push]
+
+jobs:
+  tests:
+    name: tests 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          npm install -g pnpm
+          pnpm install
+          pnpm run test
+
+  build:
+    name: build the backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          npm install -g pnpm
+          pnpm install
+          cd packages/server
+          npx prisma generate
+          pnpm run build
