@@ -1,6 +1,8 @@
+'use client';
+
 import { useAppSelector } from '../../utils/hooks/hooks'
 
-export const Hints = () => {
+export function Hints() {
     const hints = useAppSelector(state => state.hints.hints)
 
     return (

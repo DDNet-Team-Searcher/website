@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar } from '@/components/Avatar';
 import { Event } from '@/components/Event';
 import { Button } from '@/components/ui/Button';
@@ -9,7 +11,6 @@ import { SearchResult } from '@/types/SearchResult.type';
 import { getTier } from '@/utils/getTier';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { Run as RunT, Status } from '@/types/Happenings.type';
 import { HappeningPlace } from '@/components/HappeningPlace';
@@ -17,6 +18,7 @@ import { HappeningStartTime } from '@/components/HappeningStartTime';
 import classNames from 'classnames';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams } from 'next/navigation';
 
 type RunProps = {
     run: RunT;
@@ -276,7 +278,7 @@ function User({
 export default function Search() {
     const userId = useAppSelector((state) => state.user.user.id);
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-    const router = useRouter();
+    const searchParams = useSearchParams();
     const [page, setPage] = useState(1);
     const [moreResultsAvailable, setMoreResultsAvailable] = useState(false);
     const [searchQuery] = useLazySearchQuery();
@@ -289,7 +291,7 @@ export default function Search() {
         },
     });
 
-    const query = (router.query?.query as string) || '';
+    const query = searchParams?.get('query') || '';
 
     useEffect(() => {
         console.log(query);
@@ -319,7 +321,10 @@ export default function Search() {
                     if (res.status === 'success') {
                         if (res.data.results.length) {
                             setMoreResultsAvailable(res.data.next);
-                            setSearchResults(prev => [...prev, ...res.data.results]);
+                            setSearchResults((prev) => [
+                                ...prev,
+                                ...res.data.results,
+                            ]);
                         } else {
                             // no results, show something
                         }

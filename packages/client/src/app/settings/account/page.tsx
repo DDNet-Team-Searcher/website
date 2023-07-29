@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar } from '@/components/Avatar';
 import { ChangeEmailModal } from '@/components/ChangeEmailModal';
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';

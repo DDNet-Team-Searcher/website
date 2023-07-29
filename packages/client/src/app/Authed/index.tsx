@@ -1,3 +1,5 @@
+'use client';
+
 import { Events } from '@/components/Events';
 import { HappeningInfoModal } from '@/components/HappeningInfoModal';
 import { Runs } from '@/components/Runs';

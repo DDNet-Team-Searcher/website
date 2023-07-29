@@ -1,3 +1,5 @@
+'use client';
+
 import { AboutUsItem } from '@/components/AboutUsItem';
 import { Button } from '@/components/ui/Button';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';

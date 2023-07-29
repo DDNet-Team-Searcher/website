@@ -1,3 +1,5 @@
+'use client';
+
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
@@ -5,7 +7,8 @@ import Link from "next/link"
 import { useAppDispatch } from "@/utils/hooks/hooks"
 import { hint } from "@/store/slices/hints"
 import { useLoginMutation } from "@/features/api/users.api"
-import { useRouter } from "next/router"
+//import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { ExcludeSuccess } from "@/types/Response.type"
 import { LoginUserResponse } from "@/types/api.type"
@@ -26,7 +29,7 @@ export default function Login() {
             await loginUser(data).unwrap()
 
             dispatch(setIsAuthed(true))
-            router.push('/', undefined, { shallow: true });
+            router.push('/');
         } catch (err) {
             const error = (err as FetchBaseQueryError).data as ExcludeSuccess<LoginUserResponse>
 
@@ -41,7 +44,7 @@ export default function Login() {
             } else if (error.status === 'error') {
                 dispatch(hint({ type: "error", text: error.message }));
             }
- 
+
         }
     }
 

@@ -1,10 +1,11 @@
+'use client';
+
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { Run } from '@/components/Run';
 import { Event } from '@/components/Event';
-import { useRouter } from 'next/router';
 import {
     useFollowUserMutation,
     useLazyGetProfileQuery,
@@ -18,10 +19,13 @@ import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
 
-export default function Profile() {
-    const {
-        query: { id },
-    } = useRouter();
+type OwnProps = {
+    params: {
+        id: string;
+    };
+};
+
+export default function Profile({ params: { id } }: OwnProps) {
     const dispatch = useAppDispatch();
     const [fetchProfile] = useLazyGetProfileQuery();
     const [followUser] = useFollowUserMutation();
@@ -48,7 +52,7 @@ export default function Profile() {
                 console.log(e);
             }
         }
-    }
+    };
 
     useEffect(() => {
         refetchUserProfile();
@@ -151,7 +155,9 @@ export default function Profile() {
                                     onClick={follow}
                                     styleType={'filled'}
                                 >
-                                    {profile.isFollowing ? 'Unfollow' : 'Follow'}
+                                    {profile.isFollowing
+                                        ? 'Unfollow'
+                                        : 'Follow'}
                                 </Button>
                             </div>
                         </div>

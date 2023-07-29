@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import classNames from 'classnames';
@@ -13,9 +15,11 @@ import {
 import { CreateHappeningModal } from '../CreateHappeningModal';
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
-import { useRouter } from 'next/router';
 
-export const Header = () => {
+// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+
+export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
     const inputRef = useRef<null | HTMLInputElement>(null);
     const notificationRef = useRef<null | HTMLDivElement>(null);
@@ -215,4 +219,4 @@ export const Header = () => {
             </div>
         </header>
     );
-};
+}
