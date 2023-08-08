@@ -2,7 +2,7 @@ type OwnProps = {
     color?: string;
 };
 
-export const CalendarIcon: React.FC<OwnProps> = ({ color = '#000' }) => {
+export function CalendarIcon({ color = '#000' }: OwnProps) {
     return (
         <svg
             width="20"
@@ -34,4 +34,4 @@ export const CalendarIcon: React.FC<OwnProps> = ({ color = '#000' }) => {
             </defs>
         </svg>
     );
-};
+}

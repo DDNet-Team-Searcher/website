@@ -26,7 +26,7 @@ type OwnProps = {
     className?: string;
 };
 
-export const Run = ({ className, run }: OwnProps) => {
+export function Run({ className, run }: OwnProps) {
     const {
         description,
         id,
@@ -133,12 +133,14 @@ export const Run = ({ className, run }: OwnProps) => {
     };
 
     const onClick = () => {
-        dispatch(setHappeningInfoModalData({
-            type: Happenings.Run,
-            happeningId: run.id,
-            visible: true
-        }));
-    }
+        dispatch(
+            setHappeningInfoModalData({
+                type: Happenings.Run,
+                happeningId: run.id,
+                visible: true,
+            }),
+        );
+    };
 
     return (
         <div
@@ -265,4 +267,4 @@ export const Run = ({ className, run }: OwnProps) => {
             </div>
         </div>
     );
-};
+}

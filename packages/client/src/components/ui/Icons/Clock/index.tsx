@@ -3,7 +3,7 @@ type OwnProps = {
     className?: string;
 };
 
-export const ClockIcon = ({ color = '#000', className }: OwnProps) => {
+export function ClockIcon({ color = '#000', className }: OwnProps) {
     return (
         <svg
             className={className || ''}
@@ -25,4 +25,4 @@ export const ClockIcon = ({ color = '#000', className }: OwnProps) => {
             />
         </svg>
     );
-};
+}

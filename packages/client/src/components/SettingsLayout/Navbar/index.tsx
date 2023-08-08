@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export const Navbar = () => {
+export function Navbar() {
     const urls = [
         {
             path: 'account',
@@ -38,4 +38,4 @@ export const Navbar = () => {
             </div>
         </aside>
     );
-};
+}

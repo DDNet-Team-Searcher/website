@@ -1,4 +1,4 @@
-import { CSSProperties, PropsWithChildren } from 'react';
+import { CSSProperties } from 'react';
 import classNames from 'classnames';
 
 type OwnProps = {
@@ -11,9 +11,10 @@ type OwnProps = {
     disabled?: boolean;
     id?: string;
     form?: string;
+    children: React.ReactNode;
 };
 
-export const Button: React.FC<PropsWithChildren<OwnProps>> = ({
+export function Button({
     type = 'button',
     tabIndex,
     styleType,
@@ -22,7 +23,7 @@ export const Button: React.FC<PropsWithChildren<OwnProps>> = ({
     style,
     className,
     ...props
-}) => {
+}: OwnProps) {
     return (
         <button
             disabled={disabled}
@@ -45,4 +46,4 @@ export const Button: React.FC<PropsWithChildren<OwnProps>> = ({
             {props.children}
         </button>
     );
-};
+}

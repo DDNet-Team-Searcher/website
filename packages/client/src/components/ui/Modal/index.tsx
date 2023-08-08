@@ -11,7 +11,7 @@ interface OwnProps {
     style?: React.CSSProperties;
 }
 
-export const Modal = ({
+export function Modal({
     visible,
     onClose,
     children,
@@ -19,7 +19,7 @@ export const Modal = ({
     width,
     style,
     className,
-}: OwnProps) => {
+}: OwnProps) {
     if (typeof window !== 'undefined') {
         if (visible) document.body.classList.add('no-scroll');
         if (!visible) document.body.classList.remove('no-scroll');
@@ -50,4 +50,4 @@ export const Modal = ({
             </div>
         </div>
     );
-};
+}

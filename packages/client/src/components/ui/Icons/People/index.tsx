@@ -3,7 +3,7 @@ type OwnProps = {
     className?: string;
 };
 
-export const PeopleIcon = ({ color = '#000', className }: OwnProps) => {
+export function PeopleIcon({ color = '#000', className }: OwnProps) {
     return (
         <svg
             className={className || ''}
@@ -21,4 +21,4 @@ export const PeopleIcon = ({ color = '#000', className }: OwnProps) => {
             />
         </svg>
     );
-};
+}

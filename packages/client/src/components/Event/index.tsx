@@ -1,7 +1,11 @@
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
-import { Event as EventType, Happenings, Status } from '@/types/Happenings.type';
+import {
+    Event as EventType,
+    Happenings,
+    Status,
+} from '@/types/Happenings.type';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import Link from 'next/link';
 import { hint } from '@/store/slices/hints';
@@ -26,7 +30,7 @@ type OwnProps = {
     className?: string;
 };
 
-export const Event = ({ className, event }: OwnProps) => {
+export function Event({ className, event }: OwnProps) {
     const {
         description,
         id,
@@ -132,14 +136,18 @@ export const Event = ({ className, event }: OwnProps) => {
     };
 
     const onClick = () => {
-        dispatch(setHappeningInfoModalData({
-            type: Happenings.Event,
-            happeningId: event.id,
-            visible: true
-        }));
-    }
+        dispatch(
+            setHappeningInfoModalData({
+                type: Happenings.Event,
+                happeningId: event.id,
+                visible: true,
+            }),
+        );
+    };
 
-    const thumbnailUrl = thumbnail || `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
+    const thumbnailUrl =
+        thumbnail ||
+        `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
 
     return (
         <div
@@ -268,4 +276,4 @@ export const Event = ({ className, event }: OwnProps) => {
             </div>
         </div>
     );
-};
+}

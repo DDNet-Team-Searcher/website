@@ -2,15 +2,12 @@ import { Status } from '@/types/Happenings.type';
 import classNames from 'classnames';
 import { CalendarIcon } from '../ui/Icons/Calendar';
 
-interface EventStartTimeProps {
+type OwnProps = {
     startAt: string;
     status: Status;
-}
+};
 
-export const HappeningStartTime: React.FC<EventStartTimeProps> = ({
-    startAt,
-    status,
-}) => {
+export function HappeningStartTime({ startAt, status }: OwnProps) {
     const startDateWithWeekday = new Date(startAt).toLocaleDateString([], {
         month: 'short',
         weekday: 'short',
@@ -48,4 +45,4 @@ export const HappeningStartTime: React.FC<EventStartTimeProps> = ({
             </span>
         </div>
     );
-};
+}

@@ -8,11 +8,12 @@ type OwnProps = {
     children: ReactNode;
 };
 
-export const RouteGuard = ({ children }: OwnProps) => {
+export function RouteGuard({ children }: OwnProps) {
     const publicUrls = ['/', '/login', '/register'];
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
     const router = useRouter();
 
+    //FIXME: fixme =]
     // if (
     //     isAuthed === false &&
     //     !publicUrls.includes(router.asPath.split('?')[0])
@@ -21,4 +22,4 @@ export const RouteGuard = ({ children }: OwnProps) => {
     // }
 
     return <>{children}</>;
-};
+}

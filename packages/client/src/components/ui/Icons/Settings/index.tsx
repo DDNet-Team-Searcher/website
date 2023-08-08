@@ -2,7 +2,7 @@ type OwnProps = {
     size?: number;
 };
 
-export const SettingsIcon = ({ size }: OwnProps) => {
+export function SettingsIcon({ size }: OwnProps) {
     return (
         <svg
             width={size || 32}
@@ -20,4 +20,4 @@ export const SettingsIcon = ({ size }: OwnProps) => {
             />
         </svg>
     );
-};
+}

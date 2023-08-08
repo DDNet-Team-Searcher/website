@@ -20,12 +20,7 @@ export default function RootLayout({
         <Provider>
             <html lang="en">
                 <body className="bg-gradient-to-b from-[#181510] to-[#201506]">
-                    <HappeningInfoModal
-                        // happeningId={happeningInfoModalData.happeningId}
-                        // onClose={onClose}
-                        // type={happeningInfoModalData.type}
-                        // visible={happeningInfoModalData.visible}
-                    />
+                    <HappeningInfoModal />
                     <Header />
                     <Hints />
                     <RouteGuard>{children}</RouteGuard>

@@ -2,7 +2,7 @@ import { useGetAllRunsQuery } from '@/features/api/happenings.api';
 import { useAppSelector } from '@/utils/hooks/hooks';
 import { Run } from '../Run';
 
-export const Runs = () => {
+export function Runs() {
     useGetAllRunsQuery();
     const runs = useAppSelector((state) => state.happenings.runs);
 
@@ -15,4 +15,4 @@ export const Runs = () => {
             </div>
         </>
     );
-};
+}

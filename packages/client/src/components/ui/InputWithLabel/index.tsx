@@ -15,7 +15,7 @@ interface OwnProps {
     type?: string;
 }
 
-export const InputWithLabel = ({
+export function InputWithLabel({
     id,
     required,
     className,
@@ -24,7 +24,7 @@ export const InputWithLabel = ({
     register,
     errors,
     ...props
-}: OwnProps) => {
+}: OwnProps) {
     const rand = Math.random(); //TODO: replace it with uuid
     const fieldName = register.name;
     const error = (errors || {})[fieldName]?.message as string;
@@ -65,4 +65,4 @@ export const InputWithLabel = ({
             )}
         </div>
     );
-};
+}

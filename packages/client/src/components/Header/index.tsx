@@ -15,8 +15,6 @@ import {
 import { CreateHappeningModal } from '../CreateHappeningModal';
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
-
-// import { useRouter } from 'next/router';
 import { useRouter } from 'next/navigation';
 
 export function Header() {

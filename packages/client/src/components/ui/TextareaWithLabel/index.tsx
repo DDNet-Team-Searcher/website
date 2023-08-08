@@ -12,15 +12,13 @@ type OwnProps = {
     [key: string]: any;
 };
 
-export const TextareaWithLabel = ({
+export function TextareaWithLabel({
     className,
     required,
     label,
     register,
     ...props
-}: OwnProps) => {
-    const rand = Math.random();
-
+}: OwnProps) {
     return (
         <div
             className={classNames('flex flex-col w-full', {
@@ -28,7 +26,6 @@ export const TextareaWithLabel = ({
             })}
         >
             <label
-                // htmlFor={id + '' + rand}
                 className="text-[12px] uppercase w-full resize-none"
             >
                 {label}
@@ -41,8 +38,7 @@ export const TextareaWithLabel = ({
                     { [className?.textarea || '']: className?.textarea },
                 )}
                 {...props}
-            // id={id + '' + rand}
             />
         </div>
     );
-};
+}

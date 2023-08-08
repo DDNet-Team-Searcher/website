@@ -9,12 +9,7 @@ interface OwnProps {
     className?: string;
 }
 
-export const Avatar: React.FC<OwnProps> = ({
-    src,
-    username,
-    size = 20,
-    className,
-}) => {
+export function Avatar({ src, username, size = 20, className }: OwnProps) {
     const color = '#' + intToRGB(stringToNum(username));
 
     return (
@@ -32,8 +27,11 @@ export const Avatar: React.FC<OwnProps> = ({
                     {username[0]}
                 </p>
             ) : (
-                <img className='w-full h-full rounded-full object-cover' src={src} />
+                <img
+                    className="w-full h-full rounded-full object-cover"
+                    src={src}
+                />
             )}
         </div>
     );
-};
+}

@@ -7,7 +7,7 @@ type OwnProps = {
     className?: string;
 };
 
-export const SettingsLayout = ({ children, className }: OwnProps) => {
+export function SettingsLayout({ children, className }: OwnProps) {
     return (
         <main className="max-w-[1110px] mx-auto flex mt-24">
             <Navbar />
@@ -20,4 +20,4 @@ export const SettingsLayout = ({ children, className }: OwnProps) => {
             </section>
         </main>
     );
-};
+}

@@ -13,7 +13,7 @@ type OwnProps = {
     notification: NotificationT;
 };
 
-export const Notification = ({ notification }: OwnProps) => {
+export function Notification({ notification }: OwnProps) {
     const [setNotificationSeen] = useLazySetNotificationSeenQuery();
     const { ref } = useInView({
         onChange: (inView) => {
@@ -51,7 +51,8 @@ export const Notification = ({ notification }: OwnProps) => {
                                     : ' deleted '}
                             {notification.happening?.type === Happenings.Event
                                 ? 'event'
-                                : notification.happening?.type === Happenings.Run
+                                : notification.happening?.type ===
+                                    Happenings.Run
                                     ? 'run'
                                     : 'happening'}
                             :D
@@ -66,4 +67,4 @@ export const Notification = ({ notification }: OwnProps) => {
             </div>
         </li>
     );
-};
+}

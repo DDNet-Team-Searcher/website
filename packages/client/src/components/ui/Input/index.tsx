@@ -13,14 +13,14 @@ type OwnProps = {
     };
 };
 
-export const Input = ({
+export function Input({
     placeholder,
     register,
     errors,
     type,
     classes,
     ...props
-}: OwnProps) => {
+}: OwnProps) {
     const errorIcon = '/error.png';
     const fieldName = register.name;
     const error = errors[fieldName]?.message as string;
@@ -29,7 +29,10 @@ export const Input = ({
         <div
             className={classNames(
                 'relative [&>input:not(:placeholder-shown)+span::before]:opacity-100 [&>input:not(:placeholder-shown)]:pt-[15px] [&>input:not(:placeholder-shown)]:pb-[5px]',
-                { [classes && classes.container || '']: classes && !!classes.container },
+                {
+                    [(classes && classes.container) || '']:
+                        classes && !!classes.container,
+                },
             )}
         >
             <input
@@ -39,7 +42,10 @@ export const Input = ({
                 placeholder={placeholder}
                 className={classNames(
                     'transition-all duration-300 border-[1px] bg-[rgba(0,0,0,.45)] border-[rgba(0,0,0,0)] rounded-[10px] py-2.5 px-[12px] text-[white] outline-0 focus:border-primary-1',
-                    { [classes && classes.input || '']: classes && !!classes.input },
+                    {
+                        [(classes && classes.input) || '']:
+                            classes && !!classes.input,
+                    },
                 )}
                 type={type ?? 'text'}
             />
@@ -57,4 +63,4 @@ export const Input = ({
             )}
         </div>
     );
-};
+}

@@ -4,7 +4,7 @@ type OwnProps = {
     place: Place;
 };
 
-export const HappeningPlace: React.FC<OwnProps> = ({ place }) => {
+export function HappeningPlace({ place }: OwnProps) {
     return (
         <div className="flex items-center font-semibold mt-2.5">
             <img src="/run-place.svg" />
@@ -13,4 +13,4 @@ export const HappeningPlace: React.FC<OwnProps> = ({ place }) => {
             </span>
         </div>
     );
-};
+}
