@@ -6,9 +6,9 @@ type OwnProps = {
     review: ReviewT;
 };
 
-export const Review = ({
+export function Review({
     review: { createdAt, author, rate, reviewedUser, review },
-}: OwnProps) => {
+}: OwnProps) {
     return (
         <div className=" rounded-[10px] bg-primary-3 pt-2.5 [&:not(:first-child)]:mt-2.5">
             <div className="flex items-center px-2.5">

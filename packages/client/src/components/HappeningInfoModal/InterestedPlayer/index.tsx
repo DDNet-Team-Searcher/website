@@ -24,13 +24,13 @@ type OwnProps = {
     alreadyReviewed: boolean;
 };
 
-export const InterestedPlayer = ({
+export function InterestedPlayer({
     user,
     happening,
     authedUserId,
     onChange,
     alreadyReviewed
-}: OwnProps) => {
+}: OwnProps) {
     const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
     const [createReview] = useCreateReviewMutation();
     const defaultValues = {
@@ -39,24 +39,6 @@ export const InterestedPlayer = ({
     };
 
     const { handleSubmit, register, formState: { errors } } = useForm({ defaultValues });
-
-    // const onSubmit = (values: typeof defaultValues) => {
-    //
-    // }
-    // const validateRateField = (value: string | number | null) =>
-    //     composeValidators(value, [required]);
-    //
-    // const validation = (values: CreateReviewForm) => {
-    //     console.log(values);
-    //
-    //     const errors: { [key in keyof Partial<CreateReviewForm>]: any } = {};
-    //
-    //     const rateField = validateRateField(values.rate);
-    //
-    //     if (rateField) errors.rate = rateField;
-    //
-    //     return errors;
-    // };
 
     const onSubmit = async (values: typeof defaultValues) => {
         try {
@@ -131,7 +113,7 @@ export const InterestedPlayer = ({
                             className="flex [&:not(:first-child)]:ml-5 items-center"
                             key={id}
                         >
-                            <RadioInput register={register('rate')} value={num}  title='' subtitle='' id={'lol'} />
+                            <RadioInput register={register('rate')} value={num} title='' subtitle='' id={'lol'} />
                             {/*
                             <Field
                                 id={id.toString()}

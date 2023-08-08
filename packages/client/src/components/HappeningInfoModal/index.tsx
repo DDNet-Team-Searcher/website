@@ -1,5 +1,7 @@
+'use client';
+
 import { Modal } from '@/components/ui/Modal';
-import { useAppSelector } from '@/utils/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
 import { useState } from 'react';
 import classNames from 'classnames';
@@ -9,20 +11,14 @@ import { HappeningPlace } from '../HappeningPlace';
 import { useGetHappeningInterestedPlayersQuery, useGetReviewsQuery, useUpdateIsPlayerInTeamMutation } from '@/features/api/happenings.api';
 import { InterestedPlayer } from './InterestedPlayer';
 import { Review } from './Review';
+import { setHappeningInfoModalData } from '@/store/slices/app';
 
-type OwnProps = {
-    visible: boolean;
-    happeningId: number | null;
-    onClose: () => void;
-    type: Happenings | null;
-};
+export function HappeningInfoModal() {
+    const dispatch = useAppDispatch();
+    const { type, visible, happeningId } = useAppSelector(
+        (state) => state.app.happeningInfoModal,
+    );
 
-export const HappeningInfoModal = ({
-    type,
-    happeningId,
-    onClose,
-    visible,
-}: OwnProps) => {
     const happening = useAppSelector(
         (state) =>
             state.happenings[
@@ -40,6 +36,16 @@ export const HappeningInfoModal = ({
     }
 
     const [slideNum, setSlideNum] = useState(0);
+
+    const onClose = () => {
+        dispatch(
+            setHappeningInfoModalData({
+                type: null,
+                happeningId: null,
+                visible: false,
+            }),
+        );
+    };
 
     if (!happening) return <></>;
 

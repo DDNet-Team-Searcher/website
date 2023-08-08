@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
-import { Run as RunType, Status } from '@/types/Happenings.type';
+import { Happenings, Run as RunType, Status } from '@/types/Happenings.type';
 import Link from 'next/link';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import { HappeningStartTime } from '../HappeningStartTime';
@@ -19,14 +19,14 @@ import {
     setHappeningStatus,
     setIsInterestedInHappening,
 } from '@/store/slices/happenings';
+import { setHappeningInfoModalData } from '@/store/slices/app';
 
 type OwnProps = {
     run: RunType;
-    onClick: (arg: number) => void;
     className?: string;
 };
 
-export const Run = ({ className, onClick, run }: OwnProps) => {
+export const Run = ({ className, run }: OwnProps) => {
     const {
         description,
         id,
@@ -132,6 +132,14 @@ export const Run = ({ className, onClick, run }: OwnProps) => {
         //         // dispatch(setEditingHappeningType("run"))
     };
 
+    const onClick = () => {
+        dispatch(setHappeningInfoModalData({
+            type: Happenings.Run,
+            happeningId: run.id,
+            visible: true
+        }));
+    }
+
     return (
         <div
             className={classNames(
@@ -164,7 +172,7 @@ export const Run = ({ className, onClick, run }: OwnProps) => {
                 <HappeningPlace place={place} />
                 <p
                     className="mt-4 text-high-emphasis font-semibold cursor-pointer"
-                    onClick={() => onClick(id)}
+                    onClick={onClick}
                 >
                     {mapName}
                 </p>

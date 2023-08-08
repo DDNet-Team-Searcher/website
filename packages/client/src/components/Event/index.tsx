@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
-import { Event as EventType, Status } from '@/types/Happenings.type';
+import { Event as EventType, Happenings, Status } from '@/types/Happenings.type';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import Link from 'next/link';
 import { hint } from '@/store/slices/hints';
@@ -19,14 +19,14 @@ import {
 import { HappeningStartTime } from '../HappeningStartTime';
 import { Avatar } from '../Avatar';
 import { HappeningPlace } from '../HappeningPlace';
+import { setHappeningInfoModalData } from '@/store/slices/app';
 
 type OwnProps = {
     event: EventType;
-    onClick: (arg: number) => void;
     className?: string;
 };
 
-export const Event = ({ className, onClick, event }: OwnProps) => {
+export const Event = ({ className, event }: OwnProps) => {
     const {
         description,
         id,
@@ -131,6 +131,14 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
         // dispatch(setEditingHappeningType("event"))
     };
 
+    const onClick = () => {
+        dispatch(setHappeningInfoModalData({
+            type: Happenings.Event,
+            happeningId: event.id,
+            visible: true
+        }));
+    }
+
     const thumbnailUrl = thumbnail || `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
 
     return (
@@ -157,7 +165,7 @@ export const Event = ({ className, onClick, event }: OwnProps) => {
                     <div>
                         <p
                             className="text-high-emphasis font-semibold cursor-pointer"
-                            onClick={() => onClick(id)}
+                            onClick={onClick}
                         >
                             {title}
                         </p>
