@@ -1,25 +1,25 @@
-import { useUpdateUsernameMutation } from '@/features/api/users.api';
-import { UpdateUsernameResponse } from '@/types/api.type';
+import { useUpdateEmailMutation } from '@/features/api/users.api';
+import { UpdateEmailRespone } from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';
-import { Button } from '../ui/Button';
-import { InputWithLabel } from '../ui/InputWithLabel';
-import { Modal } from '../ui/Modal';
-import { updateUsername as updateUsernameInStore } from '@/store/slices/user';
+import { Button } from '@/components/ui/Button';
+import { InputWithLabel } from '@/components/ui/InputWithLabel';
+import { Modal } from '@/components/ui/Modal';
+import { updateEmail as updateEmailInStore } from '@/store/slices/user';
 
 type OwnProps = {
     visible: boolean;
     onClose: () => void;
 };
 
-export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
+export function ChangeEmailModal({ visible, onClose }: OwnProps) {
     const dispatch = useAppDispatch();
-    const [updateUsername] = useUpdateUsernameMutation();
+    const [updateEmail] = useUpdateEmailMutation();
 
     const defaultValues = {
-        username: '',
+        email: '',
         password: '',
     };
 
@@ -35,13 +35,13 @@ export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
 
     const onSubmit = async (data: typeof defaultValues) => {
         try {
-            await updateUsername(data).unwrap();
-            dispatch(updateUsernameInStore(data.username));
+            await updateEmail(data).unwrap();
+            dispatch(updateEmailInStore(data.email));
             reset();
             onClose();
         } catch (err) {
             const error = (err as FetchBaseQueryError)
-                .data as ExcludeSuccess<UpdateUsernameResponse>;
+                .data as ExcludeSuccess<UpdateEmailRespone>;
 
             if (error.status === 'fail') {
                 if (Object.keys(error.data)) {
@@ -59,19 +59,20 @@ export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
         <Modal onClose={onClose} visible={visible}>
             <div className="p-5">
                 <p className="text-3xl text-center text-high-emphasis font-semibold">
-                    Change your username
+                    Change your email
                 </p>
                 <p className="text-xs text-center text-medium-emphasis mt-4">
-                    Enter a new username and your passord
+                    Enter a new email and your passord
                 </p>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    id="change-username"
+                    id="change-email"
                     className="mt-10"
                 >
                     <InputWithLabel
-                        label="Username"
-                        register={register('username')}
+                        label="Email"
+                        type="email"
+                        register={register('email')}
                         errors={errors}
                     />
                     <InputWithLabel
@@ -84,7 +85,7 @@ export const ChangeUsernameModal = ({ visible, onClose }: OwnProps) => {
             </div>
             <div className="flex justify-between mt-9 px-5 rounded-b-[10px] py-2.5 bg-primary-3">
                 <Button styleType="bordered">Cancel</Button>
-                <Button styleType="filled" type="submit" form="change-username">
+                <Button styleType="filled" type="submit" form="change-email">
                     Done
                 </Button>
             </div>

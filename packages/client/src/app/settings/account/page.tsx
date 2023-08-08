@@ -1,10 +1,10 @@
 'use client';
 
 import { Avatar } from '@/components/Avatar';
-import { ChangeEmailModal } from '@/components/ChangeEmailModal';
-import { ChangePasswordModal } from '@/components/ChangePasswordModal';
-import { ChangeUsernameModal } from '@/components/ChangeUsernameModal';
-import { DeleteAccountModal } from '@/components/DeleteAccountModal';
+import { ChangeEmailModal } from './ChangeEmailModal';
+import { ChangePasswordModal } from './ChangePasswordModal';
+import { ChangeUsernameModal } from './ChangeUsernameModal';
+import { DeleteAccountModal } from './DeleteAccountModal';
 import { SettingsLayout } from '@/components/SettingsLayout';
 import { Button } from '@/components/ui/Button';
 import { useUpdateAvatarMutation } from '@/features/api/users.api';

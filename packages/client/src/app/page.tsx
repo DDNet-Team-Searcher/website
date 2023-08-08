@@ -9,7 +9,7 @@ const Guest = dynamic(() => import('./Guest'));
 export default function Home() {
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
 
-    if (!!isAuthed) {
+    if (isAuthed === true) {
         return <Authed />;
     } else if (isAuthed === false) {
         return <Guest />;

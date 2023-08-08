@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 export const Navbar = () => {
     const urls = [
@@ -13,7 +13,7 @@ export const Navbar = () => {
             name: 'Notifications',
         },
     ];
-    const router = useRouter();
+    const pathname = usePathname();
 
     return (
         <aside className="basis-[170px]">
@@ -28,7 +28,7 @@ export const Navbar = () => {
                             'block mt-0.5 rounded-[10px] p-2.5 text-medium-emphasis max-w-[170px] w-full',
                             {
                                 'bg-primary-2 !text-high-emphasis':
-                                    router.pathname === `/settings/${url.path}`,
+                                    pathname === `/settings/${url.path}`,
                             },
                         )}
                     >

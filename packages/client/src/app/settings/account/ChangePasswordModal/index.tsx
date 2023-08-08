@@ -3,16 +3,16 @@ import { UpdatePasswordResponse } from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';
-import { Button } from '../ui/Button';
-import { InputWithLabel } from '../ui/InputWithLabel';
-import { Modal } from '../ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { InputWithLabel } from '@/components/ui/InputWithLabel';
+import { Modal } from '@/components/ui/Modal';
 
 type OwnProps = {
     visible: boolean;
     onClose: () => void;
 };
 
-export const ChangePasswordModal = ({ visible, onClose }: OwnProps) => {
+export function ChangePasswordModal({ visible, onClose }: OwnProps) {
     const [updatePassword] = useUpdatePasswordMutation();
 
     const defaultValues = {

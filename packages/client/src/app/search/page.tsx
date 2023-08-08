@@ -295,7 +295,7 @@ export default function Search() {
 
     useEffect(() => {
         console.log(query);
-        setPage(1);
+        // setPage(1);
         setMoreResultsAvailable(false);
         if (query !== '') {
             searchQuery({ query, page })
@@ -314,7 +314,7 @@ export default function Search() {
     }, [query]);
 
     useEffect(() => {
-        if (query !== '') {
+        if (query !== '' && page != 1) {
             searchQuery({ query, page })
                 .unwrap()
                 .then((res) => {
