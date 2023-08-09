@@ -8,6 +8,7 @@ import {
     GetAllRunsResponse,
     GetInterestedUsersResponse,
     GetReviewsResponse,
+    StartHappeningResponse,
 } from '@/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
@@ -31,8 +32,7 @@ export const happeningsApi = createApi({
                 body: intoFormData(body),
             }),
         }),
-        //TODO: add response type
-        startHappening: build.query<string, number>({
+        startHappening: build.query<StartHappeningResponse, number>({
             query: (id) => `/${id}/start`,
         }),
         //TODO: add response type

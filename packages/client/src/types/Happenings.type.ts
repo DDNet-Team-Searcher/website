@@ -2,6 +2,7 @@ export enum Status {
     NotStarted = 'NotStarted',
     Happening = 'Happening',
     Finished = 'Finished',
+    InQueue = 'InQueue',
 }
 export enum Happenings {
     Run,

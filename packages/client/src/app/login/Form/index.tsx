@@ -44,7 +44,6 @@ export function Form() {
             } else if (error.status === 'error') {
                 dispatch(hint({ type: "error", text: error.message }));
             }
-
         }
     }
     return (

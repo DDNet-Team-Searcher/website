@@ -1,8 +1,10 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
     Get,
+    HttpException,
     InternalServerErrorException,
     Param,
     Post,
@@ -26,9 +28,7 @@ import { Event, Run } from 'src/types/Happenings.type';
 @UseGuards(AuthorGuard)
 @Controller()
 export class HappeningsController {
-    constructor(
-        private readonly happeningsService: HappeningsService,
-    ) { }
+    constructor(private readonly happeningsService: HappeningsService) {}
 
     @Protected()
     @Post('/create/run')
@@ -93,17 +93,31 @@ export class HappeningsController {
     @Get('/:id/start')
     async startHappening(@Req() req) {
         try {
-            await this.happeningsService.startHappening(
+            const success = await this.happeningsService.startHappening(
                 parseInt(req.params.id),
             );
+
+            if (!success) {
+                throw new InternalServerErrorException({
+                    status: 'fail',
+                    data: {
+                        reason: 'NO_EMPTY_SERVERS',
+                    },
+                    message: 'Im sorry but all servers are in use',
+                });
+            }
 
             return {
                 status: 'success',
                 data: null,
             };
         } catch (e) {
-            console.log(e);
-            throw new InternalServerErrorException();
+            if (e instanceof HttpException) {
+                throw e;
+            } else {
+                console.log(e);
+                throw new InternalServerErrorException();
+            }
         }
     }
 

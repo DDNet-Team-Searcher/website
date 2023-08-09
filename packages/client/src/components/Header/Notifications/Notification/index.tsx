@@ -23,6 +23,41 @@ export function Notification({ notification }: OwnProps) {
         },
     });
 
+    let string = '';
+
+    if (notification.type == NotificationType.InterestedInHappening) {
+        string = `${notification.author.username || 'deleted user'
+            } is interested in your ${notification.happening.type === Happenings.Event
+                ? notification.happening.title
+                : notification.happening.mapName
+            } ${notification.happening.type === Happenings.Event ? 'event' : 'run'}`;
+    } else if (notification.type == NotificationType.NoEmptyServers) {
+        string = `Sadly you cant play on our servers coz there're no empty servers`;
+    }
+
+    // {notification.type ===
+    //     NotificationType.InterestedInHappening ? (
+    //     <>
+    //         {notification.author.username || 'deleted user'} is
+    //         interested in your
+    //         {notification.happening?.type === Happenings.Event
+    //             ? ` '${notification.happening.title}' `
+    //             : notification.happening?.type ===
+    //                 Happenings.Run
+    //                 ? ` '${notification.happening.mapName}' `
+    //                 : ' deleted '}
+    //         {notification.happening?.type === Happenings.Event
+    //             ? 'event'
+    //             : notification.happening?.type ===
+    //                 Happenings.Run
+    //                 ? 'run'
+    //                 : 'happening'}
+    //         :D
+    //     </>
+    // ) : (
+    //     ''
+    // )}
+
     return (
         <li className="mt-[15px] flex" ref={ref}>
             {notification.type === NotificationType.InterestedInHappening && (
@@ -37,30 +72,7 @@ export function Notification({ notification }: OwnProps) {
                 </Link>
             )}
             <div className="ml-[10px]">
-                <p className="align-top">
-                    {notification.type ===
-                        NotificationType.InterestedInHappening ? (
-                        <>
-                            {notification.author.username || 'deleted user'} is
-                            interested in your
-                            {notification.happening?.type === Happenings.Event
-                                ? ` '${notification.happening.title}' `
-                                : notification.happening?.type ===
-                                    Happenings.Run
-                                    ? ` '${notification.happening.mapName}' `
-                                    : ' deleted '}
-                            {notification.happening?.type === Happenings.Event
-                                ? 'event'
-                                : notification.happening?.type ===
-                                    Happenings.Run
-                                    ? 'run'
-                                    : 'happening'}
-                            :D
-                        </>
-                    ) : (
-                        ''
-                    )}
-                </p>
+                <p className="align-top">{string}</p>
                 <span className="text-[12px] text-medium-emphasis align-top">
                     {timeAgo.format(new Date(notification.createdAt!))}
                 </span>

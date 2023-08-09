@@ -197,7 +197,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                             >
                                 <RadioInput
                                     title={'Our own servers.'}
-                                    value="HERE"
+                                    value={val.value}
                                     subtitle={
                                         'You will have less change to get ddosed.'
                                     }

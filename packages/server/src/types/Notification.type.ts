@@ -12,22 +12,24 @@ export type NotificationJson<T = NotificationType> = T extends Extract<
     'Followage'
 >
     ? {
-        userId: number;
-    }
+          userId: number;
+      }
     : T extends Extract<NotificationType, 'AddedInTeam'>
     ? {
-        happeningId: number;
-    }
+          happeningId: number;
+      }
     : T extends Extract<NotificationType, 'RemovedFromTeam'>
     ? {
-        happeningId: number;
-    }
+          happeningId: number;
+      }
     : T extends Extract<NotificationType, 'InterestedInHappening'>
     ? {
-        userId: number;
-        happeningId: number;
-    }
+          userId: number;
+          happeningId: number;
+      }
     : T extends Extract<NotificationType, 'MadeAnAccountPOG'>
+    ? {} 
+    : T extends Extract<NotificationType, 'NoEmptyServers'>
     ? {}
     : never;
 
@@ -55,8 +57,16 @@ type IdkHowToCallIt<T extends NotificationType> = Omit<
 };
 
 export type Notification =
-    | (IdkHowToCallIt<Extract<NotificationType, 'Followage'>> & Author & Happening)
-    | (IdkHowToCallIt<Extract<NotificationType, 'AddedInTeam'>> & Author & Happening)
-    | (IdkHowToCallIt<Extract<NotificationType, 'RemovedFromTeam'>> & Author & Happening)
-    | (IdkHowToCallIt<Extract<NotificationType, 'InterestedInHappening'>> & Author & Happening)
-    | (IdkHowToCallIt<Extract<NotificationType, 'MadeAnAccountPOG'>>);
+    | (IdkHowToCallIt<Extract<NotificationType, 'Followage'>> &
+          Author &
+          Happening)
+    | (IdkHowToCallIt<Extract<NotificationType, 'AddedInTeam'>> &
+          Author &
+          Happening)
+    | (IdkHowToCallIt<Extract<NotificationType, 'RemovedFromTeam'>> &
+          Author &
+          Happening)
+    | (IdkHowToCallIt<Extract<NotificationType, 'InterestedInHappening'>> &
+          Author &
+          Happening)
+    | IdkHowToCallIt<Extract<NotificationType, 'MadeAnAccountPOG'>>;

@@ -6,6 +6,7 @@ export enum NotificationType {
     AddedInTeam = 'AddedInTeam',
     RemovedFromTeam = 'RemovedFromTeam',
     MadeAnAccountPOG = 'MadeAnAccountPOG',
+    NoEmptyServers = 'NoEmptyServers',
 }
 
 export type NotificationJson<T = NotificationType> = T extends Extract<
@@ -29,6 +30,8 @@ export type NotificationJson<T = NotificationType> = T extends Extract<
           happeningId: number;
       }
     : T extends Extract<NotificationType, 'MadeAnAccountPOG'>
+    ? {}
+    : T extends Extract<NotificationType, 'NoEmptyServers'>
     ? {}
     : never;
 
@@ -60,4 +63,5 @@ export type Notification =
     | (Common<NotificationType.InterestedInHappening> & Author & Happening)
     | (Common<NotificationType.AddedInTeam> & Author & Happening)
     | (Common<NotificationType.RemovedFromTeam> & Author & Happening)
-    | Common<NotificationType.MadeAnAccountPOG>;
+    | Common<NotificationType.MadeAnAccountPOG>
+    | Common<NotificationType.NoEmptyServers>;

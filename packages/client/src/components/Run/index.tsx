@@ -20,6 +20,9 @@ import {
     setIsInterestedInHappening,
 } from '@/store/slices/happenings';
 import { setHappeningInfoModalData } from '@/store/slices/app';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { ExcludeSuccess } from '@/types/Response.type';
+import { StartHappeningResponse } from '@/types/api.type';
 
 type OwnProps = {
     run: RunType;
@@ -101,8 +104,23 @@ export function Run({ className, run }: OwnProps) {
                         status: Status.Happening,
                     }),
                 );
-            } catch (e) {
-                console.log(e);
+            } catch (err) {
+                const error = (err as FetchBaseQueryError)
+                    .data as ExcludeSuccess<StartHappeningResponse>;
+
+                if (
+                    error.status === 'fail' &&
+                    error.data.reason == 'NO_EMPTY_SERVERS'
+                ) {
+                    dispatch(
+                        hint({
+                            type: 'error',
+                            text: error.message!,
+                        }),
+                    );
+                }
+
+                console.log(err);
             }
         };
     };

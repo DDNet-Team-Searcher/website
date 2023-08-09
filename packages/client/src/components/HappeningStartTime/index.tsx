@@ -21,17 +21,19 @@ export function HappeningStartTime({ startAt, status }: OwnProps) {
 
     return (
         <div className="flex items-center">
-            <CalendarIcon
-                color={
-                    status === Status.NotStarted
-                        ? 'var(--app-primary-1)'
-                        : status === Status.Happening
-                            ? 'var(--app-success)'
-                            : status === Status.Finished
-                                ? 'var(--app-error)'
-                                : ''
-                }
-            />
+            {status != Status.InQueue && (
+                <CalendarIcon
+                    color={
+                        status === Status.NotStarted
+                            ? 'var(--app-primary-1)'
+                            : status === Status.Happening
+                                ? 'var(--app-success)'
+                                : status === Status.Finished
+                                    ? 'var(--app-error)'
+                                    : ''
+                    }
+                />
+            )}
             <span
                 className={classNames(
                     'text-[12px] ml-2.5 font-semibold text-medium-emphasis',
@@ -42,6 +44,7 @@ export function HappeningStartTime({ startAt, status }: OwnProps) {
                     `${startDateWithWeekday}th ∙ ${startTime}`}
                 {status === Status.Happening && `Happening Now`}
                 {status === Status.Finished && `Finished`}
+                {status === Status.InQueue && `In Queue To Be Started`}
             </span>
         </div>
     );

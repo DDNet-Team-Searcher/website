@@ -13,7 +13,6 @@ import { Event, Run } from 'src/types/Happenings.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
-import { GameServersService } from 'src/gamerservers/gameservers.service';
 import { ServersService } from 'src/servers/servers.service';
 
 @Injectable()
@@ -21,7 +20,6 @@ export class HappeningsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
-        private readonly gameServersService: GameServersService,
         private readonly serversService: ServersService,
     ) { }
 
@@ -58,42 +56,46 @@ export class HappeningsService {
             data: {
                 ...data,
                 thumbnail: filename,
-                place: data.place ? 'THERE' : 'HERE',
+                //@ts-ignore NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
+                place: parseInt(data.place) ? 'THERE' : 'HERE',
                 endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
                 type: 'Event',
+                interestedPlayers: {
+                    create: {
+                        userId: data.authorId,
+                        inTeam: true,
+                    },
+                },
             },
         });
     }
 
-    //@ts-ignore FIXME: Function lacks ending return statement and return type does not include 'undefined'.
-    async startHappening(id: number): Promise<Happening> {
+    async startHappening(id: number): Promise<boolean> {
         const happeningPlace = await this.getHappeningPlace(id);
 
         if (happeningPlace === 'HERE') {
             const serverId = await this.serversService.findEmptyServer();
-            const mapName = (
-                await this.prismaService.happening.findFirst({
-                    where: {
-                        id,
-                    },
-                    select: {
-                        mapName: true,
-                    },
-                })
-            )!.mapName;
+            const mapName = (await this.prismaService.happening.findFirst({
+                where: {
+                    id,
+                },
+                select: {
+                    mapName: true,
+                },
+            }))!.mapName;
 
             if (serverId) {
                 const serverData = (await this.serversService.getServerData(
                     serverId,
                 ))!; //NOTE: this is fine
                 const { port, password } =
-                    await this.gameServersService.startServer(serverId, {
+                    await this.serversService.startServer(serverId, {
                         mapName,
                         id,
                     });
 
-                return await this.prismaService.happening.update({
+                await this.prismaService.happening.update({
                     where: {
                         id,
                     },
@@ -103,9 +105,13 @@ export class HappeningsService {
                         connectString: `connect ${serverData.ip}:${port}; password ${password}`,
                     },
                 });
+
+                return true;
             }
+
+            return false;
         } else {
-            return await this.prismaService.happening.update({
+            await this.prismaService.happening.update({
                 where: {
                     id,
                 },
@@ -113,27 +119,24 @@ export class HappeningsService {
                     status: 'Happening',
                 },
             });
-        }
 
-        // all servers are full 😭
-        //TODO: return something here?
+            return true;
+        }
     }
 
     async endHappening(id: number): Promise<Happening> {
         const happeningPlace = await this.getHappeningPlace(id);
-        if (happeningPlace == "HERE") {
-            const serverId = (
-                await this.prismaService.happening.findFirst({
-                    where: {
-                        id,
-                    },
-                    select: {
-                        serverId: true,
-                    },
-                })
-            )!.serverId;
+        if (happeningPlace == 'HERE') {
+            const serverId = (await this.prismaService.happening.findFirst({
+                where: {
+                    id,
+                },
+                select: {
+                    serverId: true,
+                },
+            }))!.serverId;
 
-            await this.gameServersService.shutdownServer(serverId!, id);
+            await this.serversService.shutdownServer(serverId!, id);
 
             return await this.prismaService.happening.update({
                 where: {
@@ -173,15 +176,17 @@ export class HappeningsService {
 
     async getHappeningPlace(id: number): Promise<Place | null> {
         return (
-            await this.prismaService.happening.findFirst({
-                where: {
-                    id,
-                },
-                select: {
-                    place: true,
-                },
-            })
-        )?.place || null;
+            (
+                await this.prismaService.happening.findFirst({
+                    where: {
+                        id,
+                    },
+                    select: {
+                        place: true,
+                    },
+                })
+            )?.place || null
+        );
     }
 
     async isUserInterestedHappening({
@@ -340,7 +345,7 @@ export class HappeningsService {
                         : `:${process.env.PORT}`
                     }${process.env.HAPPENING_PATH}/${event.thumbnail}`
                     : null,
-            }
+            };
         }
 
         return null;
@@ -495,10 +500,7 @@ export class HappeningsService {
         });
     }
 
-    async getRecentEvents(
-        id: number,
-        eventsCount = 5,
-    ): Promise<Event[]> {
+    async getRecentEvents(id: number, eventsCount = 5): Promise<Event[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
@@ -616,6 +618,7 @@ export class HappeningsService {
             select: {
                 id: true,
                 startAt: true,
+                status: true,
             },
             take: n,
         });
@@ -632,8 +635,20 @@ export class HappeningsService {
             select: {
                 id: true,
                 startAt: true,
+                status: true,
             },
             skip: n,
+        });
+    }
+
+    async updateStatus(id: number, status: Status) {
+        await this.prismaService.happening.update({
+            where: {
+                id,
+            },
+            data: {
+                status,
+            },
         });
     }
 }

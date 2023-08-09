@@ -10,7 +10,6 @@ import { ReviewsModule } from './reviews/reviews.module';
 import * as path from 'path';
 import { WebsocketsModule } from './websockets/websockets.module';
 import { AuthModule } from './auth/auth.module';
-import { GameServersModule } from './gamerservers/gameservers.module';
 import { CronModule } from './cron/cron.module';
 import { SearchModule } from './search/search.module';
 
@@ -38,7 +37,6 @@ import { SearchModule } from './search/search.module';
         ]),
         SearchModule,
         WebsocketsModule,
-        GameServersModule,
         CronModule
     ],
     controllers: [AppController],

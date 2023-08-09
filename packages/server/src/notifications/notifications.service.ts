@@ -116,6 +116,9 @@ export class NotificationsService {
             select: {
                 id: true,
             },
+            orderBy: {
+                createdAt: 'desc' 
+            }
         });
 
         const res: Notification[] = [];

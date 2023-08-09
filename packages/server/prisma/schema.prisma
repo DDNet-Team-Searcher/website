@@ -62,7 +62,6 @@ model Server {
     ip String @db.VarChar(255)
     port Int
     happenings Happening[] 
-    serversRunningMax Int 
 }
 
 enum Place {
@@ -74,6 +73,7 @@ enum Status {
     NotStarted
     Happening
     Finished
+    InQueue
 }
 
 enum HappeningType {
@@ -87,6 +87,7 @@ enum NotificationType {
     AddedInTeam
     RemovedFromTeam
     MadeAnAccountPOG
+    NoEmptyServers // you get this when you try to start a happening when all servers are in use
 }
 
 model Happening {
