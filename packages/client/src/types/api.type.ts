@@ -49,6 +49,10 @@ export type CreateEventResponse = ApiResponse<
 
 export type StartHappeningResponse = ApiResponse<null, { reason: string }>;
 
+export type EndHappeningResponse = ApiResponse<null, null>;
+
+export type DeleteHappeningResponse = ApiResponse<null, null>;
+
 export type GetAllRunsResponse = ApiResponse<{ runs: Run[] }, null>;
 
 export type GetAllEventsResponse = ApiResponse<{ events: Event[] }, null>;
@@ -114,3 +118,28 @@ export type SearchQueryResponse = ApiResponse<
     },
     SearchQueryRequest
 >;
+
+export type NotificationSeenResponse = ApiResponse<null, null>;
+
+export type UpdateIsPlayerInTeamRequest = {
+    userId: number;
+    happeningId: number;
+};
+
+export type UpdateIsPlayerInTeamResponse = ApiResponse<
+    null,
+    UpdateIsPlayerInTeamRequest
+>;
+
+export type SetIsInterestedInHappeningResponse = ApiResponse<null, null>;
+
+export type CreateReviewRequest = {
+    happeningId: number;
+    userId: number;
+    data: {
+        text: null | string;
+        rate: number;
+    };
+};
+
+export type CreateReviewResponse = ApiResponse<null, CreateReviewRequest>;

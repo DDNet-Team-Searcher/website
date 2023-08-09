@@ -2,13 +2,20 @@ import { setEvents, setRuns } from '@/store/slices/happenings';
 import {
     CreateEventRequest,
     CreateEventResponse,
+    CreateReviewRequest,
+    CreateReviewResponse,
     CreateRunRequest,
     CreateRunResponse,
+    DeleteHappeningResponse,
+    EndHappeningResponse,
     GetAllEventsResponse,
     GetAllRunsResponse,
     GetInterestedUsersResponse,
     GetReviewsResponse,
+    SetIsInterestedInHappeningResponse,
     StartHappeningResponse,
+    UpdateIsPlayerInTeamRequest,
+    UpdateIsPlayerInTeamResponse,
 } from '@/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
@@ -35,18 +42,19 @@ export const happeningsApi = createApi({
         startHappening: build.query<StartHappeningResponse, number>({
             query: (id) => `/${id}/start`,
         }),
-        //TODO: add response type
-        endHappening: build.query<string, number>({
+        endHappening: build.query<EndHappeningResponse, number>({
             query: (id) => `/${id}/end`,
         }),
-        deleteHappening: build.mutation<string, number>({
+        deleteHappening: build.mutation<DeleteHappeningResponse, number>({
             query: (id) => ({
                 url: `/${id}/delete`,
                 method: 'DELETE',
             }),
         }),
-        //FIXME: DO THE FUCKING TYPE U LAZY WHORE
-        setIsInterestedInHappening: build.mutation<string, number>({
+        setIsInterestedInHappening: build.mutation<
+            SetIsInterestedInHappeningResponse,
+            number
+        >({
             query: (id) => ({
                 url: `/${id}/interested`,
                 method: 'POST',
@@ -80,7 +88,6 @@ export const happeningsApi = createApi({
                 }
             },
         }),
-        //TODO: add response type
         getHappeningInterestedPlayers: build.query<
             GetInterestedUsersResponse,
             number
@@ -88,8 +95,8 @@ export const happeningsApi = createApi({
             query: (id) => `/${id}/interested`,
         }),
         updateIsPlayerInTeam: build.mutation<
-            number,
-            { userId: number; happeningId: number }
+            UpdateIsPlayerInTeamResponse,
+            UpdateIsPlayerInTeamRequest
         >({
             query: ({ userId, happeningId }) => ({
                 url: `/${happeningId}/in-team/${userId}`,
@@ -97,18 +104,17 @@ export const happeningsApi = createApi({
             }),
         }),
         getReviews: build.query<GetReviewsResponse, number>({
-            query: (happeningId) => `/${happeningId}/reviews`
+            query: (happeningId) => `/${happeningId}/reviews`,
         }),
-        createReview: build.mutation<
-            string,
-            { happeningId: number; userId: number, data: { text: null | string, rate: number } }
-        >({
-            query: ({ happeningId, userId, data }) => ({
-                url: `/${happeningId}/reviews/${userId}`,
-                method: 'POST',
-                body: data
-            }),
-        }),
+        createReview: build.mutation<CreateReviewResponse, CreateReviewRequest>(
+            {
+                query: ({ happeningId, userId, data }) => ({
+                    url: `/${happeningId}/reviews/${userId}`,
+                    method: 'POST',
+                    body: data,
+                }),
+            },
+        ),
     }),
 });
 
@@ -124,5 +130,5 @@ export const {
     useGetHappeningInterestedPlayersQuery,
     useUpdateIsPlayerInTeamMutation,
     useGetReviewsQuery,
-    useCreateReviewMutation
+    useCreateReviewMutation,
 } = happeningsApi;

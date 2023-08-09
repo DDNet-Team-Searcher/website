@@ -1,22 +1,32 @@
-import { Body, Controller, Get, InternalServerErrorException, Param, Post, Req } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    InternalServerErrorException,
+    Param,
+    Post,
+    Req,
+} from '@nestjs/common';
 import { Protected } from 'src/decorators/protected.decorator';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { ReviewsService } from './reviews.service';
 
 @Controller()
 export class ReviewsController {
-    constructor(private reviewsService: ReviewsService) { }
+    constructor(private reviewsService: ReviewsService) {}
 
     @Get()
     async getReviews(@Param('happeningId') happeningId: string) {
         try {
-            const reviews = await this.reviewsService.getReviewsByHappeningId(parseInt(happeningId));
+            const reviews = await this.reviewsService.getReviewsByHappeningId(
+                parseInt(happeningId),
+            );
 
             return {
                 status: 'success',
                 data: {
-                    reviews: reviews
-                }
+                    reviews: reviews,
+                },
             };
         } catch (e) {
             console.log(e);
@@ -43,12 +53,10 @@ export class ReviewsController {
 
             return {
                 status: 'success',
-                data: {
-                    message: 'ALL GUUUUT',
-                },
+                data: null,
             };
         } catch (e) {
-            console.log("We're fucked");
+            console.log(e);
             throw new InternalServerErrorException();
         }
     }
