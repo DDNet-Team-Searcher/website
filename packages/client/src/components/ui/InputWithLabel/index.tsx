@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
 import styles from './styles.module.css';
 
-interface OwnProps {
+type OwnProps = {
     label: string;
     id?: string;
     required?: boolean;
@@ -13,7 +13,8 @@ interface OwnProps {
     register: UseFormRegisterReturn;
     errors?: FieldErrors;
     type?: string;
-}
+    [key: string]: any; //NOTE: idk how to remove this any :p
+};
 
 export function InputWithLabel({
     id,
@@ -25,7 +26,7 @@ export function InputWithLabel({
     errors,
     ...props
 }: OwnProps) {
-    const rand = Math.random(); //TODO: replace it with uuid
+    const labelId = label.replace(" ", "_");
     const fieldName = register.name;
     const error = (errors || {})[fieldName]?.message as string;
 
@@ -36,7 +37,7 @@ export function InputWithLabel({
             })}
         >
             <label
-                htmlFor={id + '' + rand}
+                htmlFor={labelId}
                 className={classNames('text-[12px] uppercase', {
                     'text-error': !!error,
                 })}
@@ -54,13 +55,13 @@ export function InputWithLabel({
                 }
                 list={datalist && id + '_1'}
                 {...props}
-                id={id + '' + rand}
+                id={labelId}
             />
             {datalist && (
                 <datalist id={id + '_1'}>
-                    {datalist.map((el: string) => {
-                        return <option key={el} value={el}></option>;
-                    })}
+                    {datalist.map((el: string) => (
+                        <option key={el} value={el}></option>
+                    ))}
                 </datalist>
             )}
         </div>

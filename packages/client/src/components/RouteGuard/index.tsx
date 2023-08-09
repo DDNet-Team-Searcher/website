@@ -14,10 +14,7 @@ export function RouteGuard({ children }: OwnProps) {
     const router = useRouter();
     const pathname = usePathname();
 
-    if (
-        isAuthed === false &&
-        !publicUrls.includes(pathname)
-    ) {
+    if (isAuthed === false && !publicUrls.includes(pathname)) {
         router.push('/login');
     }
 
