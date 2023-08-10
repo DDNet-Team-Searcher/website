@@ -12,13 +12,14 @@ import { getTier } from '@/utils/getTier';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { Run as RunT, Status } from '@/types/Happenings.type';
+import { Event as EventT, Run as RunT, Status } from '@/types/Happenings.type';
 import { HappeningPlace } from '@/components/HappeningPlace';
 import { HappeningStartTime } from '@/components/HappeningStartTime';
 import classNames from 'classnames';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
+import { setEvents, setRuns } from '@/store/slices/happenings';
 
 type RunProps = {
     run: RunT;
@@ -276,6 +277,7 @@ function User({
 }
 
 export default function Search() {
+    const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.user.user.id);
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const searchParams = useSearchParams();
@@ -305,6 +307,20 @@ export default function Search() {
                         if (res.data.results.length) {
                             setMoreResultsAvailable(res.data.next);
                             setSearchResults(res.data.results);
+
+                            const runs: RunT[] = [];
+                            const events: EventT[] = [];
+
+                            for (const happening of res.data.results) {
+                                if (happening.type == "run") {
+                                    runs.push(happening);
+                                } else if (happening.type == "event") {
+                                    events.push(happening);
+                                }
+                            }
+
+                            dispatch(setEvents(events));
+                            dispatch(setRuns(runs));
                         } else {
                             // no results, show something
                         }
