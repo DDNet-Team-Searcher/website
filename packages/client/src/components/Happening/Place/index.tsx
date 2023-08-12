@@ -4,7 +4,7 @@ type OwnProps = {
     place: Place;
 };
 
-export function HappeningPlace({ place }: OwnProps) {
+export function Place({ place }: OwnProps) {
     return (
         <div className="flex items-center font-semibold mt-2.5">
             <img src="/run-place.svg" />

@@ -2,10 +2,8 @@ import {
     useCreateEventMutation,
     useCreateRunMutation,
 } from '@/features/api/happenings.api';
-import { addHappening } from '@/store/slices/happenings';
 import { hint } from '@/store/slices/hints';
 import { CreateEventResponse, CreateRunResponse } from '@/types/api.type';
-import { Happenings } from '@/types/Happenings.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
@@ -91,12 +89,6 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
 
                 if (res.status === 'success') {
                     onClose();
-                    dispatch(
-                        addHappening({
-                            type: Happenings.Event,
-                            happening: res.data.event,
-                        }),
-                    );
                 }
             } catch (err) {
                 const error = (err as FetchBaseQueryError)
@@ -128,12 +120,6 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
 
                 if (res.status === 'success') {
                     onClose();
-                    dispatch(
-                        addHappening({
-                            type: Happenings.Run,
-                            happening: res.data.run,
-                        }),
-                    );
                 }
             } catch (err) {
                 const error = (err as FetchBaseQueryError)

@@ -4,7 +4,7 @@ export type Profile = {
     id: number;
     username: string;
     avatar: string | null;
-    createdAt: Date;
+    createdAt: string;
     roles: any[]; //FIXME: WHAT'S THE TYPE OF IT?
     tier: number;
     verified: boolean;

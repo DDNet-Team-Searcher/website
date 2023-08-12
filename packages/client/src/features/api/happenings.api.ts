@@ -1,4 +1,4 @@
-import { setEvents, setRuns } from '@/store/slices/happenings';
+import { setPopularEvents, setPopularRuns } from '@/store/slices/happenings';
 import {
     CreateEventRequest,
     CreateEventResponse,
@@ -67,7 +67,7 @@ export const happeningsApi = createApi({
                     const { data } = await queryFulfilled;
 
                     if (data.status === 'success') {
-                        dispatch(setRuns(data.data.runs));
+                        dispatch(setPopularRuns(data.data.runs))
                     }
                 } catch (e) {
                     console.log(e);
@@ -81,7 +81,7 @@ export const happeningsApi = createApi({
                     const { data } = await queryFulfilled;
 
                     if (data.status === 'success') {
-                        dispatch(setEvents(data.data.events));
+                        dispatch(setPopularEvents(data.data.events));
                     }
                 } catch (e) {
                     console.log(e);

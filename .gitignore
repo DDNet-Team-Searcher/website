@@ -2,6 +2,7 @@ node_modules
 
 packages/client/node_modules
 packages/client/.next
+packages/client/tsconfig.tsbuildinfo
 
 packages/server/node_modules
 packages/server/dist

@@ -1,80 +1,108 @@
-import { Event, Happenings, Run, Status } from '@/types/Happenings.type';
+import { Event, Run, Status } from '@/types/Happenings.type';
+import { SearchResult } from '@/types/SearchResult.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type HappeningsState = {
-    runs: Run[];
-    events: Event[];
+    popular: {
+        runs: Run[];
+        events: Event[];
+    };
+    searchResults: SearchResult[];
 };
 
 const initialState: HappeningsState = {
-    runs: [],
-    events: [],
+    popular: {
+        runs: [],
+        events: [],
+    },
+    searchResults: [],
 };
 
 export const happeningsSlice = createSlice({
     name: 'happenings',
     initialState,
     reducers: {
-        setRuns(state, action: PayloadAction<Run[]>) {
-            state.runs = action.payload;
+        setPopularRuns(state, action: PayloadAction<Run[]>) {
+            state.popular.runs = action.payload;
         },
-        setEvents(state, action: PayloadAction<Event[]>) {
-            state.events = action.payload;
+        setPopularEvents(state, action: PayloadAction<Event[]>) {
+            state.popular.events = action.payload;
         },
-        addHappening(
+        setSearchResults(state, action: PayloadAction<SearchResult[]>) {
+            state.searchResults = action.payload;
+        },
+
+        setPopularHappeningStatus(
             state,
             action: PayloadAction<{
-                type: Happenings;
-                happening: Event | Run;
-            }>,
-        ) {
-            if (action.payload.type === Happenings.Event) {
-                state.events.push(action.payload.happening as Event);
-            } else {
-                state.runs.push(action.payload.happening as Run);
-            }
-        },
-        setHappeningStatus(
-            state,
-            action: PayloadAction<{
-                type: 'run' | 'event';
                 id: number;
+                type: 'run' | 'event';
                 status: Status;
             }>,
         ) {
-            if (action.payload.type === 'event') {
-                state.events = state.events.map((event) => {
-                    if (event.id == action.payload.id) {
-                        event.status = action.payload.status;
-                    }
+            const type = (action.payload.type + 's') as 'events' | 'runs';
 
-                    return event;
-                });
-            } else if (action.payload.type === 'run') {
-                state.runs = state.runs.map((run) => {
-                    if (run.id == action.payload.id) {
-                        run.status = action.payload.status;
-                    }
+            //@ts-ignore NOTE: idk how to write it in other way :p
+            state.popular[type] = state.popular[type].map((happening) => {
+                if (happening.id == action.payload.id) {
+                    happening.status = action.payload.status;
+                }
 
-                    return run;
-                });
-            }
+                return happening;
+            });
         },
-        deleteHappening(
+        setSearchResultsHappeningStatus(
             state,
-            action: PayloadAction<{ type: 'run' | 'event'; id: number }>,
+            action: PayloadAction<{ id: number; status: Status }>,
         ) {
-            if (action.payload.type === 'event') {
-                state.events = state.events.filter(
-                    (event) => event.id !== action.payload.id,
-                );
-            } else if (action.payload.type === 'run') {
-                state.runs = state.runs.filter(
-                    (run) => run.id !== action.payload.id,
-                );
-            }
+            state.searchResults = state.searchResults.map((result) => {
+                if (result.type != 'user' && result.id == action.payload.id) {
+                    result.status = action.payload.status;
+                }
+
+                return result;
+            });
         },
-        setIsInterestedInHappening(
+
+        deleteHappeningFromSearchResults(
+            state,
+            action: PayloadAction<{ id: number }>,
+        ) {
+            state.searchResults = state.searchResults.filter(
+                (happening) => happening.id !== action.payload.id,
+            );
+        },
+        deleteHappeningFromPopular(
+            state,
+            action: PayloadAction<{ id: number; type: 'run' | 'event' }>,
+        ) {
+            const type = (action.payload.type + 's') as 'runs' | 'events';
+
+            //@ts-ignore NOTE: idk how to write it in other way :p
+            state.popular[type] = [...state.popular[type]].filter(
+                (happening) => happening.id !== action.payload.id,
+            );
+        },
+
+        setIsInterestedInSearchResultHappening(
+            state,
+            action: PayloadAction<{ id: number; isInterested: boolean }>,
+        ) {
+            const happening = state.searchResults.filter(
+                (happening) => happening.id === action.payload.id,
+            )[0] as Run | Event;
+
+            if (action.payload.isInterested) {
+                happening.interestedPlayers.push({ inTeam: false });
+            } else {
+                happening.interestedPlayers.pop();
+            }
+
+            happening._count.interestedPlayers =
+                happening._count.interestedPlayers +
+                (action.payload.isInterested ? 1 : -1);
+        },
+        setIsInterestedInPopularHappening(
             state,
             action: PayloadAction<{
                 type: 'run' | 'event';
@@ -82,46 +110,37 @@ export const happeningsSlice = createSlice({
                 isInterested: boolean;
             }>,
         ) {
-            if (action.payload.type === 'run') {
-                const run = state.runs.filter(
-                    (run) => run.id === action.payload.id,
-                )[0];
+            const type = (action.payload.type + 's') as 'runs' | 'events';
+            const happening = [...state.popular[type]].filter(
+                (happening) => happening.id === action.payload.id,
+            )[0];
 
-                if (action.payload.isInterested) {
-                    run.interestedPlayers.push({ inTeam: false });
-                } else {
-                    run.interestedPlayers.pop();
-                }
-
-                run._count.interestedPlayers =
-                    run._count.interestedPlayers +
-                    (action.payload.isInterested ? 1 : -1);
-            } else if (action.payload.type === 'event') {
-                const event = state.events.filter(
-                    (event) => event.id === action.payload.id,
-                )[0];
-
-                if (action.payload.isInterested) {
-                    event.interestedPlayers.push({ inTeam: false });
-                } else {
-                    event.interestedPlayers.pop();
-                }
-
-                event._count.interestedPlayers =
-                    event._count.interestedPlayers +
-                    (action.payload.isInterested ? 1 : -1);
+            if (action.payload.isInterested) {
+                happening.interestedPlayers.push({ inTeam: false });
+            } else {
+                happening.interestedPlayers.pop();
             }
+
+            happening._count.interestedPlayers =
+                happening._count.interestedPlayers +
+                (action.payload.isInterested ? 1 : -1);
         },
     },
 });
 
 export const {
-    setEvents,
-    setRuns,
-    addHappening,
-    setHappeningStatus,
-    deleteHappening,
-    setIsInterestedInHappening,
+    setPopularRuns,
+    setPopularEvents,
+    setSearchResults,
+
+    setPopularHappeningStatus,
+    setSearchResultsHappeningStatus,
+
+    deleteHappeningFromPopular,
+    deleteHappeningFromSearchResults,
+
+    setIsInterestedInPopularHappening,
+    setIsInterestedInSearchResultHappening,
 } = happeningsSlice.actions;
 
 export default happeningsSlice.reducer;

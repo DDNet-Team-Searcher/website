@@ -1,13 +1,13 @@
 import { Status } from '@/types/Happenings.type';
 import classNames from 'classnames';
-import { CalendarIcon } from '../ui/Icons/Calendar';
+import { CalendarIcon } from '@/components/ui/Icons/Calendar';
 
 type OwnProps = {
     startAt: string;
     status: Status;
 };
 
-export function HappeningStartTime({ startAt, status }: OwnProps) {
+export function StartTime({ startAt, status }: OwnProps) {
     const startDateWithWeekday = new Date(startAt).toLocaleDateString([], {
         month: 'short',
         weekday: 'short',

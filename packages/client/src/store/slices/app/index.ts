@@ -1,4 +1,4 @@
-import { Happenings } from '@/types/Happenings.type';
+import { Event, Happenings, Run } from '@/types/Happenings.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AppState = {
@@ -6,7 +6,7 @@ type AppState = {
     isCreateRunModalHidden: boolean;
     happeningInfoModal: {
         type: Happenings | null;
-        happeningId: number | null;
+        happening: Run | Event | null;
         visible: boolean;
     };
 };
@@ -16,7 +16,7 @@ const initialState: AppState = {
     isCreateRunModalHidden: true,
     happeningInfoModal: {
         type: null,
-        happeningId: null,
+        happening: null,
         visible: false,
     },
 };
@@ -35,12 +35,12 @@ export const appSlice = createSlice({
             state,
             action: PayloadAction<{
                 type: Happenings | null;
-                happeningId: number | null;
+                happening: Run | Event | null;
                 visible: boolean;
             }>,
         ) {
             state.happeningInfoModal.type = action.payload.type;
-            state.happeningInfoModal.happeningId = action.payload.happeningId;
+            state.happeningInfoModal.happening = action.payload.happening;
             state.happeningInfoModal.visible = action.payload.visible;
         },
     },

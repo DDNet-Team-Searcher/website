@@ -4,20 +4,21 @@ import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { Run } from '@/components/Run';
-import { Event } from '@/components/Event';
+import { Run } from '@/components/Happening/Run';
+import { Event } from '@/components/Happening/Event';
 import {
     useFollowUserMutation,
     useLazyGetProfileQuery,
 } from '@/features/api/users.api';
 import { VerifiedIcon } from '@/components/ui/Icons/Verified';
-import { Profile as ProfileT } from '@/types/Profile.type';
 import { Graph } from '@/components/Graph';
 import { PeopleIcon } from '@/components/ui/Icons/People';
 import { ClockIcon } from '@/components/ui/Icons/Clock';
 import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
+import { deleteHappening, setHappeningStatus, setIsInterestedInHappening, setProfile } from '@/store/slices/profile';
+import { Event as EventType, Run as RunType } from '@/types/Happenings.type';
 
 type OwnProps = {
     params: {
@@ -29,7 +30,7 @@ export default function Profile({ params: { id } }: OwnProps) {
     const dispatch = useAppDispatch();
     const [fetchProfile] = useLazyGetProfileQuery();
     const [followUser] = useFollowUserMutation();
-    const [profile, setProfile] = useState<null | ProfileT>();
+    const profile = useAppSelector(state => state.profile);
     const authedUserId = useAppSelector((state) => state.user.user.id);
     const sameUser = authedUserId === parseInt(id as string);
     const [favServer, setFavServer] = useState('');
@@ -45,7 +46,7 @@ export default function Profile({ params: { id } }: OwnProps) {
             try {
                 fetchProfile(parseInt(id as string)).then((res) => {
                     if (res.data?.status === 'success') {
-                        setProfile(res.data.data.profile);
+                        dispatch(setProfile(res.data.data.profile));
                     }
                 });
             } catch (e) {
@@ -59,7 +60,7 @@ export default function Profile({ params: { id } }: OwnProps) {
     }, [id]);
 
     const startDateWithWeekday = new Date(
-        profile?.createdAt || '',
+        profile.createdAt || '',
     ).toLocaleDateString([], {
         day: 'numeric',
         month: 'long',
@@ -68,11 +69,13 @@ export default function Profile({ params: { id } }: OwnProps) {
 
     const follow = async () => {
         try {
-            if (profile) {
+            if (profile.id) {
                 followUser(profile.id);
                 refetchUserProfile();
             }
-        } catch (e) { }
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
@@ -190,9 +193,11 @@ export default function Profile({ params: { id } }: OwnProps) {
                             {profile.happenings.events.map((event, id) => (
                                 <Event
                                     className="mt-5"
-                                    onClick={() => { }}
-                                    event={event}
+                                    event={event as EventType}
                                     key={id}
+                                    setStatusDispatch={setHappeningStatus}
+                                    deleteDispatch={deleteHappening}
+                                    setIsInterestedDispatch={setIsInterestedInHappening}
                                 />
                             ))}
                         </div>
@@ -205,15 +210,17 @@ export default function Profile({ params: { id } }: OwnProps) {
                             {profile.happenings.runs.map((run, id) => (
                                 <Run
                                     className="mt-5"
-                                    onClick={() => { }}
-                                    run={run}
+                                    run={run as RunType}
                                     key={id}
+                                    setStatusDispatch={setHappeningStatus}
+                                    deleteDispatch={deleteHappening}
+                                    setIsInterestedDispatch={setIsInterestedInHappening}
                                 />
                             ))}
                         </div>
                     </section>
                     <section className="max-w-[80%] mx-auto w-full mt-[60px]">
-                        <Graph username={profile.username} />
+                        <Graph username={profile.username || ''} />
                     </section>
                     <section className="mt-[60px] mb-[200px]">
                         <h2 className="text-3xl text-high-emphasis text-center">
@@ -237,7 +244,7 @@ export default function Profile({ params: { id } }: OwnProps) {
                                         <div>
                                             <Avatar
                                                 size={50}
-                                                username={username}
+                                                username={username || ''}
                                                 src={avatar}
                                             />
                                         </div>
@@ -260,7 +267,7 @@ export default function Profile({ params: { id } }: OwnProps) {
                                                 </div>
                                                 <span className="text-xs text-medium-emphasis ml-1">
                                                     {timeAgo.format(
-                                                        new Date(createdAt),
+                                                        new Date(createdAt || ''),
                                                     )}
                                                 </span>
                                             </div>

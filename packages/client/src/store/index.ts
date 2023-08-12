@@ -6,6 +6,7 @@ import appReducer from './slices/app';
 import hintsReducer from './slices/hints';
 import happeningsReducer from './slices/happenings';
 import userReducer from './slices/user';
+import profileReducer from './slices/profile';
 import { searchApi } from '@/features/api/search.api';
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
         hints: hintsReducer,
         app: appReducer,
         happenings: happeningsReducer,
+        profile: profileReducer,
         [happeningsApi.reducerPath]: happeningsApi.reducer,
         [usersAPI.reducerPath]: usersAPI.reducer,
         [notificationsApi.reducerPath]: notificationsApi.reducer,

@@ -19,6 +19,6 @@ type UserT = {
     isFollowing: boolean;
 };
 
-type User = { type: 'user' } & UserT;
+export type UserSearchResult = { type: 'user' } & UserT;
 
-export type SearchResult = Run | Event | User;
+export type SearchResult = Run | Event | UserSearchResult;
