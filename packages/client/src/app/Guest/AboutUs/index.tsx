@@ -1,18 +1,18 @@
-export function AboutUs() {
-    const fax = [
-        { imageUrl: '/default-tee.png', text: '0 runs already done' },
-        {
-            imageUrl: '/default-tee.png',
-            text: '>0 people are finding mates for the run',
-        },
-        { imageUrl: '/default-tee.png', text: '>0 active users' },
-        {
-            imageUrl: '/default-tee.png',
-            text: 'I finally found a mate to finish Sunny Side Up',
-        },
-        { imageUrl: '/default-tee.png', text: '0+ events are waiting for you' },
-    ];
+const fax = [
+    { imageUrl: '/default-tee.png', text: '0 runs already done' },
+    {
+        imageUrl: '/default-tee.png',
+        text: '>0 people are finding mates for the run',
+    },
+    { imageUrl: '/default-tee.png', text: '>0 active users' },
+    {
+        imageUrl: '/default-tee.png',
+        text: 'I finally found a mate to finish Sunny Side Up',
+    },
+    { imageUrl: '/default-tee.png', text: '0+ events are waiting for you' },
+];
 
+export function AboutUs() {
     return (
         <div className="max-w-[840px] mx-auto px-10 -mt-[200px]">
             <p className="text-3xl font-medium text-high-emphasis">
@@ -35,4 +35,4 @@ export function AboutUs() {
             </div>
         </div>
     );
-};
+}

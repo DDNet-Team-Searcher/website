@@ -2,7 +2,6 @@
 
 import { Event } from '@/components/Happening/Event';
 import { useLazySearchQuery } from '@/features/api/search.api';
-import { SearchResult, UserSearchResult } from '@/types/SearchResult.type';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -15,12 +14,10 @@ import {
     setSearchResults,
     setSearchResultsHappeningStatus,
 } from '@/store/slices/happenings';
-// import { setHappenings } from '@/store/slices/happenings';
 
 export default function Search() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.user.user.id);
-    // const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
     const searchParams = useSearchParams();
     const [page, setPage] = useState(1);
     const [moreResultsAvailable, setMoreResultsAvailable] = useState(false);

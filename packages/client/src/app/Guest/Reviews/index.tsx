@@ -12,18 +12,18 @@ const arrowStyles: CSSProperties = {
     cursor: 'pointer',
 };
 
-export function Reviews() {
-    const reviews = [
-        {
-            username: 'Yo mum',
-            review: 'Cul!',
-        },
-        {
-            username: 'Stepfunn',
-            review: "Milkeey, nobody's gonna use it anyways.",
-        },
-    ];
+const reviews = [
+    {
+        username: 'Yo mum',
+        review: 'Cul!',
+    },
+    {
+        username: 'Stepfunn',
+        review: "Milkeey, nobody's gonna use it anyways.",
+    },
+];
 
+export function Reviews() {
     return (
         <div className="mt-[150px] text-high-emphasis">
             <p className="text-3xl font-medium text-center">
