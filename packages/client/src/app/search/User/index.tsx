@@ -16,9 +16,6 @@ type OwnProps = {
         tier: number;
         id: number;
         verified: boolean;
-        roles: {
-            role: any[]; //FIXME: types...
-        }[];
         _count: {
             followers: number;
             following: number;
@@ -35,6 +32,7 @@ export function User({
         id,
         isFollowing: isFollowingIDK,
         _count: { followers },
+        ...user
     },
 }: OwnProps) {
     const dispatch = useAppDispatch();

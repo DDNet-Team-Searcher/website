@@ -45,7 +45,6 @@ model Role {
     canManageRoles Boolean @default(false)
     canDeleteHappenings Boolean @default(false)
     canManagePosts Boolean @default(false)
-
 }
 
 model RolesOnUsers {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Run, Event } from 'src/types/Happenings.type';
 import { UsersService } from 'src/users/users.service';
-import { HappeningType, Role } from '@prisma/client';
+import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 
 const PER_PAGE = 5;
@@ -13,9 +13,6 @@ type User = {
     tier: number;
     id: number;
     verified: boolean;
-    roles: {
-        role: Role;
-    }[];
     _count: {
         followers: number;
         following: number;
@@ -36,19 +33,6 @@ export class SearchService {
         private readonly usersService: UsersService,
         private readonly happeningsService: HappeningsService,
     ) { }
-
-    async searchUserById(id: number) {
-        return await this.prismaService.user.findFirst({
-            where: {
-                id,
-            },
-            select: {
-                username: true,
-                avatar: true,
-                tier: true,
-            },
-        });
-    }
 
     async search(
         userId: number,
@@ -86,6 +70,7 @@ export class SearchService {
                     searchResult.push({
                         type: 'user',
                         ...profile,
+                        roles: profile.roles.map((role) => role.role),
                         isFollowing,
                     });
                 }

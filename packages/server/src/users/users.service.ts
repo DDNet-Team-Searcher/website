@@ -94,9 +94,9 @@ export class UsersService {
     }
 
     /*
-        * userId - id of user youre trying to find
-        * id - if of user who is looking for it
-    */
+     * userId - id of user youre trying to find
+     * id - if of user who is looking for it
+     */
     async searchUserById(userId: number, id: number) {
         return (await this.prismaService.user.findFirst({
             where: {
@@ -106,11 +106,6 @@ export class UsersService {
                 id: true,
                 username: true,
                 avatar: true,
-                roles: {
-                    select: {
-                        role: true,
-                    },
-                },
                 tier: true,
                 verified: true,
                 _count: {
@@ -135,7 +130,14 @@ export class UsersService {
                 createdAt: true,
                 roles: {
                     select: {
-                        role: true,
+                        role: {
+                            select: {
+                                id: true,
+                                name: true,
+                                color: true,
+                                url: true,
+                            },
+                        },
                     },
                 },
                 tier: true,

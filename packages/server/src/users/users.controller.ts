@@ -31,7 +31,7 @@ export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) { }
+    ) {}
 
     @Post('/register')
     async register(@Body() data: RegisterUserDTO) {
@@ -91,7 +91,6 @@ export class UsersController {
             data.email,
         ))!; //NOTE: this is fine
 
-
         if (!(await argon2.verify(password, data.password))) {
             throw new BadRequestException({
                 status: 'fail',
@@ -126,10 +125,11 @@ export class UsersController {
             return {
                 status: 'success',
                 data: {
-                    avatar: `${req.protocol}://${process.env.HOST}${process.env.PORT === '80'
-                        ? process.env.PORT
-                        : `:${process.env.PORT}`
-                        }${process.env.AVATAR_PATH}/${filename}`,
+                    avatar: `${req.protocol}://${process.env.HOST}${
+                        process.env.PORT === '80'
+                            ? process.env.PORT
+                            : `:${process.env.PORT}`
+                    }${process.env.AVATAR_PATH}/${filename}`,
                 },
             };
         } catch (e) {
@@ -247,12 +247,17 @@ export class UsersController {
             parseInt(id),
         );
 
-        return {
-            status: 'success',
-            data: {
-                profile,
-            },
-        };
+        if (profile) {
+            return {
+                status: 'success',
+                data: {
+                    profile: {
+                        ...profile,
+                        roles: profile.roles.map((role) => role.role),
+                    },
+                },
+            };
+        }
     }
 
     @Protected()

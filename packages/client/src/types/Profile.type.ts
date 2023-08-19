@@ -1,11 +1,12 @@
 import { Event, Run } from './Happenings.type';
+import { Role } from './Role.type';
 
 export type Profile = {
     id: number;
     username: string;
     avatar: string | null;
     createdAt: string;
-    roles: any[]; //FIXME: WHAT'S THE TYPE OF IT?
+    roles: Role[];
     tier: number;
     verified: boolean;
     isFollowing: boolean;

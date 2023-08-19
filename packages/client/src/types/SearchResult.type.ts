@@ -9,9 +9,6 @@ type UserT = {
     tier: number;
     id: number;
     verified: boolean;
-    roles: {
-        role: any[]; //FIXME: types...
-    }[];
     _count: {
         followers: number;
         following: number;
