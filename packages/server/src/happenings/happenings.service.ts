@@ -21,7 +21,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) { }
+    ) {}
 
     async createRun(data: CreateRunDTO & { authorId: number }) {
         return await this.prismaService.happening.create({
@@ -336,15 +336,16 @@ export class HappeningsService {
             },
         });
 
+        let thumbnail: string | null = null;
+
+        if (event?.thumbnail) {
+            thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
+        }
+
         if (event) {
             return {
                 ...event,
-                thumbnail: event.thumbnail
-                    ? `http://${process.env.HOST}${process.env.PORT === '80'
-                        ? process.env.PORT
-                        : `:${process.env.PORT}`
-                    }${process.env.HAPPENING_PATH}/${event.thumbnail}`
-                    : null,
+                thumbnail,
             };
         }
 
@@ -443,12 +444,9 @@ export class HappeningsService {
         });
 
         for (const event of events) {
-            event.thumbnail = event.thumbnail
-                ? `http://${process.env.HOST}${process.env.PORT === '80'
-                    ? process.env.PORT
-                    : `:${process.env.PORT}`
-                }${process.env.HAPPENING_PATH}/${event.thumbnail}`
-                : null;
+            if (event?.thumbnail) {
+                event.thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
+            }
         }
 
         return events;

@@ -82,14 +82,10 @@ export function HappeningInfoModal() {
 
     let thumbnailUrl;
 
-    if (type == Happenings.Event) {
-        thumbnailUrl = (happening as Event).thumbnail
-            ? `http://localhost:8080/public/${(happening as Event).thumbnail}`
-            : `https://ddnet.org/ranks/maps/${happening.mapName.replaceAll(
-                ' ',
-                '_',
-            )}.png`;
-    } else {
+    if ((happening as Event).thumbnail) {
+        thumbnailUrl = (happening as Event).thumbnail!;
+    }
+    if (!(happening as Event).thumbnail || type == Happenings.Run) {
         thumbnailUrl = `https://ddnet.org/ranks/maps/${happening.mapName.replaceAll(
             ' ',
             '_',

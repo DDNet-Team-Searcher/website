@@ -4,9 +4,14 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
+    process.env.BASE_URL =
+        'http://' +
+        process.env.HOST +
+        (parseInt(process.env.PORT || '') === 80 ? '' : `:${process.env.PORT}`);
+
     const app = await NestFactory.create(AppModule, {
         cors: {
-            origin: 'http://localhost:3000',
+            origin: `http://${process.env.HOST}:3000`,
             credentials: true,
         },
     });

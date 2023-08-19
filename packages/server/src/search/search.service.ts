@@ -70,7 +70,6 @@ export class SearchService {
                     searchResult.push({
                         type: 'user',
                         ...profile,
-                        roles: profile.roles.map((role) => role.role),
                         isFollowing,
                     });
                 }

@@ -72,14 +72,16 @@ export class UsersService {
         const notifications =
             await this.notificationsService.getUserNotifications(id);
 
+        let avatar: string | null = null;
+
+        if (credentials.avatar) {
+            avatar = `${process.env.BASE_URL}/${process.env.AVATAR_PATH}/${credentials.avatar}`;
+
+        }
+
         const res = {
             ...credentials,
-            avatar: credentials?.avatar
-                ? `http://${process.env.HOST}${process.env.PORT === '80'
-                    ? process.env.PORT
-                    : `:${process.env.PORT}`
-                }${process.env.AVATAR_PATH}/${credentials.avatar}`
-                : null,
+            avatar,
             notifications,
             _count: { unreadNotifications: unreadNotificationsCount },
         };
