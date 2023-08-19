@@ -1,12 +1,12 @@
+import { Step } from '@/components/Stepper/Step';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 
 type OwnProps = {
-    currentStep: number;
     userEmail: string;
 };
 
-export function Step3({ currentStep, userEmail }: OwnProps) {
+export function Step3({ userEmail }: OwnProps) {
     const router = useRouter();
 
     const redirectToLoginPage = () => {
@@ -14,11 +14,7 @@ export function Step3({ currentStep, userEmail }: OwnProps) {
     };
 
     return (
-        <div
-            style={{
-                transform: `translateX(-${(currentStep - 1) * 100}%)`,
-            }}
-        >
+        <Step>
             <div className="text-high-emphasis p-10 bg-[#24201A] rounded-[20px] mt-[200px]">
                 <div className="flex items-center">
                     <div>
@@ -26,11 +22,10 @@ export function Step3({ currentStep, userEmail }: OwnProps) {
                             Your account has been successfully created.
                         </p>
                         <p>
-                            We(I) sent an email message to
-                            {userEmail}. Go to link in message and verify your
-                            account.(actually i didnt send any email but if i
-                            will host it one day. i will be sending emails to
-                            verify accounts)
+                            We(I) sent an email message to {userEmail}. Go to
+                            link in message and verify your account.(actually i
+                            didnt send any email but if i will host it one day.
+                            i will be sending emails to verify accounts)
                         </p>
                     </div>
                     <img src="/successful-register.png" />
@@ -39,6 +34,6 @@ export function Step3({ currentStep, userEmail }: OwnProps) {
                     Go to login page
                 </Button>
             </div>
-        </div>
+        </Step>
     );
 }

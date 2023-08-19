@@ -2,19 +2,13 @@ import { Input } from "@/components/ui/Input";
 import type { StepProps } from "../types";
 import { Button } from "@/components/ui/Button";
 import { FieldErrors } from "react-hook-form";
+import { Step } from "@/components/Stepper/Step";
 
 type OwnProps = StepProps<{ errors: FieldErrors }>;
 
-
-export function Step1({ register, errors, currentStep, setCurrentStep }: OwnProps) {
+export function Step1({ register, errors, setCurrentStep }: OwnProps) {
     return (
-        <div
-            style={{
-                transform: `translateX(-${(currentStep - 1) * 100
-                    }%)`,
-            }}
-        >
-            {' '}
+        <Step>
             <div className={'max-w-[600px] mx-auto'}>
                 <div className={'flex justify-between'}>
                     <Input
@@ -89,6 +83,6 @@ export function Step1({ register, errors, currentStep, setCurrentStep }: OwnProp
                     Next
                 </Button>
             </div>
-        </div>
+        </Step>
     );
 }

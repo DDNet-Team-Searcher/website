@@ -1,19 +1,28 @@
 import classNames from 'classnames';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 type OwnProps = {
     className?: string;
-    children: ({
+    step?: number;
+    children:
+    | (({
         step,
         setStep,
     }: {
         step: number;
         setStep: Dispatch<SetStateAction<number>>;
-    }) => React.ReactNode;
+    }) => React.ReactNode)
+    | React.ReactNode[];
 };
 
-export function Stepper({ children, className }: OwnProps) {
-    const [step, setStep] = useState(1);
+export function Stepper({ children, className, step }: OwnProps) {
+    const [currentStep, setCurrentStep] = useState(step || 1);
+
+    useEffect(() => {
+        if (step) {
+            setCurrentStep(step);
+        }
+    }, [step]);
 
     return (
         <div className="relative overflow-hidden">
@@ -21,9 +30,13 @@ export function Stepper({ children, className }: OwnProps) {
                 className={classNames('w-full flex transition-all', {
                     [className || '']: className,
                 })}
-                style={{ transform: `translateX(-${(step - 1) * 100}%)` }}
+                style={{
+                    transform: `translateX(-${(currentStep - 1) * 100}%)`,
+                }}
             >
-                {children({ step, setStep })}
+                {typeof children == 'function' &&
+                    children({ step: currentStep, setStep: setCurrentStep })}
+                {typeof children == 'object' && children}
             </div>
         </div>
     );

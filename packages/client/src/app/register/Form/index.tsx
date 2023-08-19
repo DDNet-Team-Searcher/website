@@ -9,6 +9,7 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
+import { Stepper } from '@/components/Stepper';
 
 type OwnProps = {
     currentStep: number;
@@ -74,13 +75,11 @@ export function Form({ currentStep, setCurrentStep }: OwnProps) {
             onSubmit={handleSubmit(onSubmit)}
             className="max-w-[860px] mx-auto mt-[100px]"
         >
-            <div
-                className={`flex overflow-hidden [&>*]:min-w-full [&>*]:transition-all`}
-            >
-                <Step1 register={register} currentStep={currentStep} setCurrentStep={setCurrentStep} errors={errors} />
-                <Step2 register={register} currentStep={currentStep} setCurrentStep={setCurrentStep} />
-                <Step3 userEmail={userEmail || ''} currentStep={currentStep} />
-            </div>
+            <Stepper step={currentStep}>
+                <Step1 register={register} setCurrentStep={setCurrentStep} errors={errors} />
+                <Step2 register={register} setCurrentStep={setCurrentStep} />
+                <Step3 userEmail={userEmail || ''} />
+            </Stepper>
         </form>
     );
 }

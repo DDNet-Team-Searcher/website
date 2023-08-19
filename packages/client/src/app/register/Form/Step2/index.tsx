@@ -2,48 +2,50 @@ import { useState } from 'react';
 import type { StepProps } from '../types';
 import classNames from 'classnames';
 import { Button } from '@/components/ui/Button';
+import { Step } from '@/components/Stepper/Step';
+
+const tiers = [
+    {
+        url: '/voxel.png',
+        name: 'F Tier',
+        description: 'You have to be as bad as me',
+    },
+    {
+        url: '/voxel.png',
+        name: 'E Tier',
+        description: 'Be a bit better than me lmao',
+    },
+    {
+        url: '/voxel.png',
+        name: 'D Tier',
+        description: 'Be a bit better than me lmao',
+    },
+    {
+        url: '/voxel.png',
+        name: 'C Tier',
+        description: 'Be a bit better than me lmao',
+    },
+    {
+        url: '/voxel.png',
+        name: 'B Tier',
+        description: 'Be a bit better than me lmao',
+    },
+    {
+        url: '/voxel.png',
+        name: 'A Tier',
+        description: 'Be a bit better than me lmao',
+    },
+    {
+        url: '/voxel.png',
+        name: 'S Tier 💀',
+        description: 'Be a bit better than me lmao',
+    },
+];
 
 type OwnProps = StepProps;
 
-export function Step2({ setCurrentStep, currentStep, register }: OwnProps) {
+export function Step2({ setCurrentStep, register }: OwnProps) {
     const [currentTierId, setCurrentTierId] = useState(0);
-    const tiers = [
-        {
-            url: '/voxel.png',
-            name: 'F Tier',
-            description: 'You have to be as bad as me',
-        },
-        {
-            url: '/voxel.png',
-            name: 'E Tier',
-            description: 'Be a bit better than me lmao',
-        },
-        {
-            url: '/voxel.png',
-            name: 'D Tier',
-            description: 'Be a bit better than me lmao',
-        },
-        {
-            url: '/voxel.png',
-            name: 'C Tier',
-            description: 'Be a bit better than me lmao',
-        },
-        {
-            url: '/voxel.png',
-            name: 'B Tier',
-            description: 'Be a bit better than me lmao',
-        },
-        {
-            url: '/voxel.png',
-            name: 'A Tier',
-            description: 'Be a bit better than me lmao',
-        },
-        {
-            url: '/voxel.png',
-            name: 'S Tier 💀',
-            description: 'Be a bit better than me lmao',
-        },
-    ];
 
     const onTierInputChange = (e: KeyboardEvent) => {
         let target = e.target as HTMLInputElement;
@@ -58,12 +60,7 @@ export function Step2({ setCurrentStep, currentStep, register }: OwnProps) {
     };
 
     return (
-        <div
-            style={{
-                transform: `translateX(-${(currentStep - 1) * 100}%)`,
-            }}
-        >
-            {' '}
+        <Step>
             <div className={'max-w-[600px] mx-auto'}>
                 <div className={'tier-selection'}>
                     <p
@@ -142,6 +139,6 @@ export function Step2({ setCurrentStep, currentStep, register }: OwnProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </Step>
     );
 }
