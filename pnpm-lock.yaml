@@ -14,6 +14,9 @@ importers:
 
   packages/client:
     dependencies:
+      '@app/shared':
+        specifier: ^1.0.0
+        version: link:../shared
       '@reduxjs/toolkit':
         specifier: ^1.9.5
         version: 1.9.5(react-redux@8.1.1)(react@18.2.0)
@@ -84,6 +87,9 @@ importers:
 
   packages/server:
     dependencies:
+      '@app/shared':
+        specifier: ^1.0.0
+        version: link:../shared
       '@nestjs/common':
         specifier: ^10.1.0
         version: 10.1.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -211,6 +217,8 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+
+  packages/shared: {}
 
 packages:
 

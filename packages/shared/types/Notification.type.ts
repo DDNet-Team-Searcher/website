@@ -1,4 +1,6 @@
-import { Happenings } from './Happenings.type';
+import { Happenings } from './Happening.type';
+
+//NOTE: god bless your fucking soul if you have to edit this shit
 
 export enum NotificationType {
     Followage = 'Followage',
@@ -9,31 +11,29 @@ export enum NotificationType {
     NoEmptyServers = 'NoEmptyServers',
 }
 
-export type NotificationJson<T = NotificationType> = T extends Extract<
-    NotificationType,
-    'Followage'
->
-    ? {
-          userId: number;
-      }
-    : T extends Extract<NotificationType, 'AddedInTeam'>
-    ? {
-          happeningId: number;
-      }
-    : T extends Extract<NotificationType, 'RemovedFromTeam'>
-    ? {
-          happeningId: number;
-      }
-    : T extends Extract<NotificationType, 'InterestedInHappening'>
-    ? {
-          userId: number;
-          happeningId: number;
-      }
-    : T extends Extract<NotificationType, 'MadeAnAccountPOG'>
-    ? {}
-    : T extends Extract<NotificationType, 'NoEmptyServers'>
-    ? {}
-    : never;
+export type NotificationJson<T = NotificationType> =
+    T extends NotificationType.Followage
+        ? {
+              userId: number;
+          }
+        : T extends NotificationType.AddedInTeam
+        ? {
+              happeningId: number;
+          }
+        : T extends NotificationType.RemovedFromTeam
+        ? {
+              happeningId: number;
+          }
+        : T extends NotificationType.InterestedInHappening
+        ? {
+              userId: number;
+              happeningId: number;
+          }
+        : T extends NotificationType.MadeAnAccountPOG
+        ? {}
+        : T extends NotificationType.NoEmptyServers
+        ? {}
+        : {}; // this looks stupid, ngl
 
 type Author = {
     author: {
@@ -59,7 +59,7 @@ type Common<T extends NotificationType> = {
 };
 
 export type Notification =
-    | (Common<NotificationType.Followage> & Author & Happening)
+    | (Common<NotificationType.Followage> & Author)
     | (Common<NotificationType.InterestedInHappening> & Author & Happening)
     | (Common<NotificationType.AddedInTeam> & Author & Happening)
     | (Common<NotificationType.RemovedFromTeam> & Author & Happening)

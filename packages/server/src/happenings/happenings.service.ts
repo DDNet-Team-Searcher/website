@@ -7,9 +7,10 @@ import {
     Place,
     Status,
 } from '@prisma/client';
+import { Status as HappeningStatus } from '@app/shared/types/Happening.type';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Event, Run } from 'src/types/Happenings.type';
+import { Run, Event } from '@app/shared/types/Happening.type';
 import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
@@ -260,8 +261,10 @@ export class HappeningsService {
                 status: true,
                 startAt: true,
                 createdAt: true,
+                connectString: true,
                 interestedPlayers: {
                     select: {
+                        userId: true,
                         inTeam: true,
                     },
                     where: {
@@ -271,12 +274,6 @@ export class HappeningsService {
                 _count: {
                     select: {
                         interestedPlayers: true,
-                    },
-                },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
                     },
                 },
                 author: {
@@ -289,21 +286,41 @@ export class HappeningsService {
             },
         });
 
-        if (run) {
-            const isInterested = !!run?.interestedPlayers?.length || false;
-            const inTeam = run?.interestedPlayers[0]?.inTeam || false;
-
-            //@ts-ignore
-            delete run.interestedPlayers;
-
-            return {
-                ...run,
-                inTeam,
-                isInterested
-            };
+        if (!run) {
+            return null;
         }
 
-        return null;
+        const {
+            id,
+            createdAt,
+            _count,
+            place,
+            author,
+            mapName,
+            status,
+            startAt,
+            teamSize,
+            connectString,
+            description,
+        } = run;
+        const isInterested = !!run.interestedPlayers.length || false;
+        const inTeam = run.interestedPlayers[0]?.inTeam || false;
+
+        return {
+            id,
+            author,
+            teamSize: teamSize!,
+            status: status as HappeningStatus,
+            connectString,
+            createdAt: createdAt.toString(),
+            startAt: startAt.toString(),
+            description,
+            _count,
+            place,
+            mapName,
+            inTeam,
+            isInterested,
+        };
     }
 
     async getEventById(eventId: number, userId: number): Promise<Event | null> {
@@ -323,6 +340,7 @@ export class HappeningsService {
                 endAt: true,
                 thumbnail: true,
                 createdAt: true,
+                connectString: true,
                 interestedPlayers: {
                     select: {
                         inTeam: true,
@@ -336,12 +354,6 @@ export class HappeningsService {
                         interestedPlayers: true,
                     },
                 },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
-                    },
-                },
                 author: {
                     select: {
                         id: true,
@@ -352,28 +364,50 @@ export class HappeningsService {
             },
         });
 
-        if (event) {
-            let thumbnail: string | null = null;
-
-            if (event?.thumbnail) {
-                thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
-            }
-
-            const isInterested = !!event?.interestedPlayers?.length || false;
-            const inTeam = event?.interestedPlayers[0]?.inTeam || false;
-
-            //@ts-ignore
-            delete event.interestedPlayers;
-
-            return {
-                ...event,
-                inTeam,
-                isInterested,
-                thumbnail,
-            };
+        if (!event) {
+            return null;
         }
 
-        return null;
+        const {
+            id,
+            status,
+            author,
+            startAt,
+            description,
+            createdAt,
+            mapName,
+            place,
+            title,
+            _count,
+            endAt,
+            connectString,
+        } = event;
+        let thumbnail: string | null = null;
+
+        if (event?.thumbnail) {
+            thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
+        }
+
+        const isInterested = !!event.interestedPlayers.length || false;
+        const inTeam = event.interestedPlayers[0]?.inTeam || false;
+
+        return {
+            id,
+            title: title!,
+            author,
+            connectString,
+            place,
+            mapName,
+            description,
+            status: status as HappeningStatus,
+            createdAt: createdAt.toString(),
+            startAt: startAt.toString(),
+            endAt: endAt?.toString() || null,
+            _count,
+            inTeam,
+            isInterested,
+            thumbnail,
+        };
     }
 
     async getAllRunsIds() {
@@ -482,6 +516,7 @@ export class HappeningsService {
         });
     }
 
+    //TODO: MilkeeyCat will add types here
     async updateIsPlayerInTeam(happeningId: number, userId: number) {
         const { id, inTeam } =
             (await this.prismaService.interestedHappening.findFirst({

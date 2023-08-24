@@ -1,6 +1,6 @@
-import { Status } from '@/types/Happenings.type';
+import { Status } from '@app/shared/types/Happening.type';
 import { Nullable } from '@/types/Nullable.type';
-import { Profile } from '@/types/Profile.type';
+import { Profile } from '@app/shared/types/Profile.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: Nullable<Profile> = {

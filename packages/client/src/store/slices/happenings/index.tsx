@@ -1,4 +1,4 @@
-import { Event, Run, Status } from '@/types/Happenings.type';
+import { Event, Run, Status } from '@app/shared/types/Happening.type';
 import { SearchResult } from '@/types/SearchResult.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 

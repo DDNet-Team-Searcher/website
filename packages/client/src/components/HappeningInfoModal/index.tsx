@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
 import { useState } from 'react';
 import classNames from 'classnames';
-import { Event, Happenings, Run, Status } from '@/types/Happenings.type';
+import { Event, Happenings, Status } from '@app/shared/types/Happening.type';
 import { StartTime } from '@/components/Happening/StartTime';
 import { Place } from '@/components/Happening/Place';
 import {

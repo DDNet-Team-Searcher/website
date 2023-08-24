@@ -1,5 +1,5 @@
 import { setHappeningInfoModalData } from '@/store/slices/app';
-import { Happenings, Run } from '@/types/Happenings.type';
+import { Happenings, Run } from '@app/shared/types/Happening.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 
 type OwnProps = {

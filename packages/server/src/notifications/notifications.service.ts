@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType } from '@prisma/client';
+import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Notification } from 'src/types/Notification.type';
-import { NotificationJson } from 'src/types/Notification.type';
+import { Notification } from '@app/shared/types/Notification.type';
+import { NotificationJson } from '@app/shared/types/Notification.type';
 import { WebsocketsGateway } from 'src/websockets/websockets.gateway';
+import { Happenings } from '@app/shared/types/Happening.type';
 
 @Injectable()
 export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) { }
+    ) {}
 
     async sendNotification<T extends NotificationType>(
         userId: number,
@@ -27,15 +29,23 @@ export class NotificationsService {
 
         const notification = await this.getNotificationById(res.id);
 
-        this.websocketGateway.sendNotification(userId, notification);
+        if (notification) {
+            this.websocketGateway.sendNotification(userId, notification);
+        }
     }
 
-    async getNotificationById(notificationId: number) {
-        let notification = await this.prismaService.notification.findFirst({
+    async getNotificationById(
+        notificationId: number,
+    ): Promise<Notification | null> {
+        const notification = await this.prismaService.notification.findFirst({
             where: {
                 id: notificationId,
             },
-        }) as Notification;
+        });
+
+        if (!notification) {
+            return null;
+        }
 
         if (
             notification.type === NotificationType.AddedInTeam ||
@@ -44,7 +54,12 @@ export class NotificationsService {
             const { authorId, ...happeningInfo } =
                 (await this.prismaService.happening.findFirst({
                     where: {
-                        id: notification.notification.happeningId,
+                        id: (
+                            notification.notification as NotificationJson<
+                                | NotifType.AddedInTeam
+                                | NotifType.RemovedFromTeam
+                            >
+                        ).happeningId,
                     },
                     select: {
                         authorId: true,
@@ -54,19 +69,38 @@ export class NotificationsService {
                     },
                 }))!; //NOTE: this is fine
 
-            notification.happening = happeningInfo;
-
             const author = (await this.prismaService.user.findFirst({
                 where: {
                     id: authorId,
                 },
+                select: {
+                    username: true,
+                    avatar: true,
+                },
             }))!; //NOTE: this is fine
 
-            notification.author = author;
+            return {
+                author,
+                id: notification.id,
+                type: notification.type as
+                    | NotifType.AddedInTeam
+                    | NotifType.RemovedFromTeam,
+                seen: notification.seen,
+                happening: {
+                    ...happeningInfo,
+                    type: happeningInfo.type as Happenings,
+                },
+                notification: notification.notification as NotificationJson<
+                    NotifType.AddedInTeam | NotifType.RemovedFromTeam
+                >,
+                createdAt: notification.createdAt.toString(),
+            };
         } else if (notification.type === NotificationType.Followage) {
             const author = (await this.prismaService.user.findFirst({
                 where: {
-                    id: notification.notification.userId,
+                    id: (
+                        notification.notification as NotificationJson<NotifType.Followage>
+                    ).userId,
                 },
                 select: {
                     username: true,
@@ -74,26 +108,38 @@ export class NotificationsService {
                 },
             }))!; //NOTE: this is fine
 
-            notification.author = author;
+            return {
+                author,
+                id: notification.id,
+                type: notification.type as NotifType.Followage,
+                seen: notification.seen,
+                notification:
+                    notification.notification as NotificationJson<NotifType.Followage>,
+                createdAt: notification.createdAt.toString(),
+            };
         } else if (
             notification.type === NotificationType.InterestedInHappening
         ) {
-            const happeningInfo = (await this.prismaService.happening.findFirst({
-                where: {
-                    id: notification.notification.happeningId,
+            const happeningInfo = (await this.prismaService.happening.findFirst(
+                {
+                    where: {
+                        id: (
+                            notification.notification as NotificationJson<NotifType.InterestedInHappening>
+                        ).happeningId,
+                    },
+                    select: {
+                        mapName: true,
+                        title: true,
+                        type: true,
+                    },
                 },
-                select: {
-                    mapName: true,
-                    title: true,
-                    type: true,
-                },
-            }))!; //NOTE: this is fine
-
-            notification.happening = happeningInfo;
+            ))!; //NOTE: this is fine
 
             const author = (await this.prismaService.user.findFirst({
                 where: {
-                    id: notification.notification.userId,
+                    id: (
+                        notification.notification as NotificationJson<NotifType.InterestedInHappening>
+                    ).userId,
                 },
                 select: {
                     username: true,
@@ -101,10 +147,22 @@ export class NotificationsService {
                 },
             }))!; //NOTE: this is fine
 
-            notification.author = author;
+            return {
+                author,
+                id: notification.id,
+                type: notification.type as NotifType.InterestedInHappening,
+                seen: notification.seen,
+                happening: {
+                    ...happeningInfo,
+                    type: happeningInfo.type as Happenings,
+                },
+                notification:
+                    notification.notification as NotificationJson<NotifType.InterestedInHappening>,
+                createdAt: notification.createdAt.toString(),
+            };
         }
 
-        return notification;
+        return null;
     }
 
     async getUserNotifications(userId: number) {
@@ -117,14 +175,18 @@ export class NotificationsService {
                 id: true,
             },
             orderBy: {
-                createdAt: 'desc' 
-            }
+                createdAt: 'desc',
+            },
         });
 
         const res: Notification[] = [];
 
-        for (let notification of notifications) {
-            res.push(await this.getNotificationById(notification.id));
+        for (const notification of notifications) {
+            const notif = await this.getNotificationById(notification.id);
+
+            if (notif) {
+                res.push(notif);
+            }
         }
 
         return res;

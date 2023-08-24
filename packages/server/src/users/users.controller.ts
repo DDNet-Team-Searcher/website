@@ -31,7 +31,7 @@ export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-    ) {}
+    ) { }
 
     @Post('/register')
     async register(@Body() data: RegisterUserDTO) {
@@ -249,10 +249,7 @@ export class UsersController {
             return {
                 status: 'success',
                 data: {
-                    profile: {
-                        ...profile,
-                        roles: profile.roles.map((role) => role.role),
-                    },
+                    profile,
                 },
             };
         }

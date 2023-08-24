@@ -1,19 +1,20 @@
-import type { Role } from '@prisma/client';
-import type { Event, Run } from './Happenings.type';
+import { Event, Run } from './Happening.type';
+import { Role } from './Role.type';
 
 export type Profile = {
     id: number;
     username: string;
     avatar: string | null;
-    createdAt: Date;
-    roles: { role: Pick<Role, 'id' | 'name' | 'url' | 'color'> }[];
+    createdAt: string;
+    roles: Role[];
     tier: number;
     verified: boolean;
+    isFollowing: boolean;
     reviews: {
         id: number;
         review: string | null;
+        createdAt: string;
         rate: number;
-        createdAt: Date;
         author: {
             id: number;
             username: string;
@@ -24,7 +25,6 @@ export type Profile = {
         events: Event[];
         runs: Run[];
     };
-    isFollowing: boolean;
     _count: {
         followers: number;
         following: number;

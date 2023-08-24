@@ -1,4 +1,4 @@
-import { Run as RunT, Event as EventT } from './Happenings.type';
+import { Run as RunT, Event as EventT } from '@app/shared/types/Happening.type';
 
 type Run = { type: 'run' } & RunT;
 type Event = { type: 'event' } & EventT;

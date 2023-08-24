@@ -1,5 +1,5 @@
-import type { Event, Run } from './Happenings.type';
-import type { Profile } from './Profile.type';
+import type { Event, Run } from '@app/shared/types/Happening.type';
+import type { Profile } from '@app/shared/types/Profile.type';
 import type { Response as ApiResponse } from './Response.type';
 import type { Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';

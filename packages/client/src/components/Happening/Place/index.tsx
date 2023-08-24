@@ -1,4 +1,4 @@
-import { Place } from '@/types/Happenings.type';
+import { Place } from '@app/shared/types/Happening.type';
 
 type OwnProps = {
     place: Place;

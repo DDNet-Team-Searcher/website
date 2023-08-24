@@ -4,7 +4,7 @@ import { Events } from '@/components/Events';
 import { Runs } from '@/components/Runs';
 import { socket } from '@/socket';
 import { addNotification } from '@/store/slices/user';
-import { Notification } from '@/types/Notification.type';
+import { Notification } from '@app/shared/types/Notification.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useEffect } from 'react';
 

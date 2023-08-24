@@ -5,7 +5,7 @@ import {
     useLazyStartHappeningQuery,
 } from '@/features/api/happenings.api';
 import { hint } from '@/store/slices/hints';
-import { Status } from '@/types/Happenings.type';
+import { Status } from '@app/shared/types/Happening.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { StartHappeningResponse } from '@/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';

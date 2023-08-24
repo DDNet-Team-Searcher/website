@@ -3,13 +3,12 @@ import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Profile } from 'src/types/Profile.type';
-import { User } from 'src/types/User.type';
-import { computePersmissions } from 'src/utils/computedFields';
+import { Profile } from '@app/shared/types/Profile.type';
+import { User } from '@app/shared/types/User.type';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
-import { Run, Event } from 'src/types/Happenings.type';
+import { Run, Event } from '@app/shared/types/Happening.type';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +33,17 @@ export class UsersService {
     }
 
     async getUserCredentials(id: number): Promise<User> {
-        const credentials = (await this.prismaService.user.findFirst({
+        const {
+            id: userId,
+            username,
+            tier,
+            email,
+            createdAt,
+            updatedAt,
+            roles,
+            verified,
+            ...credentials
+        } = (await this.prismaService.user.findFirst({
             where: {
                 id,
             },
@@ -59,6 +68,12 @@ export class UsersService {
                         },
                     },
                 },
+                bans: {
+                    take: 1,
+                    select: {
+                        reason: true,
+                    },
+                },
             },
         }))!; //NOTE: this is fine
 
@@ -77,17 +92,32 @@ export class UsersService {
 
         if (credentials.avatar) {
             avatar = `${process.env.BASE_URL}/${process.env.AVATAR_PATH}/${credentials.avatar}`;
-
         }
 
-        const res = {
-            ...credentials,
-            avatar,
-            notifications,
-            _count: { unreadNotifications: unreadNotificationsCount },
+        let banned: User['banned'] = {
+            isBanned: false,
+            reason: null,
         };
 
-        return computePersmissions(res);
+        if (credentials.bans.length) {
+            banned.isBanned = true;
+            banned.reason = credentials.bans[0].reason;
+        }
+
+        return {
+            id,
+            username,
+            tier,
+            email,
+            avatar,
+            notifications,
+            updatedAt: updatedAt.toString(),
+            createdAt: updatedAt.toString(),
+            permissions: {} as any,
+            banned,
+            verified,
+            _count: { unreadNotifications: unreadNotificationsCount },
+        };
     }
 
     async register(data: RegisterUserDTO) {
@@ -122,7 +152,7 @@ export class UsersService {
     }
 
     async getUserProfile(userId: number, id: number): Promise<null | Profile> {
-        const profile = (await this.prismaService.user.findFirst({
+        const profile = await this.prismaService.user.findFirst({
             where: {
                 id,
             },
@@ -168,7 +198,21 @@ export class UsersService {
                     },
                 },
             },
-        }))!; //NOTE: this is fine
+        });
+
+        if (!profile) {
+            return null;
+        }
+
+        const {
+            id: profileUserId,
+            avatar,
+            verified,
+            createdAt,
+            tier,
+            username,
+            _count: { followers, following },
+        } = profile;
 
         const runIds = await this.happeningService.getRecentRunsIds(id);
         const eventIds = await this.happeningService.getRecentEventsIds(id);
@@ -177,7 +221,10 @@ export class UsersService {
         const runs: Run[] = [];
 
         for (const runId of runIds) {
-            const run = await this.happeningService.getRunById(userId, runId.id);
+            const run = await this.happeningService.getRunById(
+                userId,
+                runId.id,
+            );
 
             if (run) {
                 runs.push(run);
@@ -185,7 +232,10 @@ export class UsersService {
         }
 
         for (const eventId of eventIds) {
-            const event = await this.happeningService.getEventById(userId, eventId.id);
+            const event = await this.happeningService.getEventById(
+                userId,
+                eventId.id,
+            );
 
             if (event) {
                 events.push(event);
@@ -205,14 +255,33 @@ export class UsersService {
 
         const isFollowing = await this.isFollowing(userId, id);
 
+        const reviews: Profile['reviews'] = [];
+
+        for (const review of profile.reviews) {
+            reviews.push({
+                ...review,
+                createdAt: createdAt.toString(),
+            });
+        }
+
+        const roles = profile.roles.map((el) => el.role);
+
         return {
-            ...profile,
+            id: profileUserId,
+            reviews,
+            username,
+            tier,
+            roles,
+            createdAt: createdAt.toString(),
+            verified,
+            avatar,
             happenings: {
                 runs,
                 events,
             },
             _count: {
-                ...profile?._count,
+                followers,
+                following,
                 playedRuns,
                 playedEvents,
             },

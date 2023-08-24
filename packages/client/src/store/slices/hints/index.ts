@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Nullable } from '@/types/Nullable.type';
 import { AppDispatch } from '@/store';
 
 type Hint = {

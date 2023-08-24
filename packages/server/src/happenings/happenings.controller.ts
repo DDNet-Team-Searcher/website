@@ -20,8 +20,7 @@ import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
-import { HappeningWithConnectString } from 'src/types/HappeningWithConnectString.type';
-import { Event, Run } from 'src/types/Happenings.type';
+import { Event, Run } from '@app/shared/types/Happening.type';
 
 @UseGuards(AuthorGuard)
 @Controller()

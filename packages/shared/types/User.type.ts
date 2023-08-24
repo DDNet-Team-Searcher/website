@@ -1,12 +1,12 @@
-import type { Notification } from '@prisma/client';
+import { Notification } from "./Notification.type";
 
 export type User = {
     id: number;
     username: string;
     email: string;
     tier: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     verified: boolean;
     avatar: string | null;
     notifications: Notification[];
@@ -17,7 +17,7 @@ export type User = {
         canManageRoles: boolean;
         canManagePosts: boolean;
     };
-    bans: {
+    banned: {
         isBanned: boolean;
         reason: string | null;
     };

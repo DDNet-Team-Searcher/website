@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Run, Event } from 'src/types/Happenings.type';
+import { Run, Event } from '@app/shared/types/Happening.type';
 import { UsersService } from 'src/users/users.service';
 import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';

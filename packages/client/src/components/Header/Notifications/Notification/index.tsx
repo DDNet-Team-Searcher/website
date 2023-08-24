@@ -1,10 +1,10 @@
 import { Avatar } from '@/components/Avatar';
 import { useLazySetNotificationSeenQuery } from '@/features/api/notifications.api';
-import { Happenings } from '@/types/Happenings.type';
+import { Happenings } from '@app/shared/types/Happening.type';
 import {
     Notification as NotificationT,
     NotificationType,
-} from '@/types/Notification.type';
+} from '@app/shared/types/Notification.type';
 import { timeAgo } from '@/utils/timeago';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
@@ -30,33 +30,11 @@ export function Notification({ notification }: OwnProps) {
             } is interested in your ${notification.happening.type === Happenings.Event
                 ? notification.happening.title
                 : notification.happening.mapName
-            } ${notification.happening.type === Happenings.Event ? 'event' : 'run'}`;
+            } ${notification.happening.type === Happenings.Event ? 'event' : 'run'
+            }`;
     } else if (notification.type == NotificationType.NoEmptyServers) {
         string = `Sadly you cant play on our servers coz there're no empty servers`;
     }
-
-    // {notification.type ===
-    //     NotificationType.InterestedInHappening ? (
-    //     <>
-    //         {notification.author.username || 'deleted user'} is
-    //         interested in your
-    //         {notification.happening?.type === Happenings.Event
-    //             ? ` '${notification.happening.title}' `
-    //             : notification.happening?.type ===
-    //                 Happenings.Run
-    //                 ? ` '${notification.happening.mapName}' `
-    //                 : ' deleted '}
-    //         {notification.happening?.type === Happenings.Event
-    //             ? 'event'
-    //             : notification.happening?.type ===
-    //                 Happenings.Run
-    //                 ? 'run'
-    //                 : 'happening'}
-    //         :D
-    //     </>
-    // ) : (
-    //     ''
-    // )}
 
     return (
         <li className="mt-[15px] flex" ref={ref}>

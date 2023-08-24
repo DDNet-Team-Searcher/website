@@ -18,7 +18,7 @@ import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
 import { deleteHappening, setHappeningStatus, setIsInterestedInHappening, setProfile } from '@/store/slices/profile';
-import { Event as EventType, Run as RunType } from '@/types/Happenings.type';
+import { Event as EventType, Run as RunType } from '@app/shared/types/Happening.type';
 
 type OwnProps = {
     params: {

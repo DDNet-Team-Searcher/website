@@ -1,4 +1,4 @@
-import { Status } from '@/types/Happenings.type';
+import { Status } from '@app/shared/types/Happening.type';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';

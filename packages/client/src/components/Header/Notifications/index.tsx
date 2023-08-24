@@ -1,5 +1,5 @@
 import { SettingsIcon } from '@/components/ui/Icons/Settings';
-import { Notification as NotificationT } from '@/types/Notification.type';
+import { Notification as NotificationT } from '@app/shared/types/Notification.type';
 import { useAppSelector } from '@/utils/hooks/hooks';
 import classNames from 'classnames';
 import { forwardRef, Ref } from 'react';

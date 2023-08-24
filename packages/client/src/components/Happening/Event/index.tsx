@@ -4,7 +4,7 @@ import {
     Event as EventType,
     Happenings,
     Status,
-} from '@/types/Happenings.type';
+} from '@app/shared/types/Happening.type';
 import { hint } from '@/store/slices/hints';
 import {
     useDeleteHappeningMutation,

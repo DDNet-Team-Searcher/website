@@ -4,9 +4,10 @@ export enum Status {
     Finished = 'Finished',
     InQueue = 'InQueue',
 }
+
 export enum Happenings {
-    Run,
-    Event,
+    Run = "Run",
+    Event = "Event",
 }
 
 export type Place = 'HERE' | 'THERE';
@@ -15,7 +16,7 @@ type HappeningCommon = {
     id: number;
     place: Place;
     mapName: string;
-    description: string;
+    description: string | null;
     startAt: string;
     status: Status;
     createdAt: string;

@@ -1,7 +1,7 @@
 import { Response } from '@/types/DDstats.type';
-import { Notification } from '@/types/Notification.type';
+import { Notification } from '@app/shared/types/Notification.type';
 import { Nullable } from '@/types/Nullable.type';
-import { User } from '@/types/User.type';
+import { User } from '@app/shared/types/User.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AppState = {
@@ -20,7 +20,7 @@ const initialState: AppState = {
         verified: null,
         avatar: null,
         notifications: [],
-        perimissions: {
+        permissions: {
             canBan: null,
             canDeleteHappenings: null,
             canManageRoles: null,
