@@ -23,12 +23,10 @@ export function Run({
         startAt,
         status,
         teamSize,
-        interestedPlayers: interested,
+        isInterested,
         author: { avatar, username, id: authorId },
         _count: { interestedPlayers },
     } = run;
-
-    const isUserInterestedInRun = !!interested.length;
 
     return (
         <div
@@ -77,7 +75,7 @@ export function Run({
                             setStatusDispatch={setStatusDispatch}
                         />
                         <InterestedButton
-                            isUserInterestedInRun={isUserInterestedInRun}
+                            isUserInterestedInRun={isInterested}
                             runId={id}
                             setIsInterestedDispatch={setIsInterestedDispatch}
                         />

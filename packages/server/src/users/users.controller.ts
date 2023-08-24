@@ -122,14 +122,12 @@ export class UsersController {
                 avatar,
             );
 
+            const avatarUrl = `${process.env.BASE_URL}/${process.env.AVATAR_PATH}/${filename}`;
+
             return {
                 status: 'success',
                 data: {
-                    avatar: `${req.protocol}://${process.env.HOST}${
-                        process.env.PORT === '80'
-                            ? process.env.PORT
-                            : `:${process.env.PORT}`
-                    }${process.env.AVATAR_PATH}/${filename}`,
+                    avatar: avatarUrl,
                 },
             };
         } catch (e) {

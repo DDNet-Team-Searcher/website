@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -21,14 +20,13 @@ import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
-// import { computeConnectString } from 'src/utils/computedFields';
 import { HappeningWithConnectString } from 'src/types/HappeningWithConnectString.type';
 import { Event, Run } from 'src/types/Happenings.type';
 
 @UseGuards(AuthorGuard)
 @Controller()
 export class HappeningsController {
-    constructor(private readonly happeningsService: HappeningsService) {}
+    constructor(private readonly happeningsService: HappeningsService) { }
 
     @Protected()
     @Post('/create/run')
@@ -178,16 +176,20 @@ export class HappeningsController {
     @Protected()
     @Get('/runs')
     async getRuns(@Req() req) {
-        const runs = await this.happeningsService.getAllRuns(req.user.id);
-        const res: (Run | HappeningWithConnectString<Run>)[] = [];
+        const ids = await this.happeningsService.getAllRunsIds();
 
-        // for (let run of runs) {
-        //     if (run.server) {
-        //         res.push(computeConnectString(run));
-        //     } else {
-        // res.push(run);
-        //     }
-        // }
+        const runs: Run[] = [];
+
+        for (const id of ids) {
+            const run = await this.happeningsService.getRunById(
+                id.id,
+                req.user.id,
+            );
+
+            if (run) {
+                runs.push(run);
+            }
+        }
 
         return {
             status: 'success',
@@ -200,16 +202,17 @@ export class HappeningsController {
     @Protected()
     @Get('/events')
     async getEvents(@Req() req) {
-        const events = await this.happeningsService.getAllEvents(req.user.id);
-        const res: (Event | HappeningWithConnectString<Event>)[] = [];
+        const ids = await this.happeningsService.getAllEventsIds();
 
-        // for (let event of events) {
-        //     if (event.server) {
-        //         res.push(computeConnectString(event));
-        //     } else {
-        //         res.push(event);
-        //     }
-        // }
+        const events: Event[] = [];
+
+        for (const id of ids) {
+            const event = await this.happeningsService.getEventById(id.id, req.user.id);
+
+            if (event) {
+                events.push(event);
+            }
+        }
 
         return {
             status: 'success',

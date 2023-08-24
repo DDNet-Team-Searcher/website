@@ -42,7 +42,7 @@ export function Event({
         place,
         startAt,
         status,
-        interestedPlayers: interested,
+        isInterested,
         author: { id: authorId, username, avatar },
         _count: { interestedPlayers },
         thumbnail,
@@ -54,7 +54,6 @@ export function Event({
     const [deleteEventQuery] = useDeleteHappeningMutation();
     const [setIsUserInterestedInHappening] =
         useSetIsInterestedInHappeningMutation();
-    const isUserInterestedInEvent = !!interested.length;
 
     const endEvent = async (id: number) => {
         try {
@@ -117,7 +116,7 @@ export function Event({
                 dispatch(
                     setIsInterestedDispatch({
                         id,
-                        isInterested: !!!interested.length,
+                        isInterested: !isInterested,
                         type: 'event',
                     }),
                 );
@@ -202,7 +201,7 @@ export function Event({
                                 'py-1 px-2.5 bg-primary-3 text-high-emphasis rounded-[5px] flex items-center ml-2.5',
                                 {
                                     'bg-[#383129] !text-primary-1':
-                                        isUserInterestedInEvent,
+                                        isInterested,
                                 },
                             )}
                             onClick={setIsInterestedCb(id)}
@@ -210,7 +209,7 @@ export function Event({
                             <img
                                 className="mr-2.5"
                                 src={
-                                    isUserInterestedInEvent
+                                    isInterested
                                         ? '/check-mark.png'
                                         : '/run-bell.svg'
                                 }

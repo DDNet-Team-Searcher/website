@@ -6,9 +6,8 @@ type HappeningCommon = {
     mapName: string;
     status: Status;
     createdAt: Date;
-    interestedPlayers: {
-        inTeam: boolean;
-    }[];
+    isInterested: boolean;
+    inTeam: boolean;
     _count: {
         interestedPlayers: number;
     };

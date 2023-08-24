@@ -92,11 +92,7 @@ export const happeningsSlice = createSlice({
                 (happening) => happening.id === action.payload.id,
             )[0] as Run | Event;
 
-            if (action.payload.isInterested) {
-                happening.interestedPlayers.push({ inTeam: false });
-            } else {
-                happening.interestedPlayers.pop();
-            }
+            happening.isInterested = action.payload.isInterested;
 
             happening._count.interestedPlayers =
                 happening._count.interestedPlayers +
@@ -115,11 +111,7 @@ export const happeningsSlice = createSlice({
                 (happening) => happening.id === action.payload.id,
             )[0];
 
-            if (action.payload.isInterested) {
-                happening.interestedPlayers.push({ inTeam: false });
-            } else {
-                happening.interestedPlayers.pop();
-            }
+            happening.isInterested = action.payload.isInterested;
 
             happening._count.interestedPlayers =
                 happening._count.interestedPlayers +

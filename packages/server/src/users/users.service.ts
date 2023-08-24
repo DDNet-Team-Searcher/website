@@ -9,6 +9,7 @@ import { computePersmissions } from 'src/utils/computedFields';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
+import { Run, Event } from 'src/types/Happenings.type';
 
 @Injectable()
 export class UsersService {
@@ -169,8 +170,27 @@ export class UsersService {
             },
         }))!; //NOTE: this is fine
 
-        const runs = await this.happeningService.getRecentRuns(id);
-        const events = await this.happeningService.getRecentEvents(id);
+        const runIds = await this.happeningService.getRecentRunsIds(id);
+        const eventIds = await this.happeningService.getRecentEventsIds(id);
+
+        const events: Event[] = [];
+        const runs: Run[] = [];
+
+        for (const runId of runIds) {
+            const run = await this.happeningService.getRunById(userId, runId.id);
+
+            if (run) {
+                runs.push(run);
+            }
+        }
+
+        for (const eventId of eventIds) {
+            const event = await this.happeningService.getEventById(userId, eventId.id);
+
+            if (event) {
+                events.push(event);
+            }
+        }
 
         const playedRuns =
             await this.happeningService.countLastFinishedHappenings(

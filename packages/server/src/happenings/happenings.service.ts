@@ -21,7 +21,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) {}
+    ) { }
 
     async createRun(data: CreateRunDTO & { authorId: number }) {
         return await this.prismaService.happening.create({
@@ -246,7 +246,7 @@ export class HappeningsService {
     }
 
     async getRunById(runId: number, userId: number): Promise<Run | null> {
-        return await this.prismaService.happening.findFirst({
+        const run = await this.prismaService.happening.findFirst({
             where: {
                 type: 'Run',
                 id: runId,
@@ -288,6 +288,22 @@ export class HappeningsService {
                 },
             },
         });
+
+        if (run) {
+            const isInterested = !!run?.interestedPlayers?.length || false;
+            const inTeam = run?.interestedPlayers[0]?.inTeam || false;
+
+            //@ts-ignore
+            delete run.interestedPlayers;
+
+            return {
+                ...run,
+                inTeam,
+                isInterested
+            };
+        }
+
+        return null;
     }
 
     async getEventById(eventId: number, userId: number): Promise<Event | null> {
@@ -336,15 +352,23 @@ export class HappeningsService {
             },
         });
 
-        let thumbnail: string | null = null;
-
-        if (event?.thumbnail) {
-            thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
-        }
-
         if (event) {
+            let thumbnail: string | null = null;
+
+            if (event?.thumbnail) {
+                thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
+            }
+
+            const isInterested = !!event?.interestedPlayers?.length || false;
+            const inTeam = event?.interestedPlayers[0]?.inTeam || false;
+
+            //@ts-ignore
+            delete event.interestedPlayers;
+
             return {
                 ...event,
+                inTeam,
+                isInterested,
                 thumbnail,
             };
         }
@@ -352,107 +376,38 @@ export class HappeningsService {
         return null;
     }
 
-    async getAllRuns(id: number): Promise<Run[]> {
+    async getAllRunsIds() {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Run',
+                NOT: {
+                    status: 'Finished',
+                },
             },
             select: {
                 id: true,
-                place: true,
-                mapName: true,
-                teamSize: true,
-                description: true,
-                status: true,
-                startAt: true,
-                createdAt: true,
-                connectString: true,
-                interestedPlayers: {
-                    select: {
-                        inTeam: true,
-                    },
-                    where: {
-                        userId: id,
-                    },
-                },
-                _count: {
-                    select: {
-                        interestedPlayers: true,
-                    },
-                },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
-                    },
-                },
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        avatar: true,
-                    },
-                },
             },
         });
     }
 
-    async getAllEvents(id: number): Promise<Event[]> {
-        const events = await this.prismaService.happening.findMany({
+    async getAllEventsIds() {
+        return await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
+                NOT: {
+                    status: 'Finished',
+                },
             },
             select: {
                 id: true,
-                title: true,
-                place: true,
-                mapName: true,
-                status: true,
-                startAt: true,
-                description: true,
-                endAt: true,
-                thumbnail: true,
-                createdAt: true,
-                connectString: true,
-                interestedPlayers: {
-                    select: {
-                        inTeam: true,
-                    },
-                    where: {
-                        userId: id,
-                    },
-                },
-                _count: {
-                    select: {
-                        interestedPlayers: true,
-                    },
-                },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
-                    },
-                },
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        avatar: true,
-                    },
-                },
             },
         });
-
-        for (const event of events) {
-            if (event?.thumbnail) {
-                event.thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
-            }
-        }
-
-        return events;
     }
 
-    async getRecentRuns(id: number, runsCount = 5): Promise<Run[]> {
+    async getRecentRunsIds(
+        id: number,
+        runsCount = 5,
+    ): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Run',
@@ -464,41 +419,14 @@ export class HappeningsService {
             take: runsCount,
             select: {
                 id: true,
-                place: true,
-                mapName: true,
-                teamSize: true,
-                description: true,
-                status: true,
-                startAt: true,
-                createdAt: true,
-                interestedPlayers: {
-                    select: {
-                        inTeam: true,
-                    },
-                },
-                _count: {
-                    select: {
-                        interestedPlayers: true,
-                    },
-                },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
-                    },
-                },
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        avatar: true,
-                    },
-                },
             },
         });
     }
 
-    async getRecentEvents(id: number, eventsCount = 5): Promise<Event[]> {
+    async getRecentEventsIds(
+        id: number,
+        eventsCount = 5,
+    ): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
@@ -510,38 +438,6 @@ export class HappeningsService {
             take: eventsCount,
             select: {
                 id: true,
-                title: true,
-                place: true,
-                mapName: true,
-                status: true,
-                startAt: true,
-                description: true,
-                endAt: true,
-                thumbnail: true,
-                createdAt: true,
-                interestedPlayers: {
-                    select: {
-                        inTeam: true,
-                    },
-                },
-                _count: {
-                    select: {
-                        interestedPlayers: true,
-                    },
-                },
-                server: {
-                    select: {
-                        ip: true,
-                        port: true,
-                    },
-                },
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        avatar: true,
-                    },
-                },
             },
         });
     }

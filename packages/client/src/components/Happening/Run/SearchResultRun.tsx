@@ -20,12 +20,10 @@ export function SearchResultRun({
         startAt,
         status,
         description,
-        interestedPlayers: interested,
+        isInterested,
         author: { id: authorId, username },
         _count: { interestedPlayers },
     } = run;
-
-    const isUserInterestedInRun = !!interested.length;
 
     return (
         <div className="flex bg-primary-2 rounded-[10px]">
@@ -69,7 +67,7 @@ export function SearchResultRun({
                             deleteDispatch={deleteDispatch}
                         />
                         <InterestedButton
-                            isUserInterestedInRun={isUserInterestedInRun}
+                            isUserInterestedInRun={isInterested}
                             runId={id}
                             setIsInterestedDispatch={setIsInterestedDispatch}
                         />

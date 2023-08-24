@@ -19,9 +19,8 @@ type HappeningCommon = {
     startAt: string;
     status: Status;
     createdAt: string;
-    interestedPlayers: {
-        inTeam: boolean;
-    }[]; // this thing means if a user is interested in a run, is there's an object in an array then it's true
+    inTeam: boolean;
+    isInterested: boolean;
     _count: {
         interestedPlayers: number;
     };
