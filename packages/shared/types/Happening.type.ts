@@ -6,8 +6,8 @@ export enum Status {
 }
 
 export enum Happenings {
-    Run = "Run",
-    Event = "Event",
+    Run = 'Run',
+    Event = 'Event',
 }
 
 export type Place = 'HERE' | 'THERE';

@@ -8,6 +8,9 @@ const nextConfig = {
         });
         return config;
     },
+    experimental: {
+        externalDir: true,
+    },
 };
 
 module.exports = nextConfig;
