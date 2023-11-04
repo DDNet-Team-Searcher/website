@@ -17,7 +17,7 @@ export async function createFile(file: Express.Multer.File, type: string) {
         const filename = uuidv4() + path.extname(file.originalname);
 
         fs.writeFile(
-            `.${fileType[type]}/${filename}`,
+            `${fileType[type]}/${filename}`,
             file.buffer,
             async (err) => {
                 if (err === null) {
