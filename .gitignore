@@ -1,4 +1,5 @@
 node_modules
+docker-compose.dev.yml
 
 packages/client/node_modules
 packages/client/.next
