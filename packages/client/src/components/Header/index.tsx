@@ -64,9 +64,10 @@ export function Header() {
         // dispatch(setIsCreateEventModalHidden(false))
     };
 
-    const onCreateHappeningModalClose = () => {
+    const onCreateHappeningModalClose = (cb: () => void) => {
         setCurrentHappening(null);
         setIsCreateModalVisible(false);
+        cb();
     };
 
     const search = (e: any) => {

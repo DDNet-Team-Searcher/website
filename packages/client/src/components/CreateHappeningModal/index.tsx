@@ -18,7 +18,7 @@ import { TextareaWithLabel } from '../ui/TextareaWithLabel';
 
 type OwnProps = {
     isVisible: boolean;
-    onClose: () => void;
+    onClose: (cb: () => void) => void;
     type: 'run' | 'event';
 };
 
@@ -49,6 +49,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
         register,
         setValue,
         formState: { errors },
+        clearErrors
     } = useForm({
         defaultValues,
     });
@@ -88,7 +89,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                 const res = await createEvent(eventData).unwrap();
 
                 if (res.status === 'success') {
-                    onClose();
+                    onClose(clearErrors);
                 }
             } catch (err) {
                 const error = (err as FetchBaseQueryError)
@@ -119,7 +120,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                 }).unwrap();
 
                 if (res.status === 'success') {
-                    onClose();
+                    onClose(clearErrors);
                 }
             } catch (err) {
                 const error = (err as FetchBaseQueryError)
@@ -159,7 +160,9 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
         <Modal
             className={'create-run'}
             visible={isVisible}
-            onClose={onClose}
+            onClose={
+                () => onClose(clearErrors)
+            }
             width={'600px'}
         >
             <p className="text-3xl m-0 pt-6 px-5">Create your own {type}</p>
@@ -217,6 +220,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                         <div className="flex justify-between mt-4">
                             {type === 'event' ? (
                                 <InputWithLabel
+                                    errors={errors}
                                     className={{ container: 'max-w-[256px]' }}
                                     register={register('title')}
                                     label="event title"
@@ -225,6 +229,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                                 />
                             ) : (
                                 <InputWithLabel
+                                    errors={errors}
                                     className={{ container: 'max-w-[256px]' }}
                                     register={register('mapName')}
                                     label="map name"
@@ -234,6 +239,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                             )}
                             {type === 'event' ? (
                                 <InputWithLabel
+                                    errors={errors}
                                     className={{ container: 'max-w-[256px]' }}
                                     register={register('mapName')}
                                     label="map name"
@@ -242,6 +248,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                                 />
                             ) : (
                                 <InputWithLabel
+                                    errors={errors}
                                     className={{ container: 'max-w-[256px]' }}
                                     register={register('teamSize')}
                                     label="team size"
@@ -255,6 +262,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                         </div>
                         <div className="flex justify-between mt-4 w-full">
                             <InputWithLabel
+                                errors={errors}
                                 className={{ container: 'max-w-[256px]' }}
                                 register={register('startDate')}
                                 label="start date"
@@ -262,6 +270,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                                 type="date"
                             />
                             <InputWithLabel
+                                errors={errors}
                                 className={{ container: 'max-w-[256px]' }}
                                 register={register('startTime')}
                                 label="start time"
@@ -290,6 +299,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                     {type == 'event' && isEndFieldsVisible && (
                         <div className="flex justify-between mt-4">
                             <InputWithLabel
+                                errors={errors}
                                 className={{ container: 'max-w-[256px]' }}
                                 register={register('endDate')}
                                 label="end date"
@@ -297,6 +307,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                                 type="date"
                             />
                             <InputWithLabel
+                                errors={errors}
                                 className={{ container: 'max-w-[256px]' }}
                                 register={register('endTime')}
                                 label="end time"
