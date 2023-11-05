@@ -16,6 +16,7 @@ export function Runs() {
             <div className="flex flex-wrap [&>*]:m-2.5">
                 {runs.map((run) => (
                     <Run
+                        key={run.id}
                         run={run}
                         setStatusDispatch={setPopularHappeningStatus}
                         deleteDispatch={deleteHappeningFromPopular}

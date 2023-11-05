@@ -16,6 +16,7 @@ export function Events() {
             <div className="flex flex-wrap [&>*]:m-2.5">
                 {events.map((event) => (
                     <Event
+                        key={event.id}
                         event={event}
                         setIsInterestedDispatch={
                             setIsInterestedInPopularHappening
