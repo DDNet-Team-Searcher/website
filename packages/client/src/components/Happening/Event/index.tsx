@@ -188,6 +188,7 @@ export function Event({
                     <Place place={place} />
                     <div className="flex">
                         <ActionButtons
+                            type={Happenings.Event}
                             status={status}
                             deleteHappening={deleteEvent}
                             endHappening={endEvent}

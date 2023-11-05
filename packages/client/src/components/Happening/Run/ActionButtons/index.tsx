@@ -5,7 +5,7 @@ import {
     useLazyStartHappeningQuery,
 } from '@/features/api/happenings.api';
 import { hint } from '@/store/slices/hints';
-import { Status } from '@app/shared/types/Happening.type';
+import { Happenings, Status } from '@app/shared/types/Happening.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { StartHappeningResponse } from '@/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
@@ -13,12 +13,14 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { RunProps } from '../types';
 
 type OwnProps = {
+    type: Happenings;
     runId: number;
     authorId: number;
     status: Status;
 } & Pick<RunProps, 'setStatusDispatch' | 'deleteDispatch'>;
 
 export function ActionButtons({
+    type,
     runId,
     authorId,
     status,
@@ -92,6 +94,7 @@ export function ActionButtons({
 
     return (
         <HappeningActionButtons
+            type={type}
             happeningId={runId}
             startHappening={startRun}
             authorId={authorId}

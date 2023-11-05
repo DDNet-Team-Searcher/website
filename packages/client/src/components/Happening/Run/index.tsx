@@ -7,6 +7,7 @@ import { ActionButtons } from './ActionButtons';
 import { Title } from './Title';
 import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
+import { Happenings } from '@app/shared/types/Happening.type';
 
 export function Run({
     className,
@@ -68,6 +69,7 @@ export function Run({
                     </Link>
                     <div className="flex">
                         <ActionButtons
+                            type={Happenings.Run}
                             runId={id}
                             status={status}
                             authorId={authorId}

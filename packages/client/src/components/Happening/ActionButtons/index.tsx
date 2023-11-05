@@ -1,10 +1,11 @@
-import { Status } from '@app/shared/types/Happening.type';
+import { Happenings, Status } from '@app/shared/types/Happening.type';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useAppSelector } from '@/utils/hooks/hooks';
 
 type OwnProps = {
+    type: Happenings;
     authorId: number;
     happeningId: number;
     status: Status;
@@ -19,6 +20,7 @@ export function ActionButtons({
     editHappening: editHappeningProp,
     endHappening: endHappeningProp,
     deleteHappening: deleteHappeningProp,
+    type,
     status,
     happeningId,
     authorId,
@@ -54,6 +56,8 @@ export function ActionButtons({
         deleteHappeningProp(happeningId);
     };
 
+    const happeningType = type.toLowerCase()
+
     return (
         <div className="relative">
             <button
@@ -78,7 +82,7 @@ export function ActionButtons({
                         className="text-high-emphasis py-2.5 px-4 rounded-[10px] transition-all duration-200 cursor-pointer text-left hover:bg-primary-1"
                         onClick={startHappening}
                     >
-                        Start Event
+                        Start {happeningType}
                     </button>
                 )}
                 {isOwner && (
@@ -86,7 +90,7 @@ export function ActionButtons({
                         className="text-high-emphasis py-2.5 px-4 rounded-[10px] transition-all duration-200 cursor-pointer text-left hover:bg-primary-1"
                         onClick={editHappening}
                     >
-                        Edit Event
+                        Edit {happeningType}
                     </button>
                 )}
                 {isOwner && status == Status.Happening && (
@@ -96,7 +100,7 @@ export function ActionButtons({
                         }
                         onClick={endHappening}
                     >
-                        End Event
+                        End {happeningType}
                     </button>
                 )}
                 {isOwner && status != Status.Happening && (
@@ -106,7 +110,7 @@ export function ActionButtons({
                         }
                         onClick={deleteHappening}
                     >
-                        Delete Event
+                        Delete {happeningType}
                     </button>
                 )}
             </div>
