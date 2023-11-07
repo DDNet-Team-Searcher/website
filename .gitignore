@@ -16,6 +16,7 @@ packages/server/public/avatars/*
 !packages/server/public/happenings
 packages/server/public/happenings/*
 !packages/server/public/happenings/.gitkeep
+packages/server/src/protos/*.ts
 
 naked-tees
 hentai

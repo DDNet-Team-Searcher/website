@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+enum Action {
+    START = 0;
+    SHUTDOWN = 1;
+    INFO = 2;
+}
+
+message Request {
+    Action action = 1;
+    uint32 id = 2;
+    optional string map_name = 3;
+}

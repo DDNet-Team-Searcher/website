@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+enum ResponseCode {
+  ERROR = 0;
+  OK = 1;
+  NOT_FOUND = 2;
+  WHOOPSIE_DAISY = 3;
+}
+
+message Response {
+  ResponseCode response_code = 1;
+  optional string password = 2;
+  optional uint32 port = 3;
+  optional uint32 used = 4;
+  optional uint32 max = 5;
+}

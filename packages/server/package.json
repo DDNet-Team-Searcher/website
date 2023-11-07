@@ -6,7 +6,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "build": "nest build",
+        "build": "pnpm run proto:generate && nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "npx prisma generate && npx prisma db push --schema ./prisma/schema.prisma && nest start --watch",
@@ -17,9 +17,11 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "proto:generate": "protoc --plugin=\"./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_opt=esModuleInterop=true --experimental_allow_proto3_optional --ts_proto_out=\"./src\" protos/*.proto"
     },
     "dependencies": {
+        "@app/shared": "^1.0.0",
         "@nestjs/common": "^10.1.0",
         "@nestjs/config": "^3.0.0",
         "@nestjs/core": "^10.1.0",
@@ -35,11 +37,12 @@
         "cookie-parser": "^1.4.6",
         "jsonwebtoken": "^9.0.1",
         "prisma": "^5.0.0",
+        "protobufjs": "^7.2.5",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.1",
         "socket.io": "^4.7.1",
-        "uuid": "^9.0.0",
-        "@app/shared": "^1.0.0"
+        "ts-proto": "^1.163.0",
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@nestjs/cli": "^10.1.10",

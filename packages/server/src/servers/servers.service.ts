@@ -1,22 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Socket } from 'net';
-
-type SocketResponse =
-    | {
-        status: 'SERVER_STARTED_SUCCESSFULLY';
-        pid: number;
-        id: number;
-        password: string;
-        port: number;
-    }
-    | {
-        status: 'SERVER_SHUTDOWN_SUCCESSFULLY';
-        pid: number;
-    }
-    | {
-        status: 'SOMETHING_HAPPENNED_IDK_MYSELF';
-    };
+import { Action, Request } from 'src/protos/request';
+import { Response, ResponseCode } from 'src/protos/response';
 
 type Host = {
     ip: string;
@@ -48,22 +34,24 @@ export class ServersService {
 
             await new Promise<void>((res) => {
                 socket.connect(port, ip, async () => {
+                    //TODO: fix this bs
+                    console.log(
+                        `TCP connection established with ${ip}:${port}`,
+                    );
+
                     const server = {
                         socket,
                         max: 0,
                         used: 0,
                     };
+
                     this.sockets.set(id, server);
 
                     const { used, max } = await this.getServerDataAboutHowManyServersItCanRunButThisMethodNameSeemsBigIllLeaveItLikeThis(id);
+
                     server.used = used;
                     server.max = max;
 
-                    this.sockets.set(id, server);
-
-                    console.log(
-                        `TCP connection established with ${ip}:${port}`,
-                    );
                     res();
                 });
 
@@ -79,17 +67,8 @@ export class ServersService {
                 });
 
                 socket.on('data', async (bytes) => {
-                    let res: SocketResponse = JSON.parse(
-                        Buffer.from(bytes).toString(),
-                    );
-
-                    if (res.status === 'SERVER_SHUTDOWN_SUCCESSFULLY') {
-                        //TODO: idk how but here should be handled responses from the rust server which will be triggered by ddnet server
-                        //ddnet server sends a request to rust server and then rust server sends data here :deadge:
-                    } else if (
-                        res.status === 'SOMETHING_HAPPENNED_IDK_MYSELF'
-                    ) {
-                    }
+                    let respose = Response.decode(bytes);
+                    //TODO: idk how but here should be handled responses from the rust server which will be triggered by ddnet server
                 });
             });
         }
@@ -133,20 +112,25 @@ export class ServersService {
         return new Promise((res) => {
             const socket = this.sockets.get(serverId)?.socket!;
 
-            socket.write(
-                Buffer.from(
-                    JSON.stringify({
-                        action: 'INFO',
-                    }) + '\n',
-                ),
-            );
+            const request = Request.create({
+                action: Action.INFO
+            });
+
+            socket.write(Request.encode(request).finish());
 
             const handler = (bytes: Buffer) => {
                 //FIXME: error handling left the code
-                const { status, ...data } = JSON.parse(bytes.toString());
+                const response = Response.decode(bytes);
 
-                if (status == 'INFO_SUCCESS') {
-                    res(data);
+                if (typeof response.max !== "number" || typeof response.used !== "number") {
+                    console.log("This bs doesnt work D:", response);
+                }
+
+                if (response.responseCode == ResponseCode.OK) {
+                    res({
+                        used: response.used!,
+                        max: response.max!,
+                    });
                 }
 
                 socket.removeListener('data', handler);
@@ -163,22 +147,29 @@ export class ServersService {
         return new Promise((res) => {
             const socket = this.sockets.get(serverId)?.socket!;
 
-            socket.write(
-                Buffer.from(
-                    JSON.stringify({
-                        action: 'START',
-                        map_name: data.mapName,
-                        id: data.id,
-                    }) + '\n',
-                ),
-            );
+            const request = Request.create({
+                action: Action.START,
+                mapName: data.mapName,
+                id: data.id
+            });
+
+            socket.write(Request.encode(request).finish());
 
             const handler = (bytes: Buffer) => {
                 //FIXME: error handling left the code
-                const { status, ...data } = JSON.parse(bytes.toString());
+                const response = Response.decode(bytes);
 
-                if (status == 'SERVER_STARTED_SUCCESSFULLY') {
-                    res(data);
+                if (!response.port || !response.password) {
+                    console.log("Thats.. not good #69");
+                }
+
+                if (response.responseCode == ResponseCode.OK) {
+                    res({
+                        port: response.port!,
+                        password: response.password!
+                    });
+                } else {
+                    console.log("Couldnt start the game server");
                 }
 
                 socket.removeListener('data', handler);
@@ -192,19 +183,21 @@ export class ServersService {
         return new Promise<void>((res) => {
             const socket = this.sockets.get(serverId)?.socket!;
 
-            socket.write(
-                Buffer.from(
-                    JSON.stringify({ action: 'SHUTDOWN', id: happeningId }) +
-                    '\n',
-                ),
-            );
+            const request = Request.create({
+                action: Action.SHUTDOWN,
+                id: happeningId
+            });
+
+            socket.write(Request.encode(request).finish());
 
             const handler = (bytes: Buffer) => {
-                const { status } = JSON.parse(bytes.toString());
-                console.log(status);
+                //FIXME: error handling left the code
+                const response = Response.decode(bytes);
 
-                if (status == 'SERVER_SHUTDOWN_SUCCESSFULLY') {
+                if (response.responseCode == ResponseCode.OK) {
                     res();
+                } else {
+                    console.log("Couldnt shutdown the server owo");
                 }
 
                 socket.removeListener('data', handler);
