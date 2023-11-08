@@ -25,6 +25,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeUsernameDTO } from './dto/change-username.dto';
 import { ChangeEmailDTO } from './dto/change-email.dto';
 import { ChangePasswordDTO } from './dto/change-password.dto';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 @Controller()
 export class UsersController {
@@ -122,12 +123,10 @@ export class UsersController {
                 avatar,
             );
 
-            const avatarUrl = `${process.env.BASE_URL}/${process.env.AVATAR_PATH}/${filename}`;
-
             return {
                 status: 'success',
                 data: {
-                    avatar: avatarUrl,
+                    avatar: getAvatarUrl(filename),
                 },
             };
         } catch (e) {

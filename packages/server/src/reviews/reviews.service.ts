@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 @Injectable()
 export class ReviewsService {
     constructor(private readonly prismaService: PrismaService) { }
 
     async getReviewsByHappeningId(happeningId: number) {
-        return this.prismaService.review.findMany({
+        const reviews = await this.prismaService.review.findMany({
             where: {
                 happeningId,
             },
@@ -31,6 +32,13 @@ export class ReviewsService {
                 },
             },
         });
+
+        for (const review of reviews) {
+            review.reviewedUser.avatar = getAvatarUrl(review.reviewedUser.avatar);
+            review.author.avatar = getAvatarUrl(review.author.avatar);
+        }
+
+        return reviews;
     }
 
     async createReview({

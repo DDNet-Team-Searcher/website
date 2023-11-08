@@ -156,7 +156,7 @@ export function Event({
                 <div className="flex justify-between">
                     <StartTime startAt={startAt} status={status} />
                     <Link href={`/profile/${authorId}`} className="ml-auto">
-                        <Avatar src={null} username={username} />
+                        <Avatar src={avatar} username={username} />
                     </Link>
                     <div className="bg-primary-3 text-high-emphasis px-[7px] py-[3px] rounded-full flex items-center ml-2.5">
                         <img src="/run-people.svg" />

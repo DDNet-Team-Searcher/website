@@ -15,6 +15,7 @@ import { CreateEvenDTO } from './dto/create-event.dto';
 import { CreateRunDTO } from './dto/create-run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 @Injectable()
 export class HappeningsService {
@@ -308,7 +309,11 @@ export class HappeningsService {
 
         return {
             id,
-            author,
+            author: {
+                id: author.id,
+                avatar: getAvatarUrl(author.avatar),
+                username: author.username
+            },
             teamSize: teamSize!,
             status: status as HappeningStatus,
             connectString,
@@ -394,7 +399,11 @@ export class HappeningsService {
         return {
             id,
             title: title!,
-            author,
+            author: {
+                id: author.id,
+                avatar: getAvatarUrl(author.avatar),
+                username: author.username
+            },
             connectString,
             place,
             mapName,

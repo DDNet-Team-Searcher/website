@@ -65,7 +65,7 @@ export function Run({
                 </p>
                 <div className="mt-auto flex items-center justify-between">
                     <Link href={`/profile/${authorId}`}>
-                        <Avatar src={null} username={username} />
+                        <Avatar src={avatar} username={username} />
                     </Link>
                     <div className="flex">
                         <ActionButtons

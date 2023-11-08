@@ -9,6 +9,7 @@ import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
 import { Run, Event } from '@app/shared/types/Happening.type';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 @Injectable()
 export class UsersService {
@@ -90,9 +91,7 @@ export class UsersService {
 
         let avatar: string | null = null;
 
-        if (credentials.avatar) {
-            avatar = `${process.env.BASE_URL}/${process.env.AVATAR_PATH}/${credentials.avatar}`;
-        }
+        credentials.avatar = getAvatarUrl(credentials.avatar);
 
         let banned: User['banned'] = {
             isBanned: false,
@@ -274,7 +273,7 @@ export class UsersService {
             roles,
             createdAt: createdAt.toString(),
             verified,
-            avatar,
+            avatar: getAvatarUrl(avatar),
             happenings: {
                 runs,
                 events,

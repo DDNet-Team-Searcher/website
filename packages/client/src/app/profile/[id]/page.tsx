@@ -90,7 +90,7 @@ export default function Profile({ params: { id } }: OwnProps) {
                     <div className="flex justify-center">
                         <Avatar
                             size={285}
-                            src={null}
+                            src={profile.avatar}
                             username={profile.username || ''}
                         />
                         <div className="text-high-emphasis ml-[65px]">
