@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateRunDTO {
+export class RunDTO {
     @IsString()
     @IsNotEmpty()
     mapName: string;

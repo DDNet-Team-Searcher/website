@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsNumberString, IsOptional, IsString } from "class-validator";
 
-export class CreateEvenDTO {
+export class EventDTO {
     @IsString()
     @IsNotEmpty()
     mapName: string;

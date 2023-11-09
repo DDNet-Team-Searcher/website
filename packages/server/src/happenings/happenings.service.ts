@@ -11,8 +11,8 @@ import { Status as HappeningStatus } from '@app/shared/types/Happening.type';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Run, Event } from '@app/shared/types/Happening.type';
-import { CreateEvenDTO } from './dto/create-event.dto';
-import { CreateRunDTO } from './dto/create-run.dto';
+import { EventDTO } from './dto/event.dto';
+import { RunDTO } from './dto/run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
@@ -25,7 +25,7 @@ export class HappeningsService {
         private readonly serversService: ServersService,
     ) { }
 
-    async createRun(data: CreateRunDTO & { authorId: number }) {
+    async createRun(data: RunDTO & { authorId: number }) {
         return await this.prismaService.happening.create({
             data: {
                 ...data,
@@ -43,7 +43,7 @@ export class HappeningsService {
     }
 
     async createEvent(
-        data: CreateEvenDTO & {
+        data: EventDTO & {
             authorId: number;
             thumbnail: Express.Multer.File | null;
         },
@@ -73,7 +73,7 @@ export class HappeningsService {
         });
     }
 
-    async updateRun(runId: number, data: CreateRunDTO) {
+    async updateRun(runId: number, data: RunDTO) {
         return await this.prismaService.happening.update({
             where: {
                 id: runId
@@ -88,7 +88,7 @@ export class HappeningsService {
 
     async updateEvent(
         happeningId: number,
-        data: CreateEvenDTO & {
+        data: EventDTO & {
             thumbnail: Express.Multer.File | null;
         },
     ) {

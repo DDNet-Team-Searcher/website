@@ -16,8 +16,8 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateEvenDTO } from './dto/create-event.dto';
-import { CreateRunDTO } from './dto/create-run.dto';
+import { EventDTO } from './dto/event.dto';
+import { RunDTO } from './dto/run.dto';
 import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
@@ -34,7 +34,7 @@ export class HappeningsController {
 
     @Protected()
     @Post('/create/run')
-    async createRun(@Req() req, @Body() data: CreateRunDTO) {
+    async createRun(@Req() req, @Body() data: RunDTO) {
         try {
             const { id } = await this.happeningsService.createRun({
                 ...data,
@@ -64,7 +64,7 @@ export class HappeningsController {
     async createEvent(
         @UploadedFile() file: Express.Multer.File,
         @Req() req,
-        @Body() data: CreateEvenDTO,
+        @Body() data: EventDTO,
     ) {
         try {
             const { id } = await this.happeningsService.createEvent({
@@ -104,7 +104,7 @@ export class HappeningsController {
         const happeningType = await this.happeningsService.getHappeningType(happeningId);
 
         if (happeningType == HappeningType.Run) {
-            const run = new CreateRunDTO();
+            const run = new RunDTO();
 
             run.mapName = body.mapName;
             run.teamSize = body.teamSize ? parseInt(body.teamSize) : body.teamSize;
@@ -129,7 +129,7 @@ export class HappeningsController {
             await this.happeningsService.updateRun(happeningId, run);
 
         } else if (happeningType == HappeningType.Event) {
-            const event = new CreateEvenDTO();
+            const event = new EventDTO();
 
             event.title = body.title;
             event.mapName = body.mapName;
