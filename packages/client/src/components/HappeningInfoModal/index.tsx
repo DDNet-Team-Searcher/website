@@ -67,8 +67,6 @@ export function HappeningInfoModal() {
     };
 
     const copyConnectData = async () => {
-        //TODO: Right now coping server data thing doesnt work :D
-
         if (happening?.connectString) {
             await navigator.clipboard.writeText(happening?.connectString);
             alert(
@@ -76,7 +74,7 @@ export function HappeningInfoModal() {
             );
         } else {
             alert(
-                'Seems like something fucked up and I cant get server connect data :p',
+                'Seems like something fucked up and you cant get server connect data :p',
             );
         }
     };
