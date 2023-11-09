@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { BaseHappeningProps } from '../types';
 import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
+import { getMapUrl } from '@/utils/getMapUrl';
 
 type OwnProps = BaseHappeningProps & {
     event: EventType;
@@ -144,9 +145,7 @@ export function Event({
     };
 
     //TODO: fix this shit kek
-    const thumbnailUrl =
-        thumbnail ||
-        `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
+    const thumbnailUrl = thumbnail || getMapUrl(mapName);
 
     const onClose = () => {
         setISEditEventModalVisible(false);

@@ -10,6 +10,7 @@ import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
 import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
+import { getMapUrl } from '@/utils/getMapUrl';
 
 export function Run({
     className,
@@ -74,10 +75,7 @@ export function Run({
                 isVisible={isEditRunModalVisible}
             />
             <img
-                src={`https://ddnet.org/ranks/maps/${mapName.replaceAll(
-                    ' ',
-                    '_',
-                )}.png`}
+                src={getMapUrl(mapName)}
                 className="w-full max-h-[100px] object-cover rounded-t-[10px]"
                 alt="map thumbnail"
             />

@@ -7,6 +7,7 @@ import { Title } from './Title';
 import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
+import { getMapUrl } from '@/utils/getMapUrl';
 
 export function SearchResultRun({
     run,
@@ -29,10 +30,7 @@ export function SearchResultRun({
     return (
         <div className="flex bg-primary-2 rounded-[10px]">
             <img
-                src={`https://ddnet.org/ranks/maps/${mapName.replaceAll(
-                    ' ',
-                    '_',
-                )}.png`}
+                src={getMapUrl(mapName)}
                 className="max-w-[256px] w-full object-cover rounded-l-[10px]"
                 alt="map thumbnail"
             />

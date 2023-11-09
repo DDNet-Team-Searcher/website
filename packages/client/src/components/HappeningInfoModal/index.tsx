@@ -16,6 +16,7 @@ import {
 import { InterestedPlayer } from './InterestedPlayer';
 import { Review } from './Review';
 import { setHappeningInfoModalData } from '@/store/slices/app';
+import { getMapUrl } from '@/utils/getMapUrl';
 
 export function HappeningInfoModal() {
     const dispatch = useAppDispatch();
@@ -86,10 +87,7 @@ export function HappeningInfoModal() {
         thumbnailUrl = (happening as Event).thumbnail!;
     }
     if (!(happening as Event).thumbnail || type == Happenings.Run) {
-        thumbnailUrl = `https://ddnet.org/ranks/maps/${happening.mapName.replaceAll(
-            ' ',
-            '_',
-        )}.png`;
+        thumbnailUrl = getMapUrl(happening.mapName);
     }
 
     return (
