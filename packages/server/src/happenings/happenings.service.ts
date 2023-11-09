@@ -73,6 +73,59 @@ export class HappeningsService {
         });
     }
 
+    async updateRun(runId: number, data: CreateRunDTO) {
+        return await this.prismaService.happening.update({
+            where: {
+                id: runId
+            },
+            data: {
+                ...data,
+                place: data.place ? 'THERE' : 'HERE',
+                startAt: new Date(data.startAt),
+            },
+        });
+    }
+
+    async updateEvent(
+        happeningId: number,
+        data: CreateEvenDTO & {
+            thumbnail: Express.Multer.File | null;
+        },
+    ) {
+        let oldThumbnail = await this.prismaService.happening.findFirst({
+            where: {
+                id: happeningId,
+            },
+            select: {
+                thumbnail: true
+            }
+        });
+
+        if (oldThumbnail?.thumbnail) {
+            deleteFile(oldThumbnail.thumbnail, FileTypeEnum.Happening);
+        }
+
+        let filename: string | null = null;
+
+        if (data.thumbnail) {
+            filename = await createFile(data.thumbnail, FileTypeEnum.Happening);
+        }
+
+        return await this.prismaService.happening.update({
+            where: {
+                id: happeningId
+            },
+            data: {
+                ...data,
+                thumbnail: filename,
+                //@ts-ignore NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
+                place: parseInt(data.place) ? 'THERE' : 'HERE',
+                endAt: data.endAt ? new Date(data.endAt) : null,
+                startAt: new Date(data.startAt),
+            },
+        });
+    }
+
     async startHappening(id: number): Promise<boolean> {
         const happeningPlace = await this.getHappeningPlace(id);
 
@@ -588,5 +641,16 @@ export class HappeningsService {
                 status,
             },
         });
+    }
+
+    async getHappeningType(id: number): Promise<HappeningType> {
+        return (await this.prismaService.happening.findFirst({
+            where: {
+                id
+            },
+            select: {
+                type: true
+            }
+        }))?.type!;
     }
 }

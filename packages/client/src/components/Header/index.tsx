@@ -12,7 +12,7 @@ import {
     setIsCreateEventModalHidden,
     setIsCreateRunModalHidden,
 } from '@/store/slices/app';
-import { CreateHappeningModal } from '../CreateHappeningModal';
+import { CreateAndUpdateHappeningModal, ModalMode } from '../CreateAndUpdateHappeningModal';
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
 import { useRouter } from 'next/navigation';
@@ -83,10 +83,11 @@ export function Header() {
                 'absolute t-0': !isAuthed,
             })}
         >
-            <CreateHappeningModal
+            <CreateAndUpdateHappeningModal
                 isVisible={isCreateModalVisible}
                 onClose={onCreateHappeningModalClose}
                 type={currentHappening as 'run' | 'event'}
+                mode={ModalMode.Create}
             />
             <div className="flex items-end max-w-[1110px] mx-auto">
                 <Link href={'/'}>

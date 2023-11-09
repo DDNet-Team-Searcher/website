@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -8,6 +9,7 @@ import {
     Param,
     Post,
     Put,
+    RawBodyRequest,
     Req,
     UploadedFile,
     UseGuards,
@@ -21,6 +23,9 @@ import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
 import { Event, Run } from '@app/shared/types/Happening.type';
+import { Request } from 'express';
+import { HappeningType } from '@prisma/client';
+import { Validator } from 'class-validator';
 
 @UseGuards(AuthorGuard)
 @Controller()
@@ -83,6 +88,83 @@ export class HappeningsController {
             console.log(e);
             throw new InternalServerErrorException();
         }
+    }
+
+    @Protected()
+    @Author('happening')
+    @Put('/:id/update')
+    @UseInterceptors(FileInterceptor('thumbnail'))
+    async updateHappening(
+        @UploadedFile() file: Express.Multer.File,
+        @Req() req,
+        @Body() body
+    ) {
+        const happeningId = parseInt(req.params.id);
+
+        const happeningType = await this.happeningsService.getHappeningType(happeningId);
+
+        if (happeningType == HappeningType.Run) {
+            const run = new CreateRunDTO();
+
+            run.mapName = body.mapName;
+            run.teamSize = body.teamSize ? parseInt(body.teamSize) : body.teamSize;
+            run.startAt = body.startAt;
+            run.description = body.description;
+            run.place = body.place ? parseInt(body.place) : body.place;
+
+            let errors = await new Validator().validate(run);
+            let obj: Record<string, string> = {};
+
+            if (errors.length) {
+                for (const err of errors) {
+                    obj[err.property] = Object.values(err.constraints!)[0]
+                }
+
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: obj
+                });
+            }
+
+            await this.happeningsService.updateRun(happeningId, run);
+
+        } else if (happeningType == HappeningType.Event) {
+            const event = new CreateEvenDTO();
+
+            event.title = body.title;
+            event.mapName = body.mapName;
+            event.startAt = body.startAt;
+            event.description = body.description;
+            event.place = body.place;
+
+            if (body.endAt) {
+                event.endAt = body.endAt;
+            }
+
+            const errors = await new Validator().validate(event);
+            let obj: Record<string, string> = {};
+
+            if (errors.length) {
+                for (const err of errors) {
+                    obj[err.property] = Object.values(err.constraints!)[0]
+                }
+
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: obj
+                });
+            }
+
+            await this.happeningsService.updateEvent(happeningId, {
+                ...event,
+                thumbnail: file
+            });
+        }
+
+        return {
+            status: 'success',
+            data: null,
+        };
     }
 
     @Protected()

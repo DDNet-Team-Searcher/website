@@ -47,6 +47,8 @@ export type CreateEventResponse = ApiResponse<
     Omit<CreateEventRequest, 'startAt' | 'endAt'>
 >;
 
+export type UpdateHappening = ApiResponse<null, { [key: string]: string }>;
+
 export type StartHappeningResponse = ApiResponse<null, { reason: string }>;
 
 export type EndHappeningResponse = ApiResponse<null, null>;

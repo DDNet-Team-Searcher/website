@@ -1,9 +1,10 @@
 import {
     useCreateEventMutation,
     useCreateRunMutation,
+    useUpdateHappeningMutation,
 } from '@/features/api/happenings.api';
 import { hint } from '@/store/slices/hints';
-import { CreateEventResponse, CreateRunResponse } from '@/types/api.type';
+import { CreateEventResponse, CreateRunResponse, UpdateHappening } from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
@@ -16,20 +17,46 @@ import { Modal } from '../ui/Modal';
 import { RadioInput } from '../ui/RadioInput';
 import { TextareaWithLabel } from '../ui/TextareaWithLabel';
 
+export enum ModalMode {
+    Create,
+    Edit
+}
+
+type FormFields = {
+    place: string,
+    mapName: string,
+    teamSize: string,
+    startDate: string,
+    startTime: string,
+    description: string,
+
+    // event's fields
+    endDate: string,
+    endTime: string,
+    title: string,
+    thumbnail: null | File,
+};
+
 type OwnProps = {
     isVisible: boolean;
     onClose: (cb: () => void) => void;
     type: 'run' | 'event';
+    mode: ModalMode;
+    data?: FormFields;
+    happeningId?: number;
 };
 
-export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
+//NOTE: I literally spent few fukcing hours thinking about how to name this
+//component but i couldnt come up with something good :pepeW:
+export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, data, happeningId }: OwnProps) {
     const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
     const [createRun] = useCreateRunMutation();
     const [createEvent] = useCreateEventMutation();
+    const [updateHappening] = useUpdateHappeningMutation();
     const dispatch = useAppDispatch();
     const ref = useRef<null | HTMLInputElement>(null);
     const [isEndFieldsVisible, setIsEndFieldsVisible] = useState(false);
-    const defaultValues = {
+    let defaultValues: FormFields = {
         place: '',
         mapName: '',
         teamSize: '',
@@ -41,8 +68,15 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
         endDate: '',
         endTime: '',
         title: '',
-        thumbnail: null as null | File,
+        thumbnail: null
     };
+
+    if (mode == ModalMode.Edit && data) {
+        defaultValues = {
+            ...data
+        };
+    }
+
     const {
         setError,
         handleSubmit,
@@ -60,8 +94,92 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
 
     const onSubmit = async (values: typeof defaultValues) => {
         console.log(type);
-        if (type === 'event') {
-            try {
+        console.log(mode);
+        if (mode === ModalMode.Create) {
+            if (type === 'event') {
+                try {
+                    const endAt = values.endDate + ' ' + values.endTime;
+                    type EventDataT = {
+                        place: number;
+                        title: string;
+                        mapName: string;
+                        startAt: string;
+                        thumbnail: null | File;
+                        description: string | null;
+                        endAt?: string;
+                    };
+
+                    const eventData: EventDataT = {
+                        place: values.place === 'HERE' ? 0 : 1,
+                        title: values.title,
+                        mapName: values.mapName,
+                        description: values.description ?? null,
+                        startAt: values.startDate + ' ' + values.startTime,
+                        thumbnail: values.thumbnail,
+                    };
+
+                    if (endAt.trim() !== '') {
+                        eventData.endAt = endAt;
+                    }
+
+                    const res = await createEvent(eventData).unwrap();
+
+                    if (res.status === 'success') {
+                        onClose(clearErrors);
+                    }
+                } catch (err) {
+                    const error = (err as FetchBaseQueryError)
+                        .data as ExcludeSuccess<CreateEventResponse>;
+
+                    if (error.status === 'fail') {
+                        for (let [key, value] of Object.entries(error.data ?? {})) {
+                            setError(key as keyof typeof error.data, {
+                                message: value,
+                            });
+                        }
+
+                        if ('message' in error && error.message !== undefined) {
+                            dispatch(hint({ type: 'error', text: error.message }));
+                        }
+                    } else if (error.status === 'error') {
+                        dispatch(hint({ type: 'error', text: error.message }));
+                    }
+                }
+            } else if (type === 'run') {
+                try {
+                    const res = await createRun({
+                        place: values.place === 'HERE' ? 0 : 1,
+                        description: values.description ?? null,
+                        teamSize: parseInt(values.teamSize),
+                        mapName: values.mapName,
+                        startAt: values.startDate + ' ' + values.startTime,
+                    }).unwrap();
+
+                    if (res.status === 'success') {
+                        onClose(clearErrors);
+                    }
+                } catch (err) {
+                    const error = (err as FetchBaseQueryError)
+                        .data as ExcludeSuccess<CreateRunResponse>;
+
+                    if (error.status === 'fail') {
+                        for (let [key, value] of Object.entries(error.data ?? {})) {
+                            setError(key as keyof typeof error.data, {
+                                message: value,
+                            });
+                        }
+
+                        if ('message' in error && error.message !== undefined) {
+                            dispatch(hint({ type: 'error', text: error.message }));
+                        }
+                    } else if (error.status === 'error') {
+                        dispatch(hint({ type: 'error', text: error.message }));
+                    }
+                }
+            }
+        } else if (mode === ModalMode.Edit) {
+            // handle updating the happening here :D
+            if (type === 'event') {
                 const endAt = values.endDate + ' ' + values.endTime;
                 type EventDataT = {
                     place: number;
@@ -86,58 +204,71 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                     eventData.endAt = endAt;
                 }
 
-                const res = await createEvent(eventData).unwrap();
+                try {
+                    const res = await updateHappening({
+                        id: happeningId!,
+                        data: eventData
+                    }).unwrap();
 
-                if (res.status === 'success') {
-                    onClose(clearErrors);
-                }
-            } catch (err) {
-                const error = (err as FetchBaseQueryError)
-                    .data as ExcludeSuccess<CreateEventResponse>;
-
-                if (error.status === 'fail') {
-                    for (let [key, value] of Object.entries(error.data ?? {})) {
-                        setError(key as keyof typeof error.data, {
-                            message: value,
-                        });
+                    if (res.status === 'success') {
+                        onClose(clearErrors);
                     }
+                } catch (err) {
+                    const error = (err as FetchBaseQueryError)
+                        .data as ExcludeSuccess<UpdateHappening>;
 
-                    if ('message' in error && error.message !== undefined) {
+                    if (error.status === 'fail') {
+                        for (let [key, value] of Object.entries(error.data ?? {})) {
+                            //@ts-ignore shush
+                            setError(key as keyof typeof error.data, {
+                                message: value,
+                            });
+                        }
+
+                        if ('message' in error && error.message !== undefined) {
+                            dispatch(hint({ type: 'error', text: error.message }));
+                        }
+                    } else if (error.status === 'error') {
                         dispatch(hint({ type: 'error', text: error.message }));
                     }
-                } else if (error.status === 'error') {
-                    dispatch(hint({ type: 'error', text: error.message }));
                 }
-            }
-        } else if (type === 'run') {
-            try {
-                const res = await createRun({
+            } else if (type === 'run') {
+                const runData = {
                     place: values.place === 'HERE' ? 0 : 1,
                     description: values.description ?? null,
                     teamSize: parseInt(values.teamSize),
                     mapName: values.mapName,
                     startAt: values.startDate + ' ' + values.startTime,
-                }).unwrap();
-
-                if (res.status === 'success') {
-                    onClose(clearErrors);
                 }
-            } catch (err) {
-                const error = (err as FetchBaseQueryError)
-                    .data as ExcludeSuccess<CreateRunResponse>;
 
-                if (error.status === 'fail') {
-                    for (let [key, value] of Object.entries(error.data ?? {})) {
-                        setError(key as keyof typeof error.data, {
-                            message: value,
-                        });
+                try {
+                    const res = await updateHappening({
+                        id: happeningId!,
+                        data: runData
+                    }).unwrap();
+
+                    if (res.status === 'success') {
+                        onClose(clearErrors);
                     }
+                } catch (err) {
+                    const error = (err as FetchBaseQueryError)
+                        .data as ExcludeSuccess<UpdateHappening>;
 
-                    if ('message' in error && error.message !== undefined) {
+                    if (error.status === 'fail') {
+                        for (let [key, value] of Object.entries(error.data ?? {})) {
+                            console.log(key, value);
+                            //@ts-ignore shush
+                            setError(key as keyof typeof error.data, {
+                                message: value,
+                            });
+                        }
+
+                        if ('message' in error && error.message !== undefined) {
+                            dispatch(hint({ type: 'error', text: error.message }));
+                        }
+                    } else if (error.status === 'error') {
                         dispatch(hint({ type: 'error', text: error.message }));
                     }
-                } else if (error.status === 'error') {
-                    dispatch(hint({ type: 'error', text: error.message }));
                 }
             }
         }
@@ -165,7 +296,7 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
             }
             width={'600px'}
         >
-            <p className="text-3xl m-0 pt-6 px-5">Create your own {type}</p>
+            <p className="text-3xl m-0 pt-6 px-5">{mode == ModalMode.Create ? "Create" : "Edit"} your own {type}</p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-6">
                     <div>
@@ -360,14 +491,14 @@ export function CreateHappeningModal({ type, isVisible, onClose }: OwnProps) {
                     )}
                 </div>
                 <div className="flex justify-between mt-6 px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
-                    <Button styleType={'bordered'} onClick={onClose}>
+                    <Button styleType={'bordered'} onClick={() => onClose(clearErrors)}>
                         Close
                     </Button>
                     <Button
                         styleType={'filled'}
                         type={'submit'} /*disabled={isSubmitButtonDisabled}*/
                     >
-                        Create {type}
+                        {mode == ModalMode.Create ? "Create" : "Update"} {type}
                     </Button>
                 </div>
             </form>

@@ -17,6 +17,7 @@ type OwnProps = {
     runId: number;
     authorId: number;
     status: Status;
+    editRun: () => void;
 } & Pick<RunProps, 'setStatusDispatch' | 'deleteDispatch'>;
 
 export function ActionButtons({
@@ -26,6 +27,7 @@ export function ActionButtons({
     status,
     setStatusDispatch,
     deleteDispatch,
+    editRun
 }: OwnProps) {
     const dispatch = useAppDispatch();
     const [startRunQuery] = useLazyStartHappeningQuery();
@@ -85,11 +87,6 @@ export function ActionButtons({
 
             console.log(err);
         }
-    };
-
-    const editRun = () => {
-        //TODO: MilkeeyCat from future add happening editing thing please ;DDD
-        alert('Nuh uh');
     };
 
     return (

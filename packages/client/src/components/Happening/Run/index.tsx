@@ -8,6 +8,8 @@ import { Title } from './Title';
 import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
+import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import { useState } from 'react';
 
 export function Run({
     className,
@@ -16,6 +18,8 @@ export function Run({
     deleteDispatch,
     setIsInterestedDispatch,
 }: RunProps) {
+    const [isEditRunModalVisible, setIsEditRunModalVisible] = useState(false);
+
     const {
         description,
         id,
@@ -29,13 +33,46 @@ export function Run({
         _count: { interestedPlayers },
     } = run;
 
+    const runData = {
+        place,
+        mapName,
+        teamSize: teamSize.toString(),
+        startDate: new Date(startAt).toISOString().substring(0, 10),
+        startTime: new Date(startAt).toISOString().substring(11, 16),
+        description: description || '',
+
+        // event's fields
+        endDate: '',
+        endTime: '',
+        title: '',
+        thumbnail: null,
+    };
+
+    const editRun = () => {
+        setIsEditRunModalVisible(true);
+    }
+
+    const onClose = () => {
+        setIsEditRunModalVisible(false);
+    }
+
+    //FIXME: now it created a new modal for every run ._.
+    //FIXME: had to remove `hover:scale-[1.01]` from first div coz it was cursed as fuck
     return (
         <div
             className={classNames(
-                'max-w-[255px] w-full bg-primary-2 rounded-[10px] flex flex-col hover:scale-[1.01] transition-all duration-150',
+                'max-w-[255px] w-full bg-primary-2 rounded-[10px] flex flex-col transition-all duration-150',
                 { [className || '']: className },
             )}
         >
+            <CreateAndUpdateHappeningModal
+                onClose={onClose}
+                type='run'
+                data={runData}
+                happeningId={id}
+                mode={ModalMode.Edit}
+                isVisible={isEditRunModalVisible}
+            />
             <img
                 src={`https://ddnet.org/ranks/maps/${mapName.replaceAll(
                     ' ',
@@ -75,6 +112,7 @@ export function Run({
                             authorId={authorId}
                             deleteDispatch={deleteDispatch}
                             setStatusDispatch={setStatusDispatch}
+                            editRun={editRun}
                         />
                         <InterestedButton
                             isUserInterestedInRun={isInterested}

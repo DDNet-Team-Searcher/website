@@ -32,7 +32,7 @@ export async function createFile(file: Express.Multer.File, type: string) {
 
 export async function deleteFile(filename: string, type: string) {
     return new Promise<void>((resolve, reject) => {
-        fs.unlink(`.${fileType[type]}/${filename}`, (err) => {
+        fs.unlink(`./${fileType[type]}/${filename}`, (err) => {
             if (err) reject(err);
             resolve();
         });

@@ -22,6 +22,8 @@ import { StartHappeningResponse } from '@/types/api.type';
 import { ActionButtons } from '../ActionButtons';
 import Link from 'next/link';
 import { BaseHappeningProps } from '../types';
+import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import { useState } from 'react';
 
 type OwnProps = BaseHappeningProps & {
     event: EventType;
@@ -54,6 +56,7 @@ export function Event({
     const [deleteEventQuery] = useDeleteHappeningMutation();
     const [setIsUserInterestedInHappening] =
         useSetIsInterestedInHappeningMutation();
+    const [isEditEventModalVisible, setISEditEventModalVisible] = useState(false);
 
     const endEvent = async (id: number) => {
         try {
@@ -127,7 +130,7 @@ export function Event({
     };
 
     const editEvent = async () => {
-        alert('Eeeeh.. It doesnt rly work lmao');
+        setISEditEventModalVisible(true);
     };
 
     const onClick = () => {
@@ -145,13 +148,41 @@ export function Event({
         thumbnail ||
         `https://ddnet.org/ranks/maps/${mapName.replaceAll(' ', '_')}.png`;
 
+    const onClose = () => {
+        setISEditEventModalVisible(false);
+    }
+
+    const eventData = {
+        place,
+        mapName,
+        teamSize: '',
+        startDate: new Date(startAt).toISOString().substring(0, 10),
+        startTime: new Date(startAt).toISOString().substring(11, 16),
+        description: description || '',
+
+        // event's fields
+        endDate: event.endAt ? new Date(event.endAt).toISOString().substring(0, 10) : '',
+        endTime: event.endAt ? new Date(event.endAt).toISOString().substring(11, 16) : '',
+        title,
+        thumbnail: null,
+    };
+
+    //FIXME: had to remove hover:scale-[1.01] in className because it lookes cursed as fuck
     return (
         <div
             className={classNames(
-                'max-w-[530px] w-full bg-primary-2 rounded-[10px] flex flex-col hover:scale-[1.01] transition-all duration-150',
+                'max-w-[530px] w-full bg-primary-2 rounded-[10px] flex flex-col transition-all duration-150',
                 { [className || '']: !!className },
             )}
         >
+            <CreateAndUpdateHappeningModal
+                onClose={onClose}
+                type='event'
+                data={eventData}
+                happeningId={id}
+                mode={ModalMode.Edit}
+                isVisible={isEditEventModalVisible}
+            />
             <div className="p-2.5 grow-[1] flex flex-col">
                 <div className="flex justify-between">
                     <StartTime startAt={startAt} status={status} />

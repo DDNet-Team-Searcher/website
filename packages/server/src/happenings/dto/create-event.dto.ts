@@ -9,9 +9,9 @@ export class CreateEvenDTO {
     @IsNotEmpty()
     title: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    description: string;
+    description: string | null;
 
     @IsDateString()
     startAt: string;
@@ -22,6 +22,6 @@ export class CreateEvenDTO {
     @IsDateString()
     @IsOptional()
     endAt?: string;
-    
+
     //and aslo there's field called thumbnail but it's handled by multer so i dont have to write it here. Ig
 }

@@ -39,6 +39,13 @@ export const happeningsApi = createApi({
                 body: intoFormData(body),
             }),
         }),
+        updateHappening: build.mutation<any, {id: number, data: any}>({
+            query: ({id, data}) => ({
+                url: `/${id}/update`,
+                method: 'PUT',
+                body: intoFormData(data)
+            })
+        }),
         startHappening: build.query<StartHappeningResponse, number>({
             query: (id) => `/${id}/start`,
         }),
@@ -121,6 +128,7 @@ export const happeningsApi = createApi({
 export const {
     useCreateRunMutation,
     useCreateEventMutation,
+    useUpdateHappeningMutation,
     useLazyStartHappeningQuery,
     useLazyEndHappeningQuery,
     useDeleteHappeningMutation,
