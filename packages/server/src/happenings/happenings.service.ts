@@ -552,7 +552,7 @@ export class HappeningsService {
     }
 
     async getHappeningInterestedPlayers(id: number) {
-        return this.prismaService.happening.findMany({
+        const interestedPlayers = await this.prismaService.happening.findMany({
             where: {
                 id,
             },
@@ -576,6 +576,12 @@ export class HappeningsService {
                 },
             },
         });
+
+        for (let interestedPlayer of interestedPlayers[0].interestedPlayers) {
+            interestedPlayer.user.avatar = getAvatarUrl(interestedPlayer.user.avatar);
+        }
+
+        return interestedPlayers;
     }
 
     //TODO: MilkeeyCat will add types here
