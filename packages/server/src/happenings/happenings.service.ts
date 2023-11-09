@@ -577,7 +577,7 @@ export class HappeningsService {
             },
         });
 
-        for (let interestedPlayer of interestedPlayers[0].interestedPlayers) {
+        for (let interestedPlayer of interestedPlayers[0]?.interestedPlayers || []) {
             interestedPlayer.user.avatar = getAvatarUrl(interestedPlayer.user.avatar);
         }
 
