@@ -16,6 +16,7 @@ import { InputWithLabel } from '../ui/InputWithLabel';
 import { Modal } from '../ui/Modal';
 import { RadioInput } from '../ui/RadioInput';
 import { TextareaWithLabel } from '../ui/TextareaWithLabel';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 export enum ModalMode {
     Create,
@@ -56,6 +57,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
     const dispatch = useAppDispatch();
     const ref = useRef<null | HTMLInputElement>(null);
     const [isEndFieldsVisible, setIsEndFieldsVisible] = useState(false);
+    const handleFormError = useHandleFormError();
     let defaultValues: FormFields = {
         place: '',
         mapName: '',
@@ -78,7 +80,6 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
     }
 
     const {
-        setError,
         handleSubmit,
         register,
         setValue,
@@ -93,12 +94,11 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
     };
 
     const onSubmit = async (values: typeof defaultValues) => {
-        console.log(type);
-        console.log(mode);
         if (mode === ModalMode.Create) {
             if (type === 'event') {
                 try {
                     const endAt = values.endDate + ' ' + values.endTime;
+
                     type EventDataT = {
                         place: number;
                         title: string;
@@ -131,19 +131,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<CreateEventResponse>;
 
-                    if (error.status === 'fail') {
-                        for (let [key, value] of Object.entries(error.data ?? {})) {
-                            setError(key as keyof typeof error.data, {
-                                message: value,
-                            });
-                        }
-
-                        if ('message' in error && error.message !== undefined) {
-                            dispatch(hint({ type: 'error', text: error.message }));
-                        }
-                    } else if (error.status === 'error') {
-                        dispatch(hint({ type: 'error', text: error.message }));
-                    }
+                    handleFormError(error);
                 }
             } else if (type === 'run') {
                 try {
@@ -162,25 +150,13 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<CreateRunResponse>;
 
-                    if (error.status === 'fail') {
-                        for (let [key, value] of Object.entries(error.data ?? {})) {
-                            setError(key as keyof typeof error.data, {
-                                message: value,
-                            });
-                        }
-
-                        if ('message' in error && error.message !== undefined) {
-                            dispatch(hint({ type: 'error', text: error.message }));
-                        }
-                    } else if (error.status === 'error') {
-                        dispatch(hint({ type: 'error', text: error.message }));
-                    }
+                    handleFormError(error);
                 }
             }
         } else if (mode === ModalMode.Edit) {
-            // handle updating the happening here :D
             if (type === 'event') {
                 const endAt = values.endDate + ' ' + values.endTime;
+
                 type EventDataT = {
                     place: number;
                     title: string;
@@ -217,20 +193,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<UpdateHappening>;
 
-                    if (error.status === 'fail') {
-                        for (let [key, value] of Object.entries(error.data ?? {})) {
-                            //@ts-ignore shush
-                            setError(key as keyof typeof error.data, {
-                                message: value,
-                            });
-                        }
-
-                        if ('message' in error && error.message !== undefined) {
-                            dispatch(hint({ type: 'error', text: error.message }));
-                        }
-                    } else if (error.status === 'error') {
-                        dispatch(hint({ type: 'error', text: error.message }));
-                    }
+                    handleFormError(error);
                 }
             } else if (type === 'run') {
                 const runData = {
@@ -254,21 +217,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<UpdateHappening>;
 
-                    if (error.status === 'fail') {
-                        for (let [key, value] of Object.entries(error.data ?? {})) {
-                            console.log(key, value);
-                            //@ts-ignore shush
-                            setError(key as keyof typeof error.data, {
-                                message: value,
-                            });
-                        }
-
-                        if ('message' in error && error.message !== undefined) {
-                            dispatch(hint({ type: 'error', text: error.message }));
-                        }
-                    } else if (error.status === 'error') {
-                        dispatch(hint({ type: 'error', text: error.message }));
-                    }
+                    handleFormError(error);
                 }
             }
         }

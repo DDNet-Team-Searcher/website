@@ -3,7 +3,7 @@ type Success<T extends object | null> = {
     data: T;
 };
 
-type Fail<T extends object | null> = {
+export type Fail<T extends object | null> = {
     status: 'fail';
     data: T extends object
     ? {
@@ -13,7 +13,7 @@ type Fail<T extends object | null> = {
     message?: string;
 };
 
-type ResError = {
+export type ResError = {
     status: 'error';
     message: string;
 };

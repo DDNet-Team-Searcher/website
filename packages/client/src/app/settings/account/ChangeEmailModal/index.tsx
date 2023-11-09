@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { InputWithLabel } from '@/components/ui/InputWithLabel';
 import { Modal } from '@/components/ui/Modal';
 import { updateEmail as updateEmailInStore } from '@/store/slices/user';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 type OwnProps = {
     visible: boolean;
@@ -17,6 +18,7 @@ type OwnProps = {
 export function ChangeEmailModal({ visible, onClose }: OwnProps) {
     const dispatch = useAppDispatch();
     const [updateEmail] = useUpdateEmailMutation();
+    const handleFormError = useHandleFormError();
 
     const defaultValues = {
         email: '',
@@ -43,15 +45,7 @@ export function ChangeEmailModal({ visible, onClose }: OwnProps) {
             const error = (err as FetchBaseQueryError)
                 .data as ExcludeSuccess<UpdateEmailRespone>;
 
-            if (error.status === 'fail') {
-                if (Object.keys(error.data)) {
-                    Object.keys(error.data).map((key) => {
-                        setError(key as keyof typeof error.data, {
-                            message: error.data[key as keyof typeof error.data],
-                        });
-                    });
-                }
-            }
+            handleFormError(error, setError);
         }
     };
 

@@ -14,6 +14,7 @@ import { ExcludeSuccess } from "@/types/Response.type"
 import { LoginUserResponse } from "@/types/api.type"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query"
 import { setIsAuthed } from "@/store/slices/user"
+import { useHandleFormError } from "@/utils/hooks/useHandleFormError";
 
 export function Form() {
     const [loginUser] = useLoginMutation()
@@ -21,6 +22,7 @@ export function Form() {
     const defaultValues = { email: '', password: '', rememberMe: false }
     const dispatch = useAppDispatch()
     const { handleSubmit, register, setError, formState: { errors } } = useForm({ defaultValues });
+    const handleFormError = useHandleFormError();
 
     const onSubmit = async (values: typeof defaultValues) => {
         const { rememberMe, ...data } = values
@@ -33,17 +35,7 @@ export function Form() {
         } catch (err) {
             const error = (err as FetchBaseQueryError).data as ExcludeSuccess<LoginUserResponse>
 
-            if (error.status === 'fail') {
-                for (let [key, value] of Object.entries(error.data ?? {})) {
-                    setError(key as keyof typeof error.data, { message: value });
-                }
-
-                if ("message" in error && error.message !== undefined) {
-                    dispatch(hint({ type: "error", text: error.message }));
-                }
-            } else if (error.status === 'error') {
-                dispatch(hint({ type: "error", text: error.message }));
-            }
+            handleFormError(error, setError);
         }
     }
     return (
