@@ -10,6 +10,7 @@ export type Profile = {
     tier: number;
     verified: boolean;
     isFollowing: boolean;
+    isReported: boolean;
     reviews: {
         id: number;
         review: string | null;

@@ -264,6 +264,7 @@ export class UsersService {
         }
 
         const roles = profile.roles.map((el) => el.role);
+        const isReported = await this.isReported(id, userId);
 
         return {
             id: profileUserId,
@@ -285,6 +286,7 @@ export class UsersService {
                 playedEvents,
             },
             isFollowing,
+            isReported
         };
     }
 
@@ -423,7 +425,7 @@ export class UsersService {
         });
     }
 
-    async isAlreadyReported(reportedUserId: number, authorId: number): Promise<boolean> {
+    async isReported(reportedUserId: number, authorId: number): Promise<boolean> {
         let res = await this.prismaService.report.findFirst({
             where: {
                 authorId,

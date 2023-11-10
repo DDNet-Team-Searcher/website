@@ -177,8 +177,9 @@ export default function Profile({ params: { id } }: OwnProps) {
                                     className="max-w-[120px] ml-3 w-full !block text-center !border-error"
                                     onClick={openReportModal}
                                     styleType={'bordered'}
+                                    disabled={profile.isReported || false}
                                 >
-                                    Report
+                                    {profile.isReported ? "Reported" : "Report"}
                                 </Button>
                             </div>
                         </div>

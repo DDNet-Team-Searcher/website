@@ -274,7 +274,7 @@ export class UsersController {
         @Req() req,
         @Body() body
     ) {
-        const isAlreadyReported = await this.usersService.isAlreadyReported(parseInt(id), req.user.id);
+        const isAlreadyReported = await this.usersService.isReported(parseInt(id), req.user.id);
 
         if (isAlreadyReported) {
             throw new ConflictException({
