@@ -412,4 +412,25 @@ export class UsersService {
             return false;
         }
     }
+
+    async report(reportedUserId: number, authorId: number, reason: string): Promise<void> {
+        await this.prismaService.report.create({
+            data: {
+                reportedUserId,
+                authorId,
+                report: reason
+            }
+        });
+    }
+
+    async isAlreadyReported(reportedUserId: number, authorId: number): Promise<boolean> {
+        let res = await this.prismaService.report.findFirst({
+            where: {
+                authorId,
+                reportedUserId
+            }
+        });
+
+        return res === null ? false : true;
+    }
 }

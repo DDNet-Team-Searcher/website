@@ -145,3 +145,10 @@ export type CreateReviewRequest = {
 };
 
 export type CreateReviewResponse = ApiResponse<null, CreateReviewRequest>;
+
+export type ReportUserRequest = {
+    reason: string;
+    userId: number;
+};
+
+export type ReportUserResponse = ApiResponse<null, { reason: string }>;

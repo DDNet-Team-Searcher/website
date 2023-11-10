@@ -1,6 +1,7 @@
 import {
     BadRequestException,
     Body,
+    ConflictException,
     Controller,
     Get,
     HttpException,
@@ -262,6 +263,33 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
+        };
+    }
+
+    //TODO: do something with types :clueless:
+    @Protected()
+    @Post('/user/:id/report')
+    async report(
+        @Param('id') id: string,
+        @Req() req,
+        @Body() body
+    ) {
+        const isAlreadyReported = await this.usersService.isAlreadyReported(parseInt(id), req.user.id);
+
+        if (isAlreadyReported) {
+            throw new ConflictException({
+                status: 'fail',
+                data: null,
+                message: 'You already reported this user >~<'
+            });
+        }
+
+        await this.usersService.report(parseInt(id), req.user.id, body.reason);
+
+        return {
+            status: 'success',
+            data: null,
+            message: 'User reported successfully'
         };
     }
 }

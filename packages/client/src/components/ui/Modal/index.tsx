@@ -30,7 +30,7 @@ export function Modal({
             className={classNames(
                 'fixed inset-0 text-[white] z-10 invisible transition-all duration-500 opacity-0',
                 { '!visible !opacity-100': visible },
-                { [className || '']: className },
+                { [className || '']: !!className },
             )}
         >
             <div

@@ -5,6 +5,8 @@ import {
     LoginUserResponse,
     RegisterUserRequest,
     RegisterUserResponse,
+    ReportUserRequest,
+    ReportUserResponse,
     UpdateAvatarResponse,
     UpdateEmailRequest,
     UpdateEmailRespone,
@@ -87,6 +89,13 @@ export const usersAPI = createApi({
                 method: 'PUT',
             }),
         }),
+        reportUser: build.mutation<ReportUserResponse, ReportUserRequest>({
+            query: ({ userId, reason }) => ({
+                url: `user/${userId}/report`,
+                method: 'POST',
+                body: { reason }
+            })
+        })
     }),
 });
 
@@ -100,4 +109,5 @@ export const {
     useUpdatePasswordMutation,
     useLazyGetProfileQuery,
     useFollowUserMutation,
+    useReportUserMutation
 } = usersAPI;

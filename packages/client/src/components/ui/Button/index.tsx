@@ -18,7 +18,7 @@ export function Button({
     type = 'button',
     tabIndex,
     styleType,
-    disabled,
+    disabled = false,
     onClick,
     style,
     className,
@@ -34,7 +34,10 @@ export function Button({
                     'bg-primary-1': styleType === 'filled',
                 },
                 {
-                    '!border-primary-1': styleType === 'bordered',
+                    'border-primary-1': styleType === 'bordered',
+                },
+                {
+                    'opacity-60': disabled
                 },
                 className,
             )}

@@ -6,7 +6,7 @@ export function Hints() {
     const hints = useAppSelector(state => state.hints.hints)
 
     return (
-        <div className='fixed right-5 bottom-5 z-10'>
+        <div className='fixed right-5 bottom-5 z-20'>
             {hints.map((hint, id) => {
                 return (
                     <div className='flex items-center bg-primary-2 p-2.5 mt-4 rounded-[10px] min-w-[250px] animate-[1s_fade-up_4s_forwards,1s_fade-down]' key={id}>

@@ -19,6 +19,7 @@ import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
 import { deleteHappening, setHappeningStatus, setIsInterestedInHappening, setProfile } from '@/store/slices/profile';
 import { Event as EventType, Run as RunType } from '@app/shared/types/Happening.type';
+import { ReportModal } from './ReportModal';
 
 type OwnProps = {
     params: {
@@ -32,8 +33,9 @@ export default function Profile({ params: { id } }: OwnProps) {
     const [followUser] = useFollowUserMutation();
     const profile = useAppSelector(state => state.profile);
     const authedUserId = useAppSelector((state) => state.user.user.id);
-    const sameUser = authedUserId === parseInt(id as string);
+    const sameUser = authedUserId === parseInt(id);
     const [favServer, setFavServer] = useState('');
+    const [isReportModalVisible, setIsReportModalVisible] = useState(false);
 
     useEffect(() => {
         dispatch(getUserFavoriteServer(profile?.username || '')).then((res) =>
@@ -78,8 +80,17 @@ export default function Profile({ params: { id } }: OwnProps) {
         }
     };
 
+    const openReportModal = () => {
+        setIsReportModalVisible(true);
+    }
+
+    const onReportModalClose = () => {
+        setIsReportModalVisible(false);
+    }
+
     return (
         <>
+            <ReportModal visible={isReportModalVisible} onClose={onReportModalClose} userId={parseInt(id)} />
             {!profile && (
                 <p className="text-center text-high-emphasis text-[5rem]">
                     User not found :&lt;
@@ -161,6 +172,13 @@ export default function Profile({ params: { id } }: OwnProps) {
                                     {profile.isFollowing
                                         ? 'Unfollow'
                                         : 'Follow'}
+                                </Button>
+                                <Button
+                                    className="max-w-[120px] ml-3 w-full !block text-center !border-error"
+                                    onClick={openReportModal}
+                                    styleType={'bordered'}
+                                >
+                                    Report
                                 </Button>
                             </div>
                         </div>

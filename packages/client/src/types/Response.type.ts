@@ -1,6 +1,7 @@
 type Success<T extends object | null> = {
     status: 'success';
     data: T;
+    message?: string;
 };
 
 export type Fail<T extends object | null> = {
