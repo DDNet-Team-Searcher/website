@@ -53,8 +53,8 @@ export class ReviewsService {
         authorId: number;
         rate: number;
         text: string | null;
-    }) {
-        return await this.prismaService.review.create({
+    }): Promise<void> {
+        await this.prismaService.review.create({
             data: {
                 happeningId,
                 authorId,

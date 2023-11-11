@@ -74,7 +74,7 @@ export class HappeningsService {
     }
 
     async updateRun(runId: number, data: RunDTO) {
-        return await this.prismaService.happening.update({
+        await this.prismaService.happening.update({
             where: {
                 id: runId
             },
@@ -91,7 +91,7 @@ export class HappeningsService {
         data: EventDTO & {
             thumbnail: Express.Multer.File | null;
         },
-    ) {
+    ): Promise<void> {
         let oldThumbnail = await this.prismaService.happening.findFirst({
             where: {
                 id: happeningId,
@@ -111,7 +111,7 @@ export class HappeningsService {
             filename = await createFile(data.thumbnail, FileTypeEnum.Happening);
         }
 
-        return await this.prismaService.happening.update({
+        await this.prismaService.happening.update({
             where: {
                 id: happeningId
             },
@@ -263,7 +263,7 @@ export class HappeningsService {
         happeningId: number,
         userId: number,
         isInterested: boolean,
-    ) {
+    ): Promise<void> {
         if (isInterested) {
             const author = (await this.prismaService.happening.findFirst({
                 where: {
@@ -292,7 +292,7 @@ export class HappeningsService {
                 happeningId,
             }))!; //NOTE: ThIs Is FiNe
 
-            return await this.prismaService.interestedHappening.delete({
+            await this.prismaService.interestedHappening.delete({
                 where: {
                     id: data.id,
                 },
@@ -472,7 +472,7 @@ export class HappeningsService {
         };
     }
 
-    async getAllRunsIds() {
+    async getAllRunsIds(): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Run',
@@ -486,7 +486,7 @@ export class HappeningsService {
         });
     }
 
-    async getAllEventsIds() {
+    async getAllEventsIds(): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
                 type: 'Event',
@@ -584,8 +584,7 @@ export class HappeningsService {
         return interestedPlayers;
     }
 
-    //TODO: MilkeeyCat will add types here
-    async updateIsPlayerInTeam(happeningId: number, userId: number) {
+    async updateIsPlayerInTeam(happeningId: number, userId: number): Promise<void> {
         const { id, inTeam } =
             (await this.prismaService.interestedHappening.findFirst({
                 where: {
@@ -594,7 +593,7 @@ export class HappeningsService {
                 },
             }))!; //NOTE: this is fine
 
-        return await this.prismaService.interestedHappening.update({
+        await this.prismaService.interestedHappening.update({
             where: {
                 id,
             },
@@ -638,7 +637,7 @@ export class HappeningsService {
         });
     }
 
-    async updateStatus(id: number, status: Status) {
+    async updateStatus(id: number, status: Status): Promise<void> {
         await this.prismaService.happening.update({
             where: {
                 id,

@@ -12,13 +12,13 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) {}
+    ) { }
 
     async sendNotification<T extends NotificationType>(
         userId: number,
         type: T,
         notificationJson: NotificationJson<T>,
-    ) {
+    ): Promise<void> {
         const res = await this.prismaService.notification.create({
             data: {
                 userId,
@@ -165,7 +165,7 @@ export class NotificationsService {
         return null;
     }
 
-    async getUserNotifications(userId: number) {
+    async getUserNotifications(userId: number): Promise<Notification[]> {
         const notifications = await this.prismaService.notification.findMany({
             take: 10,
             where: {
@@ -192,8 +192,8 @@ export class NotificationsService {
         return res;
     }
 
-    async markAsSeen(id: number) {
-        return await this.prismaService.notification.update({
+    async markAsSeen(id: number): Promise<void> {
+        await this.prismaService.notification.update({
             where: { id },
             data: {
                 seen: true,

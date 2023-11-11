@@ -25,7 +25,7 @@ export class ServersService {
         this.failed = new Map();
     }
 
-    async onModuleInit() {
+    async onModuleInit(): Promise<void> {
         const servers = await this.getAllServers();
 
         for (let i = 0; i < servers.length; i++) {
@@ -74,7 +74,7 @@ export class ServersService {
         }
     }
 
-    getAllServers() {
+    getAllServers(): Promise<{ id: number; ip: string; port: number }[]> {
         return this.prismaService.server.findMany({
             select: {
                 id: true,
@@ -179,7 +179,7 @@ export class ServersService {
         });
     }
 
-    shutdownServer(serverId: number, happeningId: number) {
+    shutdownServer(serverId: number, happeningId: number): Promise<void> {
         return new Promise<void>((res) => {
             const socket = this.sockets.get(serverId)?.socket!;
 

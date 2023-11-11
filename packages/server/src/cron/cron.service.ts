@@ -25,7 +25,7 @@ export class CronService implements OnModuleInit {
 
     //FIXME: when user changes happening info it doesnt update here
     //and it starts with old date
-    async check() {
+    async check(): Promise<void> {
         for (const happening of this.happenings) {
             if (happening && new Date() > happening.startAt) {
                 const success = await this.happeningsService.startHappening(

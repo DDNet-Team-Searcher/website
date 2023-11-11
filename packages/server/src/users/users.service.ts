@@ -21,7 +21,7 @@ export class UsersService {
 
     async isUserExists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
-    ): Promise<Boolean> {
+    ): Promise<boolean> {
         return this.prismaService.exists(this.prismaService.user, args);
     }
 
@@ -119,8 +119,8 @@ export class UsersService {
         };
     }
 
-    async register(data: RegisterUserDTO) {
-        return await this.prismaService.user.create({
+    async register(data: RegisterUserDTO): Promise<void> {
+        await this.prismaService.user.create({
             data,
         });
     }
@@ -290,7 +290,7 @@ export class UsersService {
         };
     }
 
-    async isFollowing(followerId: number, followingId: number) {
+    async isFollowing(followerId: number, followingId: number): Promise<boolean> {
         const bool = await this.prismaService.follower.count({
             where: {
                 followerId,
@@ -301,10 +301,10 @@ export class UsersService {
         return Boolean(bool);
     }
 
-    async follow(followerId: number, followingId: number) {
+    async follow(followerId: number, followingId: number): Promise<void> {
         if (await this.isFollowing(followerId, followingId)) {
             // unfollow
-            return await this.prismaService.follower.delete({
+            await this.prismaService.follower.delete({
                 where: {
                     followerId_followingId: {
                         followerId,
@@ -314,7 +314,7 @@ export class UsersService {
             });
         } else {
             //follow
-            return await this.prismaService.follower.create({
+            await this.prismaService.follower.create({
                 data: {
                     followerId,
                     followingId,
@@ -323,7 +323,7 @@ export class UsersService {
         }
     }
 
-    async updateAvatar(id: number, avatar: Express.Multer.File) {
+    async updateAvatar(id: number, avatar: Express.Multer.File): Promise<string> {
         const filename = await createFile(avatar, FileTypeEnum.Avatar);
         const oldAvatar = (await this.prismaService.user.findFirst({
             where: {
@@ -352,7 +352,7 @@ export class UsersService {
     async updateUsername(
         id: number,
         data: { username: string; password: string },
-    ) {
+    ): Promise<boolean> {
         const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -373,7 +373,7 @@ export class UsersService {
         }
     }
 
-    async updateEmail(id: number, data: { email: string; password: string }) {
+    async updateEmail(id: number, data: { email: string; password: string }): Promise<boolean> {
         const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -394,7 +394,7 @@ export class UsersService {
         }
     }
 
-    async updatePassword(id: number, data: { old: string; new: string }) {
+    async updatePassword(id: number, data: { old: string; new: string }): Promise<boolean> {
         const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
