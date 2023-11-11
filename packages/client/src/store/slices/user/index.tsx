@@ -45,7 +45,7 @@ export const getUserStats = (username: string) => {
             )}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+strftime%28%22%25Y%22%2C+Timestamp%29`,
         );
 
-        return await (
+        return (
             (await req.json()) as Response<[string, number, number][]>
         ).rows;
     };

@@ -8,6 +8,8 @@ import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
 import { getMapUrl } from '@/utils/getMapUrl';
+import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import { useState } from 'react';
 
 export function SearchResultRun({
     run,
@@ -15,6 +17,7 @@ export function SearchResultRun({
     deleteDispatch,
     setStatusDispatch,
 }: RunProps) {
+    const [isEditRunModalVisible, setIsEditRunModalVisible] = useState(false);
     const {
         id,
         mapName,
@@ -27,8 +30,39 @@ export function SearchResultRun({
         _count: { interestedPlayers },
     } = run;
 
+    const editRun = () => {
+        setIsEditRunModalVisible(true);
+    }
+
+    const onClose = () => {
+        setIsEditRunModalVisible(false);
+    }
+
+    const runData = {
+        place,
+        mapName,
+        teamSize: run.teamSize.toString(),
+        startDate: new Date(startAt).toISOString().substring(0, 10),
+        startTime: new Date(startAt).toISOString().substring(11, 16),
+        description: description || '',
+
+        // event's fields
+        endDate: '',
+        endTime: '',
+        title: '',
+        thumbnail: null,
+    };
+
     return (
         <div className="flex bg-primary-2 rounded-[10px]">
+            <CreateAndUpdateHappeningModal
+                onClose={onClose}
+                type='run'
+                data={runData}
+                happeningId={id}
+                mode={ModalMode.Edit}
+                isVisible={isEditRunModalVisible}
+            />
             <img
                 src={getMapUrl(mapName)}
                 className="max-w-[256px] w-full object-cover rounded-l-[10px]"
@@ -65,6 +99,7 @@ export function SearchResultRun({
                             status={status}
                             setStatusDispatch={setStatusDispatch}
                             deleteDispatch={deleteDispatch}
+                            editRun={editRun}
                         />
                         <InterestedButton
                             isUserInterestedInRun={isInterested}

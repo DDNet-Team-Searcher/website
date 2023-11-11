@@ -144,7 +144,6 @@ export function Event({
         );
     };
 
-    //TODO: fix this shit kek
     const thumbnailUrl = thumbnail || getMapUrl(mapName);
 
     const onClose = () => {
