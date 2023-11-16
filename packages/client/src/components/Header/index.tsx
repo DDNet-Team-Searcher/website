@@ -16,6 +16,7 @@ import { CreateAndUpdateHappeningModal, ModalMode } from '../CreateAndUpdateHapp
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
 import { useRouter } from 'next/navigation';
+import { ProfileOverlay } from './ProfileOverlay';
 
 export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
@@ -23,6 +24,8 @@ export function Header() {
     const notificationRef = useRef<null | HTMLDivElement>(null);
     const [isCreateSelectionMenuHidden, setIsSelectionMenuHidden] =
         useState(true);
+    const profileOverlayRef = useRef<null | HTMLUListElement>(null);
+    const [isProfileOverlayHidden, setIsProfileOverlayHidden] = useState(true);
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
     const [currentHappening, setCurrentHappening] = useState<
         'run' | 'event' | null
@@ -49,6 +52,18 @@ export function Header() {
             setIsNotificationOverlayVisible(false);
         },
     );
+    useOutsideClickHandler(
+        profileOverlayRef,
+        !isProfileOverlayHidden,
+        () => {
+            console.log("AIM IN");
+            setIsProfileOverlayHidden(true);
+        },
+    );
+
+    const openProfileOverlay = () => {
+        setIsProfileOverlayHidden(false);
+    }
 
     const createRun = () => {
         setCurrentHappening('run');
@@ -214,7 +229,10 @@ export function Header() {
                         isVisible={isNotificationOverlayVisible}
                     />
                     <p className="text-[white] mx-5">{username}</p>
-                    <Avatar src={avatar} username={username || ''} size={30} />
+                    <div className="relative">
+                        <Avatar className="cursor-pointer" onClick={openProfileOverlay} src={avatar} username={username || ''} size={30} />
+                        <ProfileOverlay ref={profileOverlayRef} isHidden={isProfileOverlayHidden} />
+                    </div>
                 </div>
             </div>
         </header>

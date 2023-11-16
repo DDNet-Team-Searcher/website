@@ -21,8 +21,9 @@ export function Navbar() {
                 User Settings
             </p>
             <div className="mt-5">
-                {urls.map((url) => (
+                {urls.map((url, id) => (
                     <Link
+                        key={id}
                         href={`/settings/${url.path}`}
                         className={classNames(
                             'block mt-0.5 rounded-[10px] p-2.5 text-medium-emphasis max-w-[170px] w-full',

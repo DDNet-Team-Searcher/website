@@ -7,13 +7,15 @@ interface OwnProps {
     username: string;
     size?: number;
     className?: string;
+    onClick?: () => void;
 }
 
-export function Avatar({ src, username, size = 20, className }: OwnProps) {
+export function Avatar({ src, username, size = 20, className, onClick }: OwnProps) {
     const color = '#' + intToRGB(stringToNum(username));
 
     return (
         <div
+            onClick={onClick}
             className={classNames('w-full flex justify-center items-center', {
                 [className || '']: !!className,
             })}
