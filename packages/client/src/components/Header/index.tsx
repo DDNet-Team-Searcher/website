@@ -72,8 +72,8 @@ export function Header() {
 
     const search = (e: any) => {
         e.preventDefault();
-        if (ref) {
-            router.push(`/search?query=${inputRef.current?.value}`);
+        if (ref && inputRef.current?.value) {
+            router.push(`/search?query=${encodeURIComponent(inputRef.current?.value || "")}`);
         }
     };
 

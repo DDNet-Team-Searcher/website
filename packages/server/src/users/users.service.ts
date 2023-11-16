@@ -89,10 +89,6 @@ export class UsersService {
         const notifications =
             await this.notificationsService.getUserNotifications(id);
 
-        let avatar: string | null = null;
-
-        avatar = getAvatarUrl(credentials.avatar);
-
         let banned: User['banned'] = {
             isBanned: false,
             reason: null,
@@ -108,7 +104,7 @@ export class UsersService {
             username,
             tier,
             email,
-            avatar,
+            avatar: getAvatarUrl(credentials.avatar),
             notifications,
             updatedAt: updatedAt.toString(),
             createdAt: updatedAt.toString(),

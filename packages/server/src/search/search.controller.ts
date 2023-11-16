@@ -7,15 +7,15 @@ export class SearchController {
     constructor(private readonly searchService: SearchService) { }
 
     @Protected()
-    @Get('/search/:query')
+    @Get('/search')
     async search(
-        @Param('query') query: string,
+        @Query('query') query: string | null,
         @Query('page') page: string | null,
         @Req() req,
     ) {
         const searchResult = await this.searchService.search(
             req.user.id,
-            query,
+            query || "",
             {
                 page: (Number(page) || 1) - 1,
             },
