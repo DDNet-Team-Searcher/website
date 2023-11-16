@@ -10,6 +10,7 @@ import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
 import { Run, Event } from '@app/shared/types/Happening.type';
 import { getAvatarUrl } from 'src/utils/user.util';
+import { getPermissions } from 'src/utils/permissions.util';
 
 @Injectable()
 export class UsersService {
@@ -99,6 +100,8 @@ export class UsersService {
             banned.reason = credentials.bans[0].reason;
         }
 
+        const permissions = getPermissions(roles.map(el => el[0]));
+
         return {
             id,
             username,
@@ -108,7 +111,7 @@ export class UsersService {
             notifications,
             updatedAt: updatedAt.toString(),
             createdAt: updatedAt.toString(),
-            permissions: {} as any,
+            permissions,
             banned,
             verified,
             _count: { unreadNotifications: unreadNotificationsCount },
