@@ -1,5 +1,6 @@
 'use client';
 
+import { Fragment } from 'react';
 import { Event } from '@/components/Happening/Event';
 import { useLazySearchQuery } from '@/features/api/search.api';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
@@ -75,7 +76,7 @@ export default function Search() {
     return (
         <div className="max-w-[725px] mx-auto [&>*]:mt-7">
             {happenings.map((el) => (
-                <>
+                <Fragment key={el.id}>
                     {el.type == 'user' && (
                         <User authedUserId={userId} user={el} />
                     )}
@@ -100,7 +101,7 @@ export default function Search() {
                             setStatusDispatch={setSearchResultsHappeningStatus}
                         />
                     )}
-                </>
+                </Fragment>
             ))}
             <div ref={ref} />
         </div>
