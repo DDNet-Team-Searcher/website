@@ -91,7 +91,7 @@ export class UsersService {
 
         let avatar: string | null = null;
 
-        credentials.avatar = getAvatarUrl(credentials.avatar);
+        avatar = getAvatarUrl(credentials.avatar);
 
         let banned: User['banned'] = {
             isBanned: false,
