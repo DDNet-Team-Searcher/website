@@ -9,6 +9,8 @@ type OwnProps = {
     isVisible: boolean;
 };
 
+//NOTE: do smth with it? XD
+/* eslint-disable react/display-name */
 export const Notifications = forwardRef(
     ({ isVisible }: OwnProps, ref: Ref<HTMLDivElement>) => {
         const notifications = useAppSelector(
@@ -40,5 +42,5 @@ export const Notifications = forwardRef(
                 </div>
             </div>
         );
-    },
+    }
 );

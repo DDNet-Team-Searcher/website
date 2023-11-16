@@ -253,7 +253,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                             className="text-xl mt-5"
                             style={{ margin: '40px 0 0' }}
                         >
-                            Where's your {type}?
+                            Where&apos;s your {type}?
                         </p>
                         <p className={'text-sm mt-1 text-high-emphasis'}>
                             So noone gets lost on where to go?

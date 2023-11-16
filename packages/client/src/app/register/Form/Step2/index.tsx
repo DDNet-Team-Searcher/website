@@ -114,6 +114,7 @@ export function Step2({ setCurrentStep, register }: OwnProps) {
                         <p>Short description of {tiers[currentTierId].name}:</p>
                         {tiers.map((tier, id) => (
                             <p
+                                key={id}
                                 className={classNames('mt-4', {
                                     hidden: currentTierId != id,
                                 })}

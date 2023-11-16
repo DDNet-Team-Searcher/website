@@ -59,6 +59,7 @@ export function Input({
                     className="absolute top-1/2 -translate-y-1/2 right-2.5 animate-pulse select-none"
                     draggable={false}
                     title={error}
+                    alt="error icon"
                 />
             )}
         </div>

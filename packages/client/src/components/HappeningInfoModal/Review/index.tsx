@@ -34,10 +34,12 @@ export function Review({
                             {rate &&
                                 new Array(rate)
                                     .fill(rate)
-                                    .map((item) => (
+                                    .map((item, id) => (
                                         <img
+                                            key={id}
                                             className="min-w-7 w-full h-7 [&:not(:first-child)]:-ml-3"
                                             src="/default-tee.png"
+                                            alt="tee"
                                         />
                                     ))}
                         </div>

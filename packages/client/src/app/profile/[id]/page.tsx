@@ -206,7 +206,7 @@ export default function Profile({ params: { id } }: OwnProps) {
                     </ul>
                     <section className="mt-[60px]">
                         <h2 className="text-3xl text-high-emphasis text-center">
-                            {profile.username}'s last events
+                            {profile.username}&apos;s last events
                         </h2>
                         <div className="w-full flex justify-around flex-wrap">
                             {profile.happenings.events.map((event, id) => (
@@ -223,7 +223,7 @@ export default function Profile({ params: { id } }: OwnProps) {
                     </section>
                     <section className="mt-[60px]">
                         <h2 className="text-3xl text-high-emphasis text-center">
-                            {profile.username}'s last runs
+                            {profile.username}&apos;s last runs
                         </h2>
                         <div className="max-w-[80%] w-full mx-auto flex flex-wrap justify-around">
                             {profile.happenings.runs.map((run, id) => (

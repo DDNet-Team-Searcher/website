@@ -176,7 +176,7 @@ export function Header() {
                                 )
                             }
                         >
-                            <img className="!m-0" src={'/add.svg'} />
+                            <img className="!m-0" src={'/add.svg'} alt="add icon" />
                         </Button>
                         <div
                             ref={ref}
@@ -210,6 +210,7 @@ export function Header() {
                                 setIsNotificationOverlayVisible(true)
                             }
                             src="/notification.svg"
+                            alt="notification icon"
                         />
                         {unreadNotificationsCount !== null && (
                             <span

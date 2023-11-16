@@ -30,5 +30,5 @@ export const useOutsideClickHandler = <T extends HTMLElement>(
         return () => {
             document.removeEventListener('click', handler);
         };
-    }, [condition]);
+    }, [condition, ref, callback]);
 };

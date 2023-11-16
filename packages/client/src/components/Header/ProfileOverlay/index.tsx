@@ -14,6 +14,8 @@ type OwnProps = {
     ref: MutableRefObject<HTMLUListElement | null>;
 };
 
+//NOTE: do smth with it? XD
+/* eslint-disable react/display-name */
 export const ProfileOverlay = forwardRef(({ isHidden }: OwnProps, ref: Ref<HTMLUListElement>) => {
     return (
         <ul data-id="profile-overlay" ref={ref} className={classNames(

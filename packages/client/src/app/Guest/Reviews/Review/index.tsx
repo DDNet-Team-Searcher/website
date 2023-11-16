@@ -4,6 +4,7 @@ type OwnProps = {
         username: string;
     };
 };
+
 export function Review({ review: { username, review } }: OwnProps) {
     return (
         <div>
