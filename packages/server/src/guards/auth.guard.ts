@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
             context.getHandler(),
         );
 
-        if (isProtected) {
+        if (isProtected !== undefined) {
             const request = context.switchToHttp().getRequest();
 
             try {

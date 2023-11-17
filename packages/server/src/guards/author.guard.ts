@@ -23,7 +23,7 @@ export class AuthorGuard implements CanActivate {
             context.getHandler(),
         );
 
-        if (author) {
+        if (author !== undefined) {
             try {
                 const req = context.switchToHttp().getRequest();
 
