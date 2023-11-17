@@ -292,4 +292,53 @@ export class UsersController {
             message: 'User reported successfully'
         };
     }
+
+    @Protected()
+    @Post('/user/:id/ban')
+    async ban(
+        @Param('id') id: string,
+        @Req() req,
+        @Body() body
+    ) {
+        const isBanned = await this.usersService.isBanned(parseInt(id));
+
+        if (isBanned) {
+            throw new ConflictException({
+                status: 'fail',
+                data: null,
+                message: 'You already banned this user OwO'
+            });
+        }
+
+        await this.usersService.ban(parseInt(id), req.user.id, body.reason);
+
+
+        return {
+            status: 'success',
+            data: null,
+            message: 'User banned successfully'
+        };
+    }
+
+    @Protected()
+    @Post('/user/:id/unban')
+    async unban(@Param('id') id: string) {
+        const isBanned = await this.usersService.isBanned(parseInt(id));
+
+        if (!isBanned) {
+            throw new ConflictException({
+                status: 'fail',
+                data: null,
+                message: 'You cant unban a user which is not banned'
+            });
+        }
+
+        await this.usersService.unban(parseInt(id));
+
+        return {
+            status: 'success',
+            data: null,
+            message: 'User unbanned successfully'
+        };
+    }
 }

@@ -23,7 +23,8 @@ const initialState: Nullable<Profile> = {
     verified: null,
     createdAt: null,
     isFollowing: null,
-    isReported: null
+    isReported: null,
+    isBanned: null
 };
 
 export const profileSlice = createSlice({

@@ -32,4 +32,5 @@ export type Profile = {
         playedRuns: number;
         playedEvents: number;
     };
+    isBanned: boolean | null;
 };

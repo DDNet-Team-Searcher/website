@@ -95,6 +95,19 @@ export const usersAPI = createApi({
                 method: 'POST',
                 body: { reason }
             })
+        }),
+        banUser: build.mutation({
+            query: ({ userId, reason }) => ({
+                url: `user/${userId}/ban`,
+                method: 'POST',
+                body: { reason }
+            })
+        }),
+        unbanUser: build.mutation({
+            query: ({ userId }) => ({
+                url: `user/${userId}/unban`,
+                method: 'POST',
+            })
         })
     }),
 });
@@ -109,5 +122,7 @@ export const {
     useUpdatePasswordMutation,
     useLazyGetProfileQuery,
     useFollowUserMutation,
-    useReportUserMutation
+    useReportUserMutation,
+    useBanUserMutation,
+    useUnbanUserMutation,
 } = usersAPI;

@@ -9,6 +9,7 @@ import { Event } from '@/components/Happening/Event';
 import {
     useFollowUserMutation,
     useLazyGetProfileQuery,
+    useUnbanUserMutation,
 } from '@/features/api/users.api';
 import { VerifiedIcon } from '@/components/ui/Icons/Verified';
 import { Graph } from '@/components/Graph';
@@ -20,6 +21,9 @@ import { Button } from '@/components/ui/Button';
 import { deleteHappening, setHappeningStatus, setIsInterestedInHappening, setProfile } from '@/store/slices/profile';
 import { Event as EventType, Run as RunType } from '@app/shared/types/Happening.type';
 import { ReportModal } from './ReportModal';
+import { BanModal } from './BanModal';
+import { hint } from '@/store/slices/hints';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 type OwnProps = {
     params: {
@@ -37,6 +41,10 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const sameUser = authedUserId === parseInt(id);
     const [favServer, setFavServer] = useState('');
     const [isReportModalVisible, setIsReportModalVisible] = useState(false);
+    const [isBanModalVisible, setIsBanModalVisible] = useState(false);
+    const canBan = useAppSelector(state => state.user.user.permissions.canBan);
+    const [unbanUser] = useUnbanUserMutation();
+    const handleFormError = useHandleFormError();
 
     useEffect(() => {
         dispatch(getUserFavoriteServer(profile?.username || '')).then((res) =>
@@ -89,9 +97,36 @@ export default function Profile({ params: { slug } }: OwnProps) {
         setIsReportModalVisible(false);
     }
 
+    const openBanModal = () => {
+        setIsBanModalVisible(true);
+    }
+
+    const onBanModalClose = () => {
+        setIsBanModalVisible(false);
+    }
+
+    const unban = async () => {
+        try {
+            const response = await unbanUser({
+                userId: id
+            }).unwrap();
+
+            if (response.status === 'success') {
+                dispatch(hint({ type: 'success', text: response.message || '' }));
+            }
+        } catch (err) {
+            //FIXME: fixme
+            //@ts-ignore
+            const error = (err as FetchBaseQueryError).data as ExcludeSuccess<BanUserResponse>;
+
+            handleFormError(error);
+        }
+    }
+
     return (
         <>
             <ReportModal visible={isReportModalVisible} onClose={onReportModalClose} userId={parseInt(id)} />
+            <BanModal visible={isBanModalVisible} onClose={onBanModalClose} userId={parseInt(id)} />
             {!profile && (
                 <p className="text-center text-high-emphasis text-[5rem]">
                     User not found :&lt;
@@ -174,14 +209,34 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         ? 'Unfollow'
                                         : 'Follow'}
                                 </Button>
-                                <Button
-                                    className="max-w-[120px] ml-3 w-full !block text-center !border-error"
-                                    onClick={openReportModal}
-                                    styleType={'bordered'}
-                                    disabled={profile.isReported || false}
-                                >
-                                    {profile.isReported ? "Reported" : "Report"}
-                                </Button>
+                                {canBan ?
+                                    profile.isBanned ?
+                                        <Button
+                                            className="max-w-[120px] ml-3 w-full !block text-center !border-error"
+                                            styleType={'bordered'}
+                                            onClick={unban}
+                                        >
+                                            Unban
+                                        </Button>
+                                        :
+                                        <Button
+                                            className="max-w-[120px] ml-3 w-full !block text-center !border-error"
+                                            styleType={'bordered'}
+                                            onClick={openBanModal}
+                                        >
+                                            Ban
+                                        </Button>
+
+                                    :
+                                    <Button
+                                        className="max-w-[120px] ml-3 w-full !block text-center !border-error"
+                                        onClick={openReportModal}
+                                        styleType={'bordered'}
+                                        disabled={profile.isReported || false}
+                                    >
+                                        {profile.isReported ? "Reported" : "Report"}
+                                    </Button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -300,8 +355,9 @@ export default function Profile({ params: { slug } }: OwnProps) {
                             )}
                         </div>
                     </section>
-                </div>
-            )}
+                </div >
+            )
+            }
         </>
     );
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
@@ -100,7 +100,7 @@ export class UsersService {
             banned.reason = credentials.bans[0].reason;
         }
 
-        const permissions = getPermissions(roles.map(el => el[0]));
+        const permissions = getPermissions(roles.map(el => el.role));
 
         return {
             id,
@@ -195,6 +195,15 @@ export class UsersService {
                         following: true,
                     },
                 },
+                bans: {
+                    take: 1,
+                    select: {
+                        banned: true
+                    },
+                    where: {
+                        banned: true
+                    }
+                }
             },
         });
 
@@ -265,6 +274,9 @@ export class UsersService {
         const roles = profile.roles.map((el) => el.role);
         const isReported = await this.isReported(id, userId);
 
+        //TODO: return boolean only to users who can ban
+        //return null for others
+
         return {
             id: profileUserId,
             reviews,
@@ -285,7 +297,8 @@ export class UsersService {
                 playedEvents,
             },
             isFollowing,
-            isReported
+            isReported,
+            isBanned: profile.bans[0]?.banned ? true : false,
         };
     }
 
@@ -433,5 +446,48 @@ export class UsersService {
         });
 
         return res === null ? false : true;
+    }
+
+    async isBanned(bannedUserId: number): Promise<boolean> {
+        let res = await this.prismaService.ban.findFirst({
+            where: {
+                userId: bannedUserId,
+                banned: true
+            },
+        });
+
+        return res === null ? false : true;
+    }
+
+    async ban(userIdToBan: number, authorId: number, reason: string): Promise<void> {
+        await this.prismaService.ban.create({
+            data: {
+                reason,
+                banned: true,
+                userId: userIdToBan,
+                authorId
+            }
+        });
+    }
+
+    async unban(bannedUserId: number): Promise<void> {
+        const ban = await this.prismaService.ban.findFirst({
+            where: {
+                userId: bannedUserId,
+                banned: true
+            },
+            select: {
+                id: true
+            }
+        });
+
+        await this.prismaService.ban.update({
+            where: {
+                id: ban!.id
+            },
+            data: {
+                banned: false
+            }
+        });
     }
 }

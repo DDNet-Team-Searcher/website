@@ -152,3 +152,10 @@ export type ReportUserRequest = {
 };
 
 export type ReportUserResponse = ApiResponse<null, { reason: string }>;
+
+export type BanUserRequest = {
+    reason: string;
+    userId: number;
+};
+
+export type BanUserResponse = ApiResponse<null, { reason: string }>;
