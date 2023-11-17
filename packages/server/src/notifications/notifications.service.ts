@@ -160,6 +160,14 @@ export class NotificationsService {
                     notification.notification as NotificationJson<NotifType.InterestedInHappening>,
                 createdAt: notification.createdAt.toString(),
             };
+        } else if (notification.type == NotificationType.NoEmptyServers) {
+            return {
+                id: notification.id,
+                type: notification.type as NotifType.NoEmptyServers,
+                seen: notification.seen,
+                notification: notification.notification as NotificationJson<NotifType.NoEmptyServers>,
+                createdAt: notification.createdAt.toString(),
+            };
         }
 
         return null;
