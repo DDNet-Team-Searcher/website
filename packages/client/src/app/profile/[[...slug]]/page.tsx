@@ -23,16 +23,17 @@ import { ReportModal } from './ReportModal';
 
 type OwnProps = {
     params: {
-        id: string;
+        slug?: string[]
     };
 };
 
-export default function Profile({ params: { id } }: OwnProps) {
+export default function Profile({ params: { slug } }: OwnProps) {
     const dispatch = useAppDispatch();
     const [fetchProfile] = useLazyGetProfileQuery();
     const [followUser] = useFollowUserMutation();
     const profile = useAppSelector(state => state.profile);
     const authedUserId = useAppSelector((state) => state.user.user.id);
+    const id = slug ? slug[0] : authedUserId?.toString()!;
     const sameUser = authedUserId === parseInt(id);
     const [favServer, setFavServer] = useState('');
     const [isReportModalVisible, setIsReportModalVisible] = useState(false);

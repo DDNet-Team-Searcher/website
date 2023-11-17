@@ -56,7 +56,6 @@ export function Header() {
         profileOverlayRef,
         !isProfileOverlayHidden,
         () => {
-            console.log("AIM IN");
             setIsProfileOverlayHidden(true);
         },
     );
