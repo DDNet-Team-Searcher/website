@@ -26,8 +26,11 @@ import { Event, Run } from '@app/shared/types/Happening.type';
 import { Request } from 'express';
 import { HappeningType } from '@prisma/client';
 import { Validator } from 'class-validator';
+import { InnocentGuard } from 'src/guards/innocent.guard';
+import { Innocent } from 'src/decorators/innocent.decorator';
 
 @UseGuards(AuthorGuard)
+@UseGuards(InnocentGuard)
 @Controller()
 export class HappeningsController {
     constructor(private readonly happeningsService: HappeningsService) { }
@@ -254,6 +257,7 @@ export class HappeningsController {
         );
     }
 
+    @Innocent()
     @Protected()
     @Get('/runs')
     async getRuns(@Req() req) {
