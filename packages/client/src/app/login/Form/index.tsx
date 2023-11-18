@@ -6,8 +6,7 @@ import Link from "next/link"
 // import { Checkbox } from "../../components/Checkbox"
 // TODO: fix checkbox xD
 import { useAppDispatch } from "@/utils/hooks/hooks"
-import { hint } from "@/store/slices/hints"
-import { useLoginMutation } from "@/features/api/users.api"
+import { useLazyGetCredentialsQuery, useLoginMutation } from "@/features/api/users.api"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { ExcludeSuccess } from "@/types/Response.type"
@@ -18,6 +17,7 @@ import { useHandleFormError } from "@/utils/hooks/useHandleFormError";
 
 export function Form() {
     const [loginUser] = useLoginMutation()
+    const [getCredentials] = useLazyGetCredentialsQuery();
     const router = useRouter()
     const defaultValues = { email: '', password: '', rememberMe: false }
     const dispatch = useAppDispatch()
@@ -28,9 +28,12 @@ export function Form() {
         const { rememberMe, ...data } = values
 
         try {
-            await loginUser(data).unwrap()
+            await loginUser(data).unwrap();
 
-            dispatch(setIsAuthed(true))
+            dispatch(setIsAuthed(true));
+
+            await getCredentials().unwrap();
+
             router.push('/');
         } catch (err) {
             const error = (err as FetchBaseQueryError).data as ExcludeSuccess<LoginUserResponse>

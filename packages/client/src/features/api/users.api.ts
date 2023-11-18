@@ -124,6 +124,7 @@ export const {
     useLoginMutation,
     useLogoutMutation,
     useGetCredentialsQuery,
+    useLazyGetCredentialsQuery,
     useUpdateAvatarMutation,
     useUpdateUsernameMutation,
     useUpdateEmailMutation,
