@@ -20,6 +20,8 @@ export type LoginUserRequest = {
 
 export type LoginUserResponse = ApiResponse<null, LoginUserRequest>;
 
+export type LogoutUserResponse = ApiResponse<null, null>;
+
 export type CreateRunRequest = {
     mapName: string;
     teamSize: number;

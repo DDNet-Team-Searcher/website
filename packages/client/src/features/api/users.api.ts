@@ -3,6 +3,7 @@ import {
     GetProfile,
     LoginUserRequest,
     LoginUserResponse,
+    LogoutUserResponse,
     RegisterUserRequest,
     RegisterUserResponse,
     ReportUserRequest,
@@ -35,6 +36,12 @@ export const usersAPI = createApi({
                 method: 'POST',
                 body,
             }),
+        }),
+        logout: build.mutation<LogoutUserResponse, void>({
+            query: () => ({
+                url: `/logout`,
+                method: 'DELETE',
+            })
         }),
         getCredentials: build.query<{ data: any }, void>({
             query: () => `/credentials`,
@@ -115,6 +122,7 @@ export const usersAPI = createApi({
 export const {
     useRegisterMutation,
     useLoginMutation,
+    useLogoutMutation,
     useGetCredentialsQuery,
     useUpdateAvatarMutation,
     useUpdateUsernameMutation,

@@ -6,7 +6,7 @@ import { useAppDispatch } from "./hooks";
 export function useHandleFormError() {
     const dispatch = useAppDispatch();
 
-    return (data: Fail<object> | ResError, setError: UseFormSetError<object> | null = null) => {
+    return (data: Fail<object> | ResError | Fail<null>, setError: UseFormSetError<object> | null = null) => {
         const error = data;
 
         if (error.status === 'fail') {

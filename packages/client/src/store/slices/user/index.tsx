@@ -96,6 +96,34 @@ export const userSlice = createSlice({
         },
         updateEmail(state, action: PayloadAction<string>) {
             state.user.email = action.payload;
+        },
+        clearData(state) {
+            state.user = {
+                id: null,
+                username: null,
+                email: null,
+                tier: null,
+                createdAt: null,
+                updatedAt: null,
+                verified: null,
+                avatar: null,
+                notifications: [],
+                permissions: {
+                    canBan: null,
+                    canDeleteHappenings: null,
+                    canManageRoles: null,
+                    canManagePosts: null,
+                },
+                _count: {
+                    unreadNotifications: null,
+                },
+                banned: {
+                    isBanned: null,
+                    reason: null,
+                },
+            }
+
+            state.isAuthed = false;
         }
     },
 });
@@ -107,7 +135,8 @@ export const {
     setNotificationSeen,
     updateAvatar,
     updateUsername,
-    updateEmail
+    updateEmail,
+    clearData
 } = userSlice.actions;
 
 export default userSlice.reducer;

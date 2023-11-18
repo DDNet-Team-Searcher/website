@@ -3,6 +3,7 @@ import {
     Body,
     ConflictException,
     Controller,
+    Delete,
     Get,
     HttpException,
     InternalServerErrorException,
@@ -104,6 +105,17 @@ export class UsersController {
             'token',
             this.jwtService.sign({ id: user.id }, { expiresIn: '10d' }),
         );
+
+        return {
+            status: 'success',
+            data: null,
+        };
+    }
+
+    @Protected()
+    @Delete('/logout')
+    async logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('token');
 
         return {
             status: 'success',
