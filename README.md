@@ -1,10 +1,9 @@
 # DDnet Team Searcher
 ![Logo](images/logo.png)
 ## Uuuuh. That's my second try to do something cool =]
+![Screenshot](images/screenshot.png)
 
 I'm making this thing because it's one of the hardest problems in the game. You simply cant find anybody to play with. And on this website(if i finish it) you will be able to find homies.
-
-I'd like to add some image or gif here but Im lazy fuck 🙂
 
 Aaaaand right now there's actually not many things you can do with it. But im working on it(maybe)
 

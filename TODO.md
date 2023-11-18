@@ -12,5 +12,6 @@
 - [ ] Possibility to watch happenings without need to be logged in but without possibility to interact with it
 - [ ] Do something with clans? or just remove them at all
 - [ ] Blog? or remove those blog posts on main page
+- [ ] Make a ddnet server send a request to Rust server when players finished a map
 - [ ] Git gud in desing
 - [ ] Adaptive design 🤮
