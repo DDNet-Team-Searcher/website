@@ -4,26 +4,30 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { store } from '@/store';
 import { I18nProvider } from "@lingui/react";
 import { i18n } from "@lingui/core";
-import { messages as enMessages } from "@/locales/en/messages";
-//import { messages as czMessages } from "@/locales/cz/messages";
-import { messages as ukMessages } from "@/locales/uk/messages";
-import { messages as ruMessages } from "@/locales/ru/messages";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-i18n.load("en", enMessages);
-//i18n.load("cz", czMessages);
-i18n.load("uk", ukMessages);
-i18n.load("ru", ruMessages);
-i18n.activate("en");
+i18n.loadAndActivate({ locale: 'default', messages: {} });
 
-//TODO: it looks like trash but it gets job done, y'know
+const supportedLocales = ['en', 'uk', 'ru'];
 
 export function Provider({ children }: { children: React.ReactNode }) {
+    const [locale, setLocale] = useState<string | null>(null);
+
     useEffect(() => {
-        if (navigator?.language) {
-            i18n.activate(navigator.language);
+        if (navigator && navigator?.language && supportedLocales.includes(navigator.language)) {
+            setLocale(navigator.language);
+        } else {
+            setLocale('en');
         }
     }, []);
+
+    useEffect(() => {
+        if (locale) {
+            import(`@/locales/${locale}/messages`).then(({ messages }) => {
+                i18n.loadAndActivate({ locale, messages });
+            });
+        }
+    }, [locale]);
 
     return (
         <ReduxProvider store={store}>
