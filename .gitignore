@@ -4,6 +4,7 @@ docker-compose.dev.yml
 packages/client/node_modules
 packages/client/.next
 packages/client/tsconfig.tsbuildinfo
+packages/client/src/locales/**/messages.js
 
 packages/server/node_modules
 packages/server/dist

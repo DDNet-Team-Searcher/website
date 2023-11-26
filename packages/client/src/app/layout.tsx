@@ -5,6 +5,7 @@ import { Hints } from '@/components/Hints';
 import { RouteGuard } from '@/components/RouteGuard';
 import { HappeningInfoModal } from '@/components/HappeningInfoModal';
 import { BanModal } from './BanModal';
+import { Footer } from '@/components/Footer/page';
 
 export const metadata = {
     title: 'DDnet Team Searcher',
@@ -19,13 +20,14 @@ export default function RootLayout({
 }) {
     return (
         <Provider>
-            <html lang="en">
+            <html lang="ua">
                 <body className="bg-gradient-to-b from-[#181510] to-[#201506]">
                     <BanModal />
                     <HappeningInfoModal />
                     <Header />
                     <Hints />
                     <RouteGuard>{children}</RouteGuard>
+                    <Footer />
                 </body>
             </html>
         </Provider>

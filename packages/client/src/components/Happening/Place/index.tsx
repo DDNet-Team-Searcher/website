@@ -1,7 +1,7 @@
-import { Place } from '@app/shared/types/Happening.type';
+import { Place as PlaceT } from '@app/shared/types/Happening.type';
 
 type OwnProps = {
-    place: Place;
+    place: PlaceT;
 };
 
 export function Place({ place }: OwnProps) {
