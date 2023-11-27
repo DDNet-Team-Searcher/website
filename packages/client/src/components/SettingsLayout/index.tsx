@@ -9,7 +9,7 @@ type OwnProps = {
 
 export function SettingsLayout({ children, className }: OwnProps) {
     return (
-        <main className="max-w-[1110px] mx-auto flex mt-24">
+        <main className="max-w-[1110px] w-full mx-auto flex mt-24">
             <Navbar />
             <section
                 className={classNames('ml-[100px] grow', {

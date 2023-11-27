@@ -11,14 +11,13 @@ export function Footer() {
     const { i18n } = useLingui();
 
     return (
-        <footer className="flex text-medium-emphasis px-40">
+        <footer className="flex text-medium-emphasis py-2 px-40 mt-auto">
             <img src="/logo.png" />
             <ul className="ml-auto">
                 {Object.keys(links).map((key, id) => (
                     <li key={id}><Link href={links[key as keyof typeof links]}>{i18n._(key)}</Link></li>
                 ))}
             </ul>
-            <Link href="/" locale="uk">owo</Link>
             <span className="ml-7 text-sm">
                 Made with <s>pain</s> love <span className="text-primary-1">&lt;3</span>
             </span>

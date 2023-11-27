@@ -21,7 +21,7 @@ export default function RootLayout({
     return (
         <Provider>
             <html lang="ua">
-                <body className="bg-gradient-to-b from-[#181510] to-[#201506]">
+                <body className="bg-gradient-to-b from-[#181510] to-[#201506] flex flex-col min-h-[100vh]">
                     <BanModal />
                     <HappeningInfoModal />
                     <Header />

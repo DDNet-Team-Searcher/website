@@ -74,7 +74,7 @@ export default function Search() {
     }, [page]);
 
     return (
-        <div className="max-w-[725px] mx-auto [&>*]:mt-7">
+        <div className="max-w-[725px] w-full mx-auto [&>*]:mt-7">
             {happenings.map((el) => (
                 <Fragment key={el.id}>
                     {el.type == 'user' && (
