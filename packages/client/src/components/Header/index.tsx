@@ -114,7 +114,7 @@ export function Header() {
                 <div
                     className={classNames({
                         hidden: isAuthed,
-                        'flex items-center [&>:not(:first-child)]:ml-7':
+                        'flex items-center ml-auto [&>:not(:first-child)]:ml-7':
                             !isAuthed,
                     })}
                 >
