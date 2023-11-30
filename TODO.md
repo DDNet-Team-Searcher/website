@@ -14,8 +14,6 @@
 - [ ] Fix the god damn checkbox...
 - [ ] Blog? or remove those blog posts on main page
 - [ ] Send an email with confirmation code when new user is registering and require this code as last register step
-- [ ] Add footer
-    - [ ] Add a link to the github repo
 - [ ] Break happening creating modal in few steps instead of one big ass
 - [ ] Localization
     - [ ] Backend
@@ -29,10 +27,12 @@
         - [ ] UA
         - [ ] RUS
 - [ ] Show uploaded image of an event
-- [ ] Add severs command to ddnet server like `sv_shutdown_after_finish` and `sv_wait_before_shutdown_after_finish` or smth like that
-- [ ] Make a ddnet server send a request to Rust server when players finished a map
 - [ ] Git gud in desing
 - [ ] Adaptive design 🤮
+- [x] Make a ddnet server send a request to Rust server when players finished a map
+- [x] Add severs command to ddnet server like `sv_shutdown_after_finish` and `sv_wait_before_shutdown_after_finish` or smth like that
+- [x] Add footer
+    - [x] Add a link to the github repo
 - [x] Sign out
 - [x] Rn banning works only client side, dont let ppl fetch certain data when they're banned
 - [x] Return 403 for enpoinpoints which use @Innocent decorator
