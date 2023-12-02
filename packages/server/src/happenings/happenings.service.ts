@@ -144,6 +144,7 @@ export class HappeningsService {
                 const serverData = (await this.serversService.getServerData(
                     serverId,
                 ))!; //NOTE: this is fine
+
                 const { port, password } =
                     await this.serversService.startServer(serverId, {
                         mapName,

@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Socket } from 'net';
-import { Action, Request } from 'src/protos/request';
-import { Response, ResponseCode } from 'src/protos/response';
+import { Request_Action, Request } from 'src/protos/request';
+import { Response, Response_ResponseCode } from 'src/protos/response';
+import { Origin } from 'src/protos/common';
+import { Status } from '@prisma/client';
 
 type Host = {
     ip: string;
@@ -66,9 +68,23 @@ export class ServersService {
                     res();
                 });
 
+                socket.on('close', (e) => {
+                    console.log('Connection closed');
+                });
+
                 socket.on('data', async (bytes) => {
-                    let respose = Response.decode(bytes);
-                    //TODO: idk how but here should be handled responses from the rust server which will be triggered by ddnet server
+                    let response = Response.decode(bytes);
+
+                    if (response.origin == Origin.DDNET) {
+                        await this.prismaService.happening.update({
+                            where: {
+                                id: response.id
+                            },
+                            data: {
+                                status: Status.Finished
+                            }
+                        });
+                    }
                 });
             });
         }
@@ -113,7 +129,8 @@ export class ServersService {
             const socket = this.sockets.get(serverId)?.socket!;
 
             const request = Request.create({
-                action: Action.INFO
+                origin: Origin.NOT_DDNET,
+                action: Request_Action.INFO
             });
 
             socket.write(Request.encode(request).finish());
@@ -126,7 +143,7 @@ export class ServersService {
                     console.log("This bs doesnt work D:", response);
                 }
 
-                if (response.responseCode == ResponseCode.OK) {
+                if (response.responseCode == Response_ResponseCode.OK) {
                     res({
                         used: response.used!,
                         max: response.max!,
@@ -148,8 +165,9 @@ export class ServersService {
             const socket = this.sockets.get(serverId)?.socket!;
 
             const request = Request.create({
-                action: Action.START,
+                action: Request_Action.START,
                 mapName: data.mapName,
+                origin: Origin.NOT_DDNET,
                 id: data.id
             });
 
@@ -163,7 +181,7 @@ export class ServersService {
                     console.log("Thats.. not good #69");
                 }
 
-                if (response.responseCode == ResponseCode.OK) {
+                if (response.responseCode == Response_ResponseCode.OK) {
                     res({
                         port: response.port!,
                         password: response.password!
@@ -184,7 +202,8 @@ export class ServersService {
             const socket = this.sockets.get(serverId)?.socket!;
 
             const request = Request.create({
-                action: Action.SHUTDOWN,
+                action: Request_Action.SHUTDOWN,
+                origin: Origin.NOT_DDNET,
                 id: happeningId
             });
 
@@ -194,7 +213,7 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (response.responseCode == ResponseCode.OK) {
+                if (response.responseCode == Response_ResponseCode.OK) {
                     res();
                 } else {
                     console.log("Couldnt shutdown the server owo");

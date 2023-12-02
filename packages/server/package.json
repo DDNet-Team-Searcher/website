@@ -18,7 +18,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "proto:generate": "protoc --plugin=\"./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_opt=esModuleInterop=true --experimental_allow_proto3_optional --ts_proto_out=\"./src\" protos/*.proto"
+        "proto:generate": "protoc --plugin=\"./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_opt=esModuleInterop=true --experimental_allow_proto3_optional --ts_proto_out=\"./src/protos\" --proto_path=\"./protos\" protos/*.proto"
     },
     "dependencies": {
         "@app/shared": "^1.0.0",
