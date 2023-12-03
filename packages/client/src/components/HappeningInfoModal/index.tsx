@@ -147,7 +147,7 @@ export function HappeningInfoModal() {
                     <Place place={happening.place} />
                     <div className="text-medium-emphasis flex mt-2.5 items-center">
                         <Avatar
-                            src={null}
+                            src={happening.author.avatar}
                             username={happening.author.username}
                         />
                         <span className="ml-2.5">

@@ -4,6 +4,7 @@ import { Run, Event } from '@app/shared/types/Happening.type';
 import { UsersService } from 'src/users/users.service';
 import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 const PER_PAGE = 5;
 
@@ -61,6 +62,8 @@ export class SearchService {
             );
 
             if (profile) {
+                profile.avatar = getAvatarUrl(profile.avatar);
+
                 const isFollowing = await this.usersService.isFollowing(
                     userId,
                     profile.id,

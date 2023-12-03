@@ -26,7 +26,7 @@ export function SearchResultRun({
         status,
         description,
         isInterested,
-        author: { id: authorId, username },
+        author: { id: authorId, username, avatar },
         _count: { interestedPlayers },
     } = run;
 
@@ -89,7 +89,7 @@ export function SearchResultRun({
                 </p>
                 <div className="flex items-center justify-between mt-4">
                     <Link href={`/profile/${authorId}`}>
-                        <Avatar src={null} username={username} />
+                        <Avatar src={avatar} username={username} />
                     </Link>
                     <div className="flex">
                         <ActionButtons

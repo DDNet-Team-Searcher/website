@@ -54,7 +54,7 @@ export function User({
 
     return (
         <div className="flex items-center bg-primary-2 rounded-[10px] px-5 py-2.5">
-            <Avatar src={null} username={username} size={50} />
+            <Avatar src={user.avatar} username={username} size={50} />
             <div className="ml-5">
                 <Link
                     className="text-xl text-high-emphasis"
