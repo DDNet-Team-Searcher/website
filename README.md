@@ -1,5 +1,6 @@
 # DDnet Team Searcher
 ![Logo](images/logo.png)
+![Status badge](https://github.com/DDNet-Team-Searcher/website/actions/workflows/ci.yml/badge.svg)
 ## Uuuuh. That's my second try to do something cool =]
 ![Screenshot](images/screenshot.png)
 
