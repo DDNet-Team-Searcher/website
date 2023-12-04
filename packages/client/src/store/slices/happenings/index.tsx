@@ -18,6 +18,9 @@ const initialState: HappeningsState = {
     searchResults: [],
 };
 
+//TODO: there has to be a better way to organize happenings
+// so there would be only one object of one happening
+
 export const happeningsSlice = createSlice({
     name: 'happenings',
     initialState,

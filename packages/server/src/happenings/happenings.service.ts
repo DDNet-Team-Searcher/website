@@ -17,6 +17,13 @@ import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
 
+export class AllServersInUseError extends Error {
+    constructor(message?: string) {
+        super(message);
+        this.name = "AllServersInUseError";
+    }
+}
+
 @Injectable()
 export class HappeningsService {
     constructor(
@@ -126,7 +133,7 @@ export class HappeningsService {
         });
     }
 
-    async startHappening(id: number): Promise<boolean> {
+    async startHappening(id: number): Promise<string | null> {
         const happeningPlace = await this.getHappeningPlace(id);
 
         if (happeningPlace === 'HERE') {
@@ -151,6 +158,8 @@ export class HappeningsService {
                         id,
                     });
 
+                let connectString = `connect ${serverData.ip}:${port}; password ${password}`;
+
                 await this.prismaService.happening.update({
                     where: {
                         id,
@@ -158,14 +167,14 @@ export class HappeningsService {
                     data: {
                         status: 'Happening',
                         serverId,
-                        connectString: `connect ${serverData.ip}:${port}; password ${password}`,
+                        connectString,
                     },
                 });
 
-                return true;
+                return connectString;
             }
 
-            return false;
+            throw new AllServersInUseError();
         } else {
             await this.prismaService.happening.update({
                 where: {
@@ -176,7 +185,7 @@ export class HappeningsService {
                 },
             });
 
-            return true;
+            return null;
         }
     }
 

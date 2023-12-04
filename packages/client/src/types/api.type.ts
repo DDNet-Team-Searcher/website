@@ -51,7 +51,7 @@ export type CreateEventResponse = ApiResponse<
 
 export type UpdateHappening = ApiResponse<null, { [key: string]: string }>;
 
-export type StartHappeningResponse = ApiResponse<null, { reason: string }>;
+export type StartHappeningResponse = ApiResponse<{ connectString: string | null }, { reason: string }>;
 
 export type EndHappeningResponse = ApiResponse<null, null>;
 

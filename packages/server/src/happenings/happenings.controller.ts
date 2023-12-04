@@ -9,7 +9,6 @@ import {
     Param,
     Post,
     Put,
-    RawBodyRequest,
     Req,
     UploadedFile,
     UseGuards,
@@ -23,11 +22,11 @@ import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
 import { Event, Run } from '@app/shared/types/Happening.type';
-import { Request } from 'express';
 import { HappeningType } from '@prisma/client';
 import { Validator } from 'class-validator';
 import { InnocentGuard } from 'src/guards/innocent.guard';
 import { Innocent } from 'src/decorators/innocent.decorator';
+import { AllServersInUseError } from './happenings.service';
 
 @UseGuards(AuthorGuard)
 @UseGuards(InnocentGuard)
@@ -175,11 +174,20 @@ export class HappeningsController {
     @Get('/:id/start')
     async startHappening(@Req() req) {
         try {
-            const success = await this.happeningsService.startHappening(
+            let connectString = await this.happeningsService.startHappening(
                 parseInt(req.params.id),
             );
 
-            if (!success) {
+            return {
+                status: 'success',
+                data: {
+                    connectString
+                },
+            };
+        } catch (e) {
+            if (e instanceof HttpException) {
+                throw e;
+            } else if (e instanceof AllServersInUseError) {
                 throw new InternalServerErrorException({
                     status: 'fail',
                     data: {
@@ -187,15 +195,6 @@ export class HappeningsController {
                     },
                     message: 'Im sorry but all servers are in use',
                 });
-            }
-
-            return {
-                status: 'success',
-                data: null,
-            };
-        } catch (e) {
-            if (e instanceof HttpException) {
-                throw e;
             } else {
                 console.log(e);
                 throw new InternalServerErrorException();
