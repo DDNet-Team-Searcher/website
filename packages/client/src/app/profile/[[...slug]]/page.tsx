@@ -133,7 +133,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                 </p>
             )}
             {profile && (
-                <div className="mt-[85px] max-w-[1110px] mx-auto">
+                <div className="mt-[85px] max-w-[1110px] w-full mx-auto">
                     <div className="flex justify-center">
                         <Avatar
                             size={285}

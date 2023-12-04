@@ -15,5 +15,9 @@ msgstr ""
 
 #. js-lingui-explicit-id
 #: src/components/Footer/page.tsx:15
-msgid "source_code"
-msgstr "Source code"
+#~ msgid "source_code"
+#~ msgstr "Source code"
+
+#. js-lingui-explicit-id
+#~ msgid "discord"
+#~ msgstr "Discord"

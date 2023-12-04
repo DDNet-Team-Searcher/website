@@ -8,6 +8,6 @@ I'm making this thing because it's one of the hardest problems in the game. You 
 
 Aaaaand right now there's actually not many things you can do with it. But im working on it(maybe)
 
-If you have any dumb ideas and you would like to see them to be implemented OR you found some bug(whole project is one big bug tho).You can click [here](https://discord.gg/eZewrwVaBZ) and I will get your credit card info
+If you have any dumb ideas and you would like to see them to be implemented OR you found some bug(whole project is one big bug tho).You can click [here](https://discord.gg/g69MYFA4Ba) and I will get your credit card info
 
 Cya babe!
