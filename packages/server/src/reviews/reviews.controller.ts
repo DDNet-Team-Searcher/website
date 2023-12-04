@@ -6,14 +6,18 @@ import {
     Param,
     Post,
     Req,
+    UseGuards,
 } from '@nestjs/common';
 import { Protected } from 'src/decorators/protected.decorator';
 import { CreateReviewDTO } from './dto/create-review.dto';
 import { ReviewsService } from './reviews.service';
+import { Innocent } from 'src/decorators/innocent.decorator';
+import { InnocentGuard } from 'src/guards/innocent.guard';
 
+@UseGuards(InnocentGuard)
 @Controller()
 export class ReviewsController {
-    constructor(private reviewsService: ReviewsService) {}
+    constructor(private reviewsService: ReviewsService) { }
 
     @Get()
     async getReviews(@Param('happeningId') happeningId: string) {
@@ -34,6 +38,7 @@ export class ReviewsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/:userId')
     async createReview(

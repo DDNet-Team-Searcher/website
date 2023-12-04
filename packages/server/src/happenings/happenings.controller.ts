@@ -34,6 +34,7 @@ import { AllServersInUseError } from './happenings.service';
 export class HappeningsController {
     constructor(private readonly happeningsService: HappeningsService) { }
 
+    @Innocent()
     @Protected()
     @Post('/create/run')
     async createRun(@Req() req, @Body() data: RunDTO) {
@@ -60,6 +61,7 @@ export class HappeningsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/create/event')
     @UseInterceptors(FileInterceptor('thumbnail'))
@@ -92,6 +94,7 @@ export class HappeningsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Author('happening')
     @Put('/:id/update')
@@ -169,6 +172,7 @@ export class HappeningsController {
         };
     }
 
+    @Innocent()
     @Protected()
     @Author('happening')
     @Get('/:id/start')
@@ -202,6 +206,7 @@ export class HappeningsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Author('happening')
     @Get('/:id/end')
@@ -219,6 +224,7 @@ export class HappeningsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Author('happening')
     @Delete('/:id/delete')
@@ -238,6 +244,7 @@ export class HappeningsController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/:id/interested')
     async setIsInterested(@Req() req) {
@@ -283,6 +290,7 @@ export class HappeningsController {
         };
     }
 
+    @Innocent()
     @Protected()
     @Get('/events')
     async getEvents(@Req() req) {
@@ -320,6 +328,7 @@ export class HappeningsController {
         };
     }
 
+    @Innocent()
     @Protected()
     @Put('/:happeningId/in-team/:userId')
     async updateIsPlayerInTeam(

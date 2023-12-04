@@ -12,7 +12,6 @@ import {
     Put,
     Req,
     Res,
-    SetMetadata,
     UploadedFile,
     UseInterceptors,
 } from '@nestjs/common';
@@ -28,6 +27,7 @@ import { ChangeUsernameDTO } from './dto/change-username.dto';
 import { ChangeEmailDTO } from './dto/change-email.dto';
 import { ChangePasswordDTO } from './dto/change-password.dto';
 import { getAvatarUrl } from 'src/utils/user.util';
+import { Innocent } from 'src/decorators/innocent.decorator';
 
 @Controller()
 export class UsersController {
@@ -123,6 +123,7 @@ export class UsersController {
         };
     }
 
+    @Innocent()
     @Protected()
     @Post('/profile/avatar')
     @UseInterceptors(FileInterceptor('avatar'))
@@ -147,6 +148,7 @@ export class UsersController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/profile/username')
     async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO) {
@@ -176,6 +178,7 @@ export class UsersController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/profile/email')
     async updateEmail(@Req() req, @Body() data: ChangeEmailDTO) {
@@ -205,6 +208,7 @@ export class UsersController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Post('/profile/password')
     async updatePassword(@Req() req, @Body() data: ChangePasswordDTO) {
@@ -267,6 +271,7 @@ export class UsersController {
         }
     }
 
+    @Innocent()
     @Protected()
     @Put('/user/:id/follow')
     async follow(@Param('id') id: string, @Req() req) {
@@ -279,6 +284,7 @@ export class UsersController {
     }
 
     //TODO: do something with types :clueless:
+    @Innocent()
     @Protected()
     @Post('/user/:id/report')
     async report(

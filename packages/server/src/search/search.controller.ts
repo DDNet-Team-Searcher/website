@@ -1,11 +1,15 @@
-import { Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { Protected } from 'src/decorators/protected.decorator';
 import { SearchService } from './search.service';
+import { InnocentGuard } from 'src/guards/innocent.guard';
+import { Innocent } from 'src/decorators/innocent.decorator';
 
+@UseGuards(InnocentGuard)
 @Controller()
 export class SearchController {
     constructor(private readonly searchService: SearchService) { }
 
+    @Innocent()
     @Protected()
     @Get('/search')
     async search(
