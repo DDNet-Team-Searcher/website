@@ -3,8 +3,6 @@
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
-// import { Checkbox } from "../../components/Checkbox"
-// TODO: fix checkbox xD
 import { useAppDispatch } from "@/utils/hooks/hooks"
 import { useLazyGetCredentialsQuery, useLoginMutation } from "@/features/api/users.api"
 import { useRouter } from "next/navigation"
@@ -46,12 +44,6 @@ export function Form() {
             <div className="flex flex-wrap mt-[100px] [&>*:not(:first-child)]:ml-[65px]">
                 <Input autoComplete={"off"} register={register('email', { required: 'Field is required' })} errors={errors} placeholder={"Email"} />
                 <Input autoComplete={"off"} register={register('password', { required: 'Field is required' })} errors={errors} placeholder={"Password"} type={"password"} />
-            </div>
-            <div className="mt-2.5 text-high-emphasis">
-                {
-                    // <Field name={"rememberMe"} as={Checkbox} />
-                }
-                <span className="ml-2.5">Remember me</span>
             </div>
             <Link href="/forgor-password" onClick={() => alert("Sucks to be you!")} className="mt-2.5 text-high-emphasis block">Forgor password?</Link>
             <Button type={"submit"} styleType={"filled"} className="mt-[35px]">Login</Button>
