@@ -113,6 +113,7 @@ export type UpdatePasswordResponse = ApiResponse<null, UpdatePasswordRequest>;
 export type SearchQueryRequest = {
     query: string;
     page: number;
+    filters: Record<string, string>;
 };
 
 export type SearchQueryResponse = ApiResponse<

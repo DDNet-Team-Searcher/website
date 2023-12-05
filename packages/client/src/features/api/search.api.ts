@@ -7,7 +7,11 @@ export const searchApi = createApi({
     baseQuery: baseQuery('search'),
     endpoints: (build) => ({
         search: build.query<SearchQueryResponse, SearchQueryRequest>({
-            query: ({ query, page }) => `?query=${encodeURIComponent(query)}&page=${page}`
+            query: ({ query, page, filters }) => {
+                const filterString = new URLSearchParams(filters).toString();
+
+                return `?query=${encodeURIComponent(query)}&page=${page}&${filterString}`;
+            }
         }),
     }),
 });
