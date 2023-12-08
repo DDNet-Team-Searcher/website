@@ -15,6 +15,7 @@ export class SearchController {
     async search(
         @Query('query') query: string | null,
         @Query('page') page: string | null,
+        @Query('sort') type: string | null,
         @Req() req,
     ) {
         const searchResult = await this.searchService.search(
@@ -22,6 +23,7 @@ export class SearchController {
             query || "",
             {
                 page: (Number(page) || 1) - 1,
+                sort: (type || "all") as "all" | "events" | "runs" | "users"
             },
         );
 

@@ -18,9 +18,9 @@ import {
 
 const selectOptions = {
     'all': 'All',
-    'run': 'Run',
-    'event': 'Event',
-    'user': 'User'
+    'runs': 'Run',
+    'events': 'Event',
+    'users': 'User'
 };
 
 export default function Search() {
