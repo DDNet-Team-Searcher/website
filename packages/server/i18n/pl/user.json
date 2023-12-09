@@ -1,0 +1,11 @@
+{
+    "already_exists": "Użytkownik o podanym adresie e-mail już istnieje",
+    "wrong_credentials": "E-mail lub hasło są niepoprawne",
+    "different_passwords": "Hasła nie są identyczne",
+    "reported_successfully": "Użytkownik został zgłoszony",
+    "already_reported": "Już zgłosiłeś/aś tego użytkownika >~<",
+    "banned_successfully": "Użytkownik został pomyślnie zablokowany",
+    "unbanned_successfully": "Użytkownik został pomyślnie odblokowany",
+    "already_banned": "Już zablokowałeś tego użytkownika UwU",
+    "cant_unban_not_banned": "Nie możesz odblokować użytkownika, który nie został zablokowany"
+}
