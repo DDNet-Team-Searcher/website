@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
@@ -52,9 +50,7 @@ import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } fro
             ]
         }),
     ],
-    controllers: [AppController],
     providers: [
-        AppService,
         {
             provide: APP_GUARD,
             useClass: AuthGuard,
