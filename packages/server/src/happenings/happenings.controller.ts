@@ -27,6 +27,7 @@ import { Validator } from 'class-validator';
 import { InnocentGuard } from 'src/guards/innocent.guard';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { AllServersInUseError } from './happenings.service';
+import { I18n, I18nContext } from 'nestjs-i18n';
 
 @UseGuards(AuthorGuard)
 @UseGuards(InnocentGuard)
@@ -176,7 +177,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/start')
-    async startHappening(@Req() req) {
+    async startHappening(@Req() req, @I18n() i18n: I18nContext) {
         try {
             let connectString = await this.happeningsService.startHappening(
                 parseInt(req.params.id),
@@ -197,7 +198,7 @@ export class HappeningsController {
                     data: {
                         reason: 'NO_EMPTY_SERVERS',
                     },
-                    message: 'Im sorry but all servers are in use',
+                    message: i18n.t('happening.no_empty_servers'),
                 });
             } else {
                 console.log(e);
