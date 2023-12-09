@@ -11,6 +11,9 @@ import { AuthModule } from './auth/auth.module';
 import { CronModule } from './cron/cron.module';
 import { SearchModule } from './search/search.module';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
     imports: [
@@ -49,6 +52,25 @@ import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } fro
                 new HeaderResolver(['x-lang']),
             ]
         }),
+        ConfigModule.forRoot({
+            envFilePath: [
+                '.dev.env',
+                '.env'
+            ]
+        }),
+        MailerModule.forRoot({
+            transport: `${process.env.MAIL_PROTOCOL}://${process.env.MAIL_LOGIN}:${process.env.MAIL_PASSWORD}@${process.env.MAIL_HOST}:${process.env.MAIL_PORT}`,
+            defaults: {
+                from: "Your mom",
+            },
+            template: {
+                dir: 'templaes',
+                adapter: new PugAdapter()
+            },
+            options: {
+                strict: true
+            }
+        })
     ],
     providers: [
         {
