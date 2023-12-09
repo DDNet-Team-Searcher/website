@@ -6,7 +6,7 @@
     "dev:client": "pnpm run client dev",
     "dev:server": "pnpm run server start:dev",
     "dev": "concurrently 'pnpm:dev:*'",
-    "test": "pnpm run server test"
+    "test": "pnpm run server test --passWithNoTests"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
