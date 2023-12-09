@@ -1,0 +1,11 @@
+{
+    "already_exists": "User with such an email already exists",
+    "wrong_credentials": "Email or password is wrong",
+    "different_passwords": "Passwords are not the same",
+    "reported_successfully": "User reported successfully",
+    "already_reported": "You already reported this user >~<",
+    "banned_successfully": "User banned successfully",
+    "unbanned_successfully": "User unbanned successfully",
+    "already_banned": "You already banned this user UwU",
+    "cant_unban_not_banned": "You cant unban a user which is not banned"
+}

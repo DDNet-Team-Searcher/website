@@ -36,6 +36,7 @@
         "class-validator": "^0.14.0",
         "cookie-parser": "^1.4.6",
         "jsonwebtoken": "^9.0.1",
+        "nestjs-i18n": "^10.4.0",
         "prisma": "^5.0.0",
         "protobufjs": "^7.2.5",
         "reflect-metadata": "^0.1.13",

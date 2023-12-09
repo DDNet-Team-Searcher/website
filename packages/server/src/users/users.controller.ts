@@ -28,6 +28,7 @@ import { ChangeEmailDTO } from './dto/change-email.dto';
 import { ChangePasswordDTO } from './dto/change-password.dto';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { Innocent } from 'src/decorators/innocent.decorator';
+import { I18n, I18nContext } from 'nestjs-i18n';
 
 @Controller()
 export class UsersController {
@@ -37,7 +38,7 @@ export class UsersController {
     ) { }
 
     @Post('/register')
-    async register(@Body() data: RegisterUserDTO) {
+    async register(@Body() data: RegisterUserDTO, @I18n() i18n: I18nContext) {
         const isUserAlreayExists = await this.usersService.isUserExists({
             where: {
                 email: data.email,
@@ -48,7 +49,7 @@ export class UsersController {
             throw new BadRequestException({
                 status: 'fail',
                 data: null,
-                message: 'User with such an email already exists',
+                message: i18n.t('user.already_exists')
             });
         }
 
@@ -76,6 +77,7 @@ export class UsersController {
     async login(
         @Body() data: LoginUserDTO,
         @Res({ passthrough: true }) res: Response,
+        @I18n() i18n: I18nContext
     ) {
         const isUserExists = await this.usersService.isUserExists({
             where: {
@@ -86,7 +88,7 @@ export class UsersController {
         if (!isUserExists) {
             throw new BadRequestException({
                 status: 'fail',
-                message: 'Email or password is wrong',
+                message: i18n.t('user.wrong_credentials'),
             });
         }
 
@@ -97,7 +99,7 @@ export class UsersController {
         if (!(await argon2.verify(password, data.password))) {
             throw new BadRequestException({
                 status: 'fail',
-                message: 'Email or password is wrong',
+                message: i18n.t('user.wrong_credentials'),
             });
         }
 
@@ -151,7 +153,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/username')
-    async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO) {
+    async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO, @I18n() i18n: I18nContext) {
         try {
             const isSuccess = await this.usersService.updateUsername(
                 req.user.id,
@@ -166,7 +168,7 @@ export class UsersController {
             } else {
                 throw new BadRequestException({
                     status: 'fail',
-                    data: { password: 'Passwords are not the same' },
+                    data: { password: i18n.t('user.different_passwords') },
                 });
             }
         } catch (e) {
@@ -181,7 +183,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/email')
-    async updateEmail(@Req() req, @Body() data: ChangeEmailDTO) {
+    async updateEmail(@Req() req, @Body() data: ChangeEmailDTO, @I18n() i18n: I18nContext) {
         try {
             const isSuccess = await this.usersService.updateEmail(
                 req.user.id,
@@ -196,7 +198,7 @@ export class UsersController {
             } else {
                 throw new BadRequestException({
                     status: 'fail',
-                    data: { password: 'Passwords are not the same' },
+                    data: { password: i18n.t('user.different_passwords') },
                 });
             }
         } catch (e) {
@@ -211,7 +213,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/password')
-    async updatePassword(@Req() req, @Body() data: ChangePasswordDTO) {
+    async updatePassword(@Req() req, @Body() data: ChangePasswordDTO, @I18n() i18n: I18nContext) {
         try {
             const isSuccess = await this.usersService.updatePassword(
                 req.user.id,
@@ -226,7 +228,7 @@ export class UsersController {
             } else {
                 throw new BadRequestException({
                     status: 'fail',
-                    data: { old: 'Passwords are not the same' },
+                    data: { old: i18n.t('user.different_passwords') },
                 });
             }
         } catch (e) {
@@ -290,7 +292,8 @@ export class UsersController {
     async report(
         @Param('id') id: string,
         @Req() req,
-        @Body() body
+        @Body() body,
+        @I18n() i18n: I18nContext
     ) {
         const isAlreadyReported = await this.usersService.isReported(parseInt(id), req.user.id);
 
@@ -298,7 +301,7 @@ export class UsersController {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: 'You already reported this user >~<'
+                message: i18n.t('user.already_reported')
             });
         }
 
@@ -307,7 +310,7 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
-            message: 'User reported successfully'
+            message: i18n.t('user.reported_successfully')
         };
     }
 
@@ -316,7 +319,8 @@ export class UsersController {
     async ban(
         @Param('id') id: string,
         @Req() req,
-        @Body() body
+        @Body() body,
+        @I18n() i18n: I18nContext
     ) {
         const isBanned = await this.usersService.isBanned(parseInt(id));
 
@@ -324,7 +328,7 @@ export class UsersController {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: 'You already banned this user OwO'
+                message: i18n.t('user.already_banned')
             });
         }
 
@@ -334,20 +338,20 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
-            message: 'User banned successfully'
+            message: i18n.t('user.banned_successfully')
         };
     }
 
     @Protected()
     @Post('/user/:id/unban')
-    async unban(@Param('id') id: string) {
+    async unban(@Param('id') id: string, @I18n() i18n: I18nContext) {
         const isBanned = await this.usersService.isBanned(parseInt(id));
 
         if (!isBanned) {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: 'You cant unban a user which is not banned'
+                message: i18n.t('user.cant_unban_not_banned')
             });
         }
 
@@ -356,7 +360,7 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
-            message: 'User unbanned successfully'
+            message: i18n.t('user.unbanned_successfully')
         };
     }
 }

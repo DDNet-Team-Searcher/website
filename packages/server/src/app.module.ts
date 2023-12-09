@@ -12,6 +12,7 @@ import { WebsocketsModule } from './websockets/websockets.module';
 import { AuthModule } from './auth/auth.module';
 import { CronModule } from './cron/cron.module';
 import { SearchModule } from './search/search.module';
+import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 
 @Module({
     imports: [
@@ -37,7 +38,19 @@ import { SearchModule } from './search/search.module';
         ]),
         SearchModule,
         WebsocketsModule,
-        CronModule
+        CronModule,
+        I18nModule.forRoot({
+            fallbackLanguage: 'en',
+            loaderOptions: {
+                path: 'i18n/',
+                watch: true,
+            },
+            resolvers: [
+                { use: QueryResolver, options: ['lang'] },
+                AcceptLanguageResolver,
+                new HeaderResolver(['x-lang']),
+            ]
+        }),
     ],
     controllers: [AppController],
     providers: [
