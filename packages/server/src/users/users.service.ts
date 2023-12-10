@@ -1,4 +1,4 @@
-import { Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
@@ -11,6 +11,7 @@ import * as argon2 from 'argon2';
 import { Run, Event } from '@app/shared/types/Happening.type';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { getPermissions } from 'src/utils/permissions.util';
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class UsersService {
@@ -118,10 +119,17 @@ export class UsersService {
         };
     }
 
-    async register(data: RegisterUserDTO): Promise<void> {
+    async register(data: RegisterUserDTO): Promise<string> {
+        let activationCode = uuidv4();
+
         await this.prismaService.user.create({
-            data,
+            data: {
+                ...data,
+                activationCode
+            },
         });
+
+        return activationCode;
     }
 
     /*
@@ -489,5 +497,28 @@ export class UsersService {
                 banned: false
             }
         });
+    }
+
+    async activateAccount(code: string): Promise<boolean> {
+        let user = await this.prismaService.user.findFirst({
+            where: {
+                activationCode: code
+            }
+        });
+
+        if (user && !user?.activated) {
+            await this.prismaService.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    activated: true
+                }
+            });
+
+            return true;
+        }
+
+        return false;
     }
 }

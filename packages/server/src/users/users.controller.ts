@@ -4,6 +4,7 @@ import {
     ConflictException,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     HttpException,
     InternalServerErrorException,
@@ -29,12 +30,14 @@ import { ChangePasswordDTO } from './dto/change-password.dto';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { I18n, I18nContext } from 'nestjs-i18n';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller()
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
+        private readonly mailerService: MailerService
     ) { }
 
     @Post('/register')
@@ -55,9 +58,22 @@ export class UsersController {
 
         try {
             const encryptedPassword = await argon2.hash(data.password);
-            await this.usersService.register({
+
+            let activationCode = await this.usersService.register({
                 ...data,
                 password: encryptedPassword,
+            });
+
+
+            await this.mailerService.sendMail({
+                to: data.email,
+                from: '"No Reply" <noreply@ddts.com>',
+                subject: 'Registration on ddts',
+                template: 'registration_confirmation',
+                context: {
+                    username: data.username,
+                    link: `${process.env.BASE_URL}/api/activate-account/${activationCode}`
+                }
             });
 
             return {
@@ -70,6 +86,18 @@ export class UsersController {
                 status: 'error',
                 message: 'Something bad happened on server xD',
             });
+        }
+    }
+
+    @Get('/activate-account/:code')
+    async activateAccount(@Req() req, @Res() res) {
+        let result = await this.usersService.activateAccount(req.params.code);
+
+        //TODO: do smth with these hardcoded urls
+        if (result) {
+            res.redirect("http://localhost:3000/login");
+        } else {
+            res.redirect("http://localhost:3000/login");
         }
     }
 
@@ -100,6 +128,13 @@ export class UsersController {
             throw new BadRequestException({
                 status: 'fail',
                 message: i18n.t('user.wrong_credentials'),
+            });
+        }
+
+        if (!user.activated) {
+            throw new ForbiddenException({
+                status: 'fail',
+                message: i18n.t('user.account_not_activated'),
             });
         }
 

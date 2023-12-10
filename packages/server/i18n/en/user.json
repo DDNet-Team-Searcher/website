@@ -7,5 +7,6 @@
     "banned_successfully": "User banned successfully",
     "unbanned_successfully": "User unbanned successfully",
     "already_banned": "You already banned this user UwU",
-    "cant_unban_not_banned": "You cant unban a user which is not banned"
+    "cant_unban_not_banned": "You cant unban a user which is not banned",
+    "account_not_activated": "You have to activate your account first (open link from the email)"
 }

@@ -20,6 +20,8 @@ model User {
     updatedAt DateTime @default(now())
     tier Int @db.SmallInt
     verified Boolean @default(false)
+    activated Boolean @default(false)
+    activationCode String @db.VarChar(255)
     happenings Happening[]
     interestedHappenings InterestedHappening[]
     reviews Review[] @relation(name: "reviews")
@@ -60,7 +62,7 @@ model Server {
     id Int @id @default(autoincrement())
     ip String @db.VarChar(255)
     port Int
-    happenings Happening[] 
+    happenings Happening[]
 }
 
 enum Place {

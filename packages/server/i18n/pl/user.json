@@ -7,5 +7,6 @@
     "banned_successfully": "Użytkownik został pomyślnie zablokowany",
     "unbanned_successfully": "Użytkownik został pomyślnie odblokowany",
     "already_banned": "Już zablokowałeś tego użytkownika UwU",
-    "cant_unban_not_banned": "Nie możesz odblokować użytkownika, który nie został zablokowany"
+    "cant_unban_not_banned": "Nie możesz odblokować użytkownika, który nie został zablokowany",
+    "account_not_activated": "Musisz najpierw aktywować swoje konto (otwórz link z wiadomości e-mail)"
 }

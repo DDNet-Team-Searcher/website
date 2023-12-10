@@ -22,10 +22,8 @@ export function Step3({ userEmail }: OwnProps) {
                             Your account has been successfully created.
                         </p>
                         <p>
-                            We(I) sent an email message to {userEmail}. Go to
-                            link in message and verify your account.(actually i
-                            didnt send any email but if i will host it one day.
-                            i will be sending emails to verify accounts)
+                            We sent an email to {userEmail}. You have to open the link from email to activate your account.
+                            Only then you will be able to log in.
                         </p>
                     </div>
                     <img src="/successful-register.png" />

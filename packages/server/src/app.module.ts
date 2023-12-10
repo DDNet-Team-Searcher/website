@@ -12,7 +12,7 @@ import { CronModule } from './cron/cron.module';
 import { SearchModule } from './search/search.module';
 import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -63,9 +63,10 @@ import { ConfigModule } from '@nestjs/config';
             defaults: {
                 from: "Your mom",
             },
+            preview: true,
             template: {
-                dir: 'templaes',
-                adapter: new PugAdapter()
+                dir: 'templates',
+                adapter: new EjsAdapter()
             },
             options: {
                 strict: true
