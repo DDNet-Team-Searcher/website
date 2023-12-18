@@ -23,3 +23,11 @@ export function getPermissions(permissionsArray: User['permissions'][]): User['p
 
     return permissions;
 }
+
+//TODO: rename it
+export function objToInt(obj: User['permissions']) {
+    return +obj.canBan
+        | +obj.canManageRoles << 1
+        | +obj.canDeleteHappenings << 2
+        | +obj.canManagePosts << 3;
+}

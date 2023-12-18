@@ -14,6 +14,7 @@ import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } fro
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ConfigModule } from '@nestjs/config';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { ConfigModule } from '@nestjs/config';
             },
         ]),
         SearchModule,
+        RolesModule,
         WebsocketsModule,
         CronModule,
         I18nModule.forRoot({
