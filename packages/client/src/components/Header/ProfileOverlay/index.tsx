@@ -56,6 +56,9 @@ export const ProfileOverlay = forwardRef(({ isHidden }: OwnProps, ref: Ref<HTMLU
                     </Link>
                 </li>
             ))}
+            <li className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer">
+                <Link href="/admin">Link for big bois</Link>
+            </li>
             <li className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer" onClick={logout}>Sing out</li>
         </ul>
     );

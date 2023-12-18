@@ -5,7 +5,6 @@ import { ChangeEmailModal } from './ChangeEmailModal';
 import { ChangePasswordModal } from './ChangePasswordModal';
 import { ChangeUsernameModal } from './ChangeUsernameModal';
 import { DeleteAccountModal } from './DeleteAccountModal';
-import { SettingsLayout } from '@/components/SettingsLayout';
 import { Button } from '@/components/ui/Button';
 import { useUpdateAvatarMutation } from '@/features/api/users.api';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
@@ -64,7 +63,7 @@ export default function Account() {
     };
 
     return (
-        <SettingsLayout>
+        <>
             <ChangeUsernameModal
                 visible={isChangeUsernameModalVisible}
                 onClose={() => setIsChangeUsernameModalVisible(false)}
@@ -163,6 +162,6 @@ export default function Account() {
                     Delete Account
                 </Button>
             </div>
-        </SettingsLayout>
+        </>
     );
 }

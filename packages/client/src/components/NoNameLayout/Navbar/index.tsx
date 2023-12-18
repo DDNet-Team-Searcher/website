@@ -1,25 +1,23 @@
+'use client';
+
 import classNames from 'classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export function Navbar() {
-    const urls = [
-        {
-            path: 'account',
-            name: 'Account',
-        },
-        {
-            path: 'notifications',
-            name: 'Notifications',
-        },
-    ];
+type OwnProps = {
+    title: string;
+    urls: {
+        path: string;
+        name: string;
+    }[];
+};
+
+export function Navbar({ title, urls }: OwnProps) {
     const pathname = usePathname();
 
     return (
         <aside className="basis-[170px]">
-            <p className="uppercase text-[12px] ml-2.5 text-high-emphasis font-medium">
-                User Settings
-            </p>
+            <p className="uppercase text-[12px] ml-2.5 text-high-emphasis font-medium">{title}</p>
             <div className="mt-5">
                 {urls.map((url, id) => (
                     <Link
