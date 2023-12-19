@@ -90,8 +90,8 @@ export class UsersController {
     }
 
     @Get('/activate-account/:code')
-    async activateAccount(@Req() req: Request, @Res() res: Response) {
-        const result = await this.usersService.activateAccount(req.params.code);
+    async activateAccount(@Res() res: Response, @Param('code') code: string) {
+        const result = await this.usersService.activateAccount(code);
 
         //TODO: do smth with these hardcoded urls
         if (result) {

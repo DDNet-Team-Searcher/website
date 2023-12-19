@@ -14,9 +14,9 @@ export class SearchController {
     @Protected()
     @Get('/search')
     async search(
-        @Query('query') query: string | null,
-        @Query('page') page: string | null,
-        @Query('sort') type: string | null,
+        @Query('query') query: string | undefined,
+        @Query('page') page: string | undefined,
+        @Query('sort') type: string | undefined,
         @Req() req: AuthedRequest,
     ) {
         const searchResult = await this.searchService.search(

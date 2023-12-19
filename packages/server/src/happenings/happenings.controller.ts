@@ -103,10 +103,10 @@ export class HappeningsController {
     @UseInterceptors(FileInterceptor('thumbnail'))
     async updateHappening(
         @UploadedFile() file: Express.Multer.File,
-        @Req() req: AuthedRequest,
         @Body() body,
+        @Param('id') id: string,
     ) {
-        const happeningId = parseInt(req.params.id);
+        const happeningId = parseInt(id);
 
         const happeningType = await this.happeningsService.getHappeningType(
             happeningId,
@@ -181,10 +181,10 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/start')
-    async startHappening(@Req() req: AuthedRequest, @I18n() i18n: I18nContext) {
+    async startHappening(@I18n() i18n: I18nContext, @Param('id') id: string) {
         try {
             const connectString = await this.happeningsService.startHappening(
-                parseInt(req.params.id),
+                parseInt(id),
             );
 
             return {
@@ -215,9 +215,9 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/end')
-    async endHappening(@Req() req: AuthedRequest) {
+    async endHappening(@Param('id') id: string) {
         try {
-            await this.happeningsService.endHappening(parseInt(req.params.id));
+            await this.happeningsService.endHappening(parseInt(id));
 
             return {
                 status: 'success',
@@ -233,11 +233,9 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Delete('/:id/delete')
-    async deleteHappening(@Req() req: AuthedRequest) {
+    async deleteHappening(@Param('id') id: string) {
         try {
-            await this.happeningsService.deleteHappening(
-                parseInt(req.params.id),
-            );
+            await this.happeningsService.deleteHappening(parseInt(id));
 
             return {
                 status: 'success',
@@ -252,8 +250,8 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Post('/:id/interested')
-    async setIsInterested(@Req() req: AuthedRequest) {
-        const happeningId = parseInt(req.params.id);
+    async setIsInterested(@Req() req: AuthedRequest, @Param('id') id: string) {
+        const happeningId = parseInt(id);
 
         const isInterested =
             await this.happeningsService.isUserInterestedHappening({
