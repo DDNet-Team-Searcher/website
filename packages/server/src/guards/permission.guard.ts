@@ -27,6 +27,7 @@ export class PermissionGuard implements CanActivate {
                 const req = context.switchToHttp().getRequest();
 
                 let perms = await this.rolesService.userPermissions(req.user.id);
+                console.log(perms.toString(2), permissionMask.toString(2));
                 if (!((perms & permissionMask) == permissionMask)) {
                     throw new ForbiddenException();
                 }
