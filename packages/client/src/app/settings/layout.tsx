@@ -1,4 +1,4 @@
-import { NoNameLayout } from "@/components/NoNameLayout";
+import { NoNameLayout } from '@/components/NoNameLayout';
 
 type OwnProps = {
     children: React.ReactNode;
@@ -17,8 +17,8 @@ const urls = [
 
 export default function SettingsLayout({ children }: OwnProps) {
     return (
-        <NoNameLayout title="User Settings" urls={urls} >
+        <NoNameLayout title="User Settings" urls={urls}>
             {children}
         </NoNameLayout>
-    )
+    );
 }

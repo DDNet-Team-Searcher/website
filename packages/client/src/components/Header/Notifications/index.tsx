@@ -42,5 +42,5 @@ export const Notifications = forwardRef(
                 </div>
             </div>
         );
-    }
+    },
 );

@@ -8,7 +8,10 @@ import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
 import { getMapUrl } from '@/utils/getMapUrl';
-import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import {
+    CreateAndUpdateHappeningModal,
+    ModalMode,
+} from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
 
 export function SearchResultRun({
@@ -32,11 +35,11 @@ export function SearchResultRun({
 
     const editRun = () => {
         setIsEditRunModalVisible(true);
-    }
+    };
 
     const onClose = () => {
         setIsEditRunModalVisible(false);
-    }
+    };
 
     const runData = {
         place,
@@ -57,7 +60,7 @@ export function SearchResultRun({
         <div className="flex bg-primary-2 rounded-[10px]">
             <CreateAndUpdateHappeningModal
                 onClose={onClose}
-                type='run'
+                type="run"
                 data={runData}
                 happeningId={id}
                 mode={ModalMode.Edit}

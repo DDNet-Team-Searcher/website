@@ -27,10 +27,10 @@ export function StartTime({ startAt, status }: OwnProps) {
                         status === Status.NotStarted
                             ? 'var(--app-primary-1)'
                             : status === Status.Happening
-                                ? 'var(--app-success)'
-                                : status === Status.Finished
-                                    ? 'var(--app-error)'
-                                    : ''
+                            ? 'var(--app-success)'
+                            : status === Status.Finished
+                            ? 'var(--app-error)'
+                            : ''
                     }
                 />
             )}

@@ -1,5 +1,3 @@
 export default function Roles() {
-    return (
-        <div>GOTTEM</div>
-    );
+    return <div>GOTTEM</div>;
 }

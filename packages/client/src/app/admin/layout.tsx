@@ -1,4 +1,4 @@
-import { NoNameLayout } from "@/components/NoNameLayout";
+import { NoNameLayout } from '@/components/NoNameLayout';
 
 type OwnProps = {
     children: React.ReactNode;
@@ -29,8 +29,8 @@ const urls = [
 
 export default function AdminLayout({ children }: OwnProps) {
     return (
-        <NoNameLayout title="Cul title" urls={urls} >
+        <NoNameLayout title="Cul title" urls={urls}>
             {children}
         </NoNameLayout>
-    )
+    );
 }

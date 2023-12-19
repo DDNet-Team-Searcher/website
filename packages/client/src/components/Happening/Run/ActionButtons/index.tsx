@@ -27,7 +27,7 @@ export function ActionButtons({
     status,
     setStatusDispatch,
     deleteDispatch,
-    editRun
+    editRun,
 }: OwnProps) {
     const dispatch = useAppDispatch();
     const [startRunQuery] = useLazyStartHappeningQuery();

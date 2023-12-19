@@ -11,4 +11,4 @@ export function DeleteAccountModal({ visible, onClose }: OwnProps) {
             <div>DELETE ACCOUNT MODAL</div>
         </Modal>
     );
-};
+}

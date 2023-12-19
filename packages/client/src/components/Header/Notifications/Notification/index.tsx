@@ -26,12 +26,15 @@ export function Notification({ notification }: OwnProps) {
     let string = '';
 
     if (notification.type == NotificationType.InterestedInHappening) {
-        string = `${notification.author.username || 'deleted user'
-            } is interested in your ${notification.happening.type === Happenings.Event
+        string = `${
+            notification.author.username || 'deleted user'
+        } is interested in your ${
+            notification.happening.type === Happenings.Event
                 ? notification.happening.title
                 : notification.happening.mapName
-            } ${notification.happening.type === Happenings.Event ? 'event' : 'run'
-            }`;
+        } ${
+            notification.happening.type === Happenings.Event ? 'event' : 'run'
+        }`;
     } else if (notification.type == NotificationType.NoEmptyServers) {
         string = `Sadly you cant play on our servers coz there're no empty servers`;
     }

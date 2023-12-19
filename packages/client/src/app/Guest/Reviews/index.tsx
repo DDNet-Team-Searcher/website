@@ -19,11 +19,11 @@ const reviews = [
     },
     {
         username: 'Stepfunn',
-        review: 'Milkeey, nobody\'s gonna use it anyways.',
+        review: "Milkeey, nobody's gonna use it anyways.",
     },
     {
         username: 'Lumpy ◐ω◑',
-        review: 'It\'s not gonna be realeased any time soon.',
+        review: "It's not gonna be realeased any time soon.",
     },
 ];
 

@@ -25,9 +25,7 @@ export function TextareaWithLabel({
                 [className?.container || '']: className?.container,
             })}
         >
-            <label
-                className="text-[12px] uppercase w-full resize-none"
-            >
+            <label className="text-[12px] uppercase w-full resize-none">
                 {label}
                 {required && <span className="text-error">*</span>}
             </label>

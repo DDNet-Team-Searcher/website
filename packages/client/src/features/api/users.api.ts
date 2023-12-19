@@ -41,7 +41,7 @@ export const usersAPI = createApi({
             query: () => ({
                 url: `/logout`,
                 method: 'DELETE',
-            })
+            }),
         }),
         getCredentials: build.query<{ data: any }, void>({
             query: () => `/credentials`,
@@ -63,29 +63,35 @@ export const usersAPI = createApi({
             query: (body) => ({
                 url: `/profile/avatar`,
                 method: 'POST',
-                body
+                body,
             }),
         }),
-        updateUsername: build.mutation<UpdateUsernameResponse, UpdateUsernameRequest>({
+        updateUsername: build.mutation<
+            UpdateUsernameResponse,
+            UpdateUsernameRequest
+        >({
             query: (body) => ({
                 url: `/profile/username`,
                 method: 'POST',
-                body
-            })
+                body,
+            }),
         }),
         updateEmail: build.mutation<UpdateEmailRespone, UpdateEmailRequest>({
             query: (body) => ({
                 url: `/profile/email`,
                 method: 'POST',
-                body
-            })
+                body,
+            }),
         }),
-        updatePassword: build.mutation<UpdatePasswordResponse, UpdatePasswordRequest>({
+        updatePassword: build.mutation<
+            UpdatePasswordResponse,
+            UpdatePasswordRequest
+        >({
             query: (body) => ({
                 url: `/profile/password`,
                 method: 'POST',
-                body
-            })
+                body,
+            }),
         }),
         getProfile: build.query<GetProfile, number>({
             query: (userId) => `/profile/${userId}`,
@@ -100,22 +106,22 @@ export const usersAPI = createApi({
             query: ({ userId, reason }) => ({
                 url: `user/${userId}/report`,
                 method: 'POST',
-                body: { reason }
-            })
+                body: { reason },
+            }),
         }),
         banUser: build.mutation({
             query: ({ userId, reason }) => ({
                 url: `user/${userId}/ban`,
                 method: 'POST',
-                body: { reason }
-            })
+                body: { reason },
+            }),
         }),
         unbanUser: build.mutation({
             query: ({ userId }) => ({
                 url: `user/${userId}/unban`,
                 method: 'POST',
-            })
-        })
+            }),
+        }),
     }),
 });
 

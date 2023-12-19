@@ -18,8 +18,16 @@ import { ClockIcon } from '@/components/ui/Icons/Clock';
 import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
-import { deleteHappening, setHappeningStatus, setIsInterestedInHappening, setProfile } from '@/store/slices/profile';
-import { Event as EventType, Run as RunType } from '@app/shared/types/Happening.type';
+import {
+    deleteHappening,
+    setHappeningStatus,
+    setIsInterestedInHappening,
+    setProfile,
+} from '@/store/slices/profile';
+import {
+    Event as EventType,
+    Run as RunType,
+} from '@app/shared/types/Happening.type';
 import { ReportModal } from './ReportModal';
 import { BanModal } from './BanModal';
 import { hint } from '@/store/slices/hints';
@@ -27,7 +35,7 @@ import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 type OwnProps = {
     params: {
-        slug?: string[]
+        slug?: string[];
     };
 };
 
@@ -35,14 +43,16 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const dispatch = useAppDispatch();
     const [fetchProfile] = useLazyGetProfileQuery();
     const [followUser] = useFollowUserMutation();
-    const profile = useAppSelector(state => state.profile);
+    const profile = useAppSelector((state) => state.profile);
     const authedUserId = useAppSelector((state) => state.user.user.id);
     const id = slug ? slug[0] : authedUserId?.toString()!;
     const sameUser = authedUserId === parseInt(id);
     const [favServer, setFavServer] = useState('');
     const [isReportModalVisible, setIsReportModalVisible] = useState(false);
     const [isBanModalVisible, setIsBanModalVisible] = useState(false);
-    const canBan = useAppSelector(state => state.user.user.permissions.canBan);
+    const canBan = useAppSelector(
+        (state) => state.user.user.permissions.canBan,
+    );
     const [unbanUser] = useUnbanUserMutation();
     const handleFormError = useHandleFormError();
 
@@ -91,42 +101,53 @@ export default function Profile({ params: { slug } }: OwnProps) {
 
     const openReportModal = () => {
         setIsReportModalVisible(true);
-    }
+    };
 
     const onReportModalClose = () => {
         setIsReportModalVisible(false);
-    }
+    };
 
     const openBanModal = () => {
         setIsBanModalVisible(true);
-    }
+    };
 
     const onBanModalClose = () => {
         setIsBanModalVisible(false);
-    }
+    };
 
     const unban = async () => {
         try {
             const response = await unbanUser({
-                userId: id
+                userId: id,
             }).unwrap();
 
             if (response.status === 'success') {
-                dispatch(hint({ type: 'success', text: response.message || '' }));
+                dispatch(
+                    hint({ type: 'success', text: response.message || '' }),
+                );
             }
         } catch (err) {
             //FIXME: fixme
             //@ts-ignore
-            const error = (err as FetchBaseQueryError).data as ExcludeSuccess<BanUserResponse>;
+            const error = (err as FetchBaseQueryError)
+                .data as ExcludeSuccess<BanUserResponse>;
 
             handleFormError(error);
         }
-    }
+    };
 
     return (
         <>
-            <ReportModal visible={isReportModalVisible} onClose={onReportModalClose} userId={parseInt(id)} />
-            <BanModal visible={isBanModalVisible} onClose={onBanModalClose} userId={parseInt(id)} />
+            <ReportModal
+                visible={isReportModalVisible}
+                onClose={onReportModalClose}
+                userId={parseInt(id)}
+            />
+            <BanModal
+                visible={isBanModalVisible}
+                onClose={onBanModalClose}
+                userId={parseInt(id)}
+            />
             {!profile && (
                 <p className="text-center text-high-emphasis text-[5rem]">
                     User not found :&lt;
@@ -209,8 +230,8 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         ? 'Unfollow'
                                         : 'Follow'}
                                 </Button>
-                                {canBan ?
-                                    profile.isBanned ?
+                                {canBan ? (
+                                    profile.isBanned ? (
                                         <Button
                                             className="max-w-[120px] ml-3 w-full !block text-center !border-error"
                                             styleType={'bordered'}
@@ -218,7 +239,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         >
                                             Unban
                                         </Button>
-                                        :
+                                    ) : (
                                         <Button
                                             className="max-w-[120px] ml-3 w-full !block text-center !border-error"
                                             styleType={'bordered'}
@@ -226,17 +247,19 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         >
                                             Ban
                                         </Button>
-
-                                    :
+                                    )
+                                ) : (
                                     <Button
                                         className="max-w-[120px] ml-3 w-full !block text-center !border-error"
                                         onClick={openReportModal}
                                         styleType={'bordered'}
                                         disabled={profile.isReported || false}
                                     >
-                                        {profile.isReported ? "Reported" : "Report"}
+                                        {profile.isReported
+                                            ? 'Reported'
+                                            : 'Report'}
                                     </Button>
-                                }
+                                )}
                             </div>
                         </div>
                     </div>
@@ -272,7 +295,9 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                     key={id}
                                     setStatusDispatch={setHappeningStatus}
                                     deleteDispatch={deleteHappening}
-                                    setIsInterestedDispatch={setIsInterestedInHappening}
+                                    setIsInterestedDispatch={
+                                        setIsInterestedInHappening
+                                    }
                                 />
                             ))}
                         </div>
@@ -289,7 +314,9 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                     key={id}
                                     setStatusDispatch={setHappeningStatus}
                                     deleteDispatch={deleteHappening}
-                                    setIsInterestedDispatch={setIsInterestedInHappening}
+                                    setIsInterestedDispatch={
+                                        setIsInterestedInHappening
+                                    }
                                 />
                             ))}
                         </div>
@@ -342,7 +369,9 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                                 </div>
                                                 <span className="text-xs text-medium-emphasis ml-1">
                                                     {timeAgo.format(
-                                                        new Date(createdAt || ''),
+                                                        new Date(
+                                                            createdAt || '',
+                                                        ),
                                                     )}
                                                 </span>
                                             </div>
@@ -355,9 +384,8 @@ export default function Profile({ params: { slug } }: OwnProps) {
                             )}
                         </div>
                     </section>
-                </div >
-            )
-            }
+                </div>
+            )}
         </>
     );
 }

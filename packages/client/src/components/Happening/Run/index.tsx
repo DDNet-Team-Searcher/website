@@ -8,7 +8,10 @@ import { Title } from './Title';
 import { InterestedButton } from './InterestedButton';
 import { RunProps } from './types';
 import { Happenings } from '@app/shared/types/Happening.type';
-import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import {
+    CreateAndUpdateHappeningModal,
+    ModalMode,
+} from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
 import { getMapUrl } from '@/utils/getMapUrl';
 
@@ -51,11 +54,11 @@ export function Run({
 
     const editRun = () => {
         setIsEditRunModalVisible(true);
-    }
+    };
 
     const onClose = () => {
         setIsEditRunModalVisible(false);
-    }
+    };
 
     //FIXME: now it created a new modal for every run ._.
     //FIXME: had to remove `hover:scale-[1.01]` from first div coz it was cursed as fuck
@@ -68,7 +71,7 @@ export function Run({
         >
             <CreateAndUpdateHappeningModal
                 onClose={onClose}
-                type='run'
+                type="run"
                 data={runData}
                 happeningId={id}
                 mode={ModalMode.Edit}

@@ -45,16 +45,15 @@ export const getUserStats = (username: string) => {
             )}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+strftime%28%22%25Y%22%2C+Timestamp%29`,
         );
 
-        return (
-            (await req.json()) as Response<[string, number, number][]>
-        ).rows;
+        return ((await req.json()) as Response<[string, number, number][]>)
+            .rows;
     };
 };
 
 export const getUserFavoriteServer = (username: string) => {
     return async (): Promise<string | undefined> => {
         const req = await fetch(
-            `https://db.ddstats.org/ddnet-0f28546.json?sql=SELECT+Server+FROM%0D%0A%28SELECT+race.Timestamp%2C+race.Server%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${username}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+Server+ORDER+BY+COUNT%28Server%29+DESC+LIMIT+1`
+            `https://db.ddstats.org/ddnet-0f28546.json?sql=SELECT+Server+FROM%0D%0A%28SELECT+race.Timestamp%2C+race.Server%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${username}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+Server+ORDER+BY+COUNT%28Server%29+DESC+LIMIT+1`,
         );
 
         return await ((await req.json()) as Response<[[string]]>).rows[0][0];
@@ -121,10 +120,10 @@ export const userSlice = createSlice({
                     isBanned: null,
                     reason: null,
                 },
-            }
+            };
 
             state.isAuthed = false;
-        }
+        },
     },
 });
 
@@ -136,7 +135,7 @@ export const {
     updateAvatar,
     updateUsername,
     updateEmail,
-    clearData
+    clearData,
 } = userSlice.actions;
 
 export default userSlice.reducer;

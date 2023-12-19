@@ -53,4 +53,4 @@ export function Review({
             <p className="px-2.5 mt-4 pb-2">{review}</p>
         </div>
     );
-};
+}

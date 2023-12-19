@@ -37,7 +37,7 @@ export function Button({
                     'border-primary-1': styleType === 'bordered',
                 },
                 {
-                    'opacity-60': disabled
+                    'opacity-60': disabled,
                 },
                 className,
             )}

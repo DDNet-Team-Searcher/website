@@ -29,16 +29,20 @@ export function InterestedPlayer({
     happening,
     authedUserId,
     onChange,
-    alreadyReviewed
+    alreadyReviewed,
 }: OwnProps) {
     const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
     const [createReview] = useCreateReviewMutation();
     const defaultValues = {
         rate: null as null | string,
-        text: ''
+        text: '',
     };
 
-    const { handleSubmit, register, formState: { errors } } = useForm({ defaultValues });
+    const {
+        handleSubmit,
+        register,
+        formState: { errors },
+    } = useForm({ defaultValues });
 
     const onSubmit = async (values: typeof defaultValues) => {
         try {
@@ -47,8 +51,8 @@ export function InterestedPlayer({
                 userId: user.user.id,
                 data: {
                     text: !!values.text ? values.text : null,
-                    rate: parseInt(values.rate!)
-                }
+                    rate: parseInt(values.rate!),
+                },
             }).unwrap();
         } catch (e) {
             console.log(e);
@@ -74,7 +78,10 @@ export function InterestedPlayer({
                     />
                 )}
                 <Link href={`/profile/${user.user.id}`} className="py-2.5 ml-4">
-                    <Avatar src={user.user.avatar} username={user.user.username} />
+                    <Avatar
+                        src={user.user.avatar}
+                        username={user.user.username}
+                    />
                 </Link>
                 <span className="ml-2.5">{user.user.username}</span>
                 <Button
@@ -85,7 +92,7 @@ export function InterestedPlayer({
                                 isReviewFormVisible ||
                                 user.user.id === authedUserId ||
                                 happening.status !== Status.Finished ||
-                                alreadyReviewed
+                                alreadyReviewed,
                         },
                     )}
                     onClick={() => setIsReviewFormVisible(true)}
@@ -103,9 +110,8 @@ export function InterestedPlayer({
                 )}
             >
                 <p className="text-[12px] uppercase">
-                    How many Tees out of 5 does
-                    he/SHE/IT/THEY/WHateverthefuck deserves{' '}
-                    <span className="text-[red]">*</span>
+                    How many Tees out of 5 does he/SHE/IT/THEY/WHateverthefuck
+                    deserves <span className="text-[red]">*</span>
                 </p>
                 <div className="flex items-center">
                     {[1, 2, 3, 4, 5].map((num, id) => (
@@ -113,7 +119,13 @@ export function InterestedPlayer({
                             className="flex [&:not(:first-child)]:ml-5 items-center"
                             key={id}
                         >
-                            <RadioInput register={register('rate')} value={num} title='' subtitle='' id={'lol'} />
+                            <RadioInput
+                                register={register('rate')}
+                                value={num}
+                                title=""
+                                subtitle=""
+                                id={'lol'}
+                            />
                             {/*
                             <Field
                                 id={id.toString()}
@@ -151,7 +163,12 @@ export function InterestedPlayer({
                     name="text"
                 />
                 */}
-                <TextareaWithLabel register={register('text')} label="Describe your teammate however you want" className={{ container: "mt-3" }} placeholder="This mf killed my before fkcing finish. -1000 social credit" />
+                <TextareaWithLabel
+                    register={register('text')}
+                    label="Describe your teammate however you want"
+                    className={{ container: 'mt-3' }}
+                    placeholder="This mf killed my before fkcing finish. -1000 social credit"
+                />
                 <div className="flex mt-4 justify-end">
                     <Button
                         styleType="bordered"
@@ -159,15 +176,11 @@ export function InterestedPlayer({
                     >
                         Cancel
                     </Button>
-                    <Button
-                        className="ml-5"
-                        type="submit"
-                        styleType="filled"
-                    >
+                    <Button className="ml-5" type="submit" styleType="filled">
                         Submit
                     </Button>
                 </div>
             </form>
         </li>
     );
-};
+}

@@ -10,7 +10,13 @@ interface OwnProps {
     onClick?: () => void;
 }
 
-export function Avatar({ src, username, size = 20, className, onClick }: OwnProps) {
+export function Avatar({
+    src,
+    username,
+    size = 20,
+    className,
+    onClick,
+}: OwnProps) {
     const color = '#' + intToRGB(stringToNum(username));
 
     return (

@@ -7,10 +7,10 @@ type Success<T extends object | null> = {
 export type Fail<T extends object | null> = {
     status: 'fail';
     data: T extends object
-    ? {
-        [key in keyof T]?: string;
-    }
-    : null;
+        ? {
+              [key in keyof T]?: string;
+          }
+        : null;
     message?: string;
 };
 

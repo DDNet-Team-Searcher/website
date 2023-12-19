@@ -12,7 +12,10 @@ import {
     setIsCreateEventModalHidden,
     setIsCreateRunModalHidden,
 } from '@/store/slices/app';
-import { CreateAndUpdateHappeningModal, ModalMode } from '../CreateAndUpdateHappeningModal';
+import {
+    CreateAndUpdateHappeningModal,
+    ModalMode,
+} from '../CreateAndUpdateHappeningModal';
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
 import { useRouter } from 'next/navigation';
@@ -52,17 +55,13 @@ export function Header() {
             setIsNotificationOverlayVisible(false);
         },
     );
-    useOutsideClickHandler(
-        profileOverlayRef,
-        !isProfileOverlayHidden,
-        () => {
-            setIsProfileOverlayHidden(true);
-        },
-    );
+    useOutsideClickHandler(profileOverlayRef, !isProfileOverlayHidden, () => {
+        setIsProfileOverlayHidden(true);
+    });
 
     const openProfileOverlay = () => {
         setIsProfileOverlayHidden(false);
-    }
+    };
 
     const createRun = () => {
         setCurrentHappening('run');
@@ -87,7 +86,11 @@ export function Header() {
     const search = (e: any) => {
         e.preventDefault();
         if (ref && inputRef.current?.value) {
-            router.push(`/search?query=${encodeURIComponent(inputRef.current?.value || "")}`);
+            router.push(
+                `/search?query=${encodeURIComponent(
+                    inputRef.current?.value || '',
+                )}`,
+            );
         }
     };
 
@@ -175,7 +178,11 @@ export function Header() {
                                 )
                             }
                         >
-                            <img className="!m-0" src={'/add.svg'} alt="add icon" />
+                            <img
+                                className="!m-0"
+                                src={'/add.svg'}
+                                alt="add icon"
+                            />
                         </Button>
                         <div
                             ref={ref}
@@ -230,8 +237,17 @@ export function Header() {
                     />
                     <p className="text-[white] mx-5">{username}</p>
                     <div className="relative">
-                        <Avatar className="cursor-pointer" onClick={openProfileOverlay} src={avatar} username={username || ''} size={30} />
-                        <ProfileOverlay ref={profileOverlayRef} isHidden={isProfileOverlayHidden} />
+                        <Avatar
+                            className="cursor-pointer"
+                            onClick={openProfileOverlay}
+                            src={avatar}
+                            username={username || ''}
+                            size={30}
+                        />
+                        <ProfileOverlay
+                            ref={profileOverlayRef}
+                            isHidden={isProfileOverlayHidden}
+                        />
                     </div>
                 </div>
             </div>

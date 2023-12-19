@@ -17,7 +17,9 @@ export function Navbar({ title, urls }: OwnProps) {
 
     return (
         <aside className="basis-[170px]">
-            <p className="uppercase text-[12px] ml-2.5 text-high-emphasis font-medium">{title}</p>
+            <p className="uppercase text-[12px] ml-2.5 text-high-emphasis font-medium">
+                {title}
+            </p>
             <div className="mt-5">
                 {urls.map((url, id) => (
                     <Link

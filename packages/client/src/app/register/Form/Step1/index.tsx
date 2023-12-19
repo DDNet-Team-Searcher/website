@@ -1,8 +1,8 @@
-import { Input } from "@/components/ui/Input";
-import type { StepProps } from "../types";
-import { Button } from "@/components/ui/Button";
-import { FieldErrors } from "react-hook-form";
-import { Step } from "@/components/Stepper/Step";
+import { Input } from '@/components/ui/Input';
+import type { StepProps } from '../types';
+import { Button } from '@/components/ui/Button';
+import { FieldErrors } from 'react-hook-form';
+import { Step } from '@/components/Stepper/Step';
 
 type OwnProps = StepProps<{ errors: FieldErrors }>;
 
@@ -14,8 +14,7 @@ export function Step1({ register, errors, setCurrentStep }: OwnProps) {
                     <Input
                         autoComplete="off"
                         classes={{
-                            container:
-                                'max-w-[255px] w-full',
+                            container: 'max-w-[255px] w-full',
                             input: 'w-full',
                         }}
                         errors={errors}
@@ -27,8 +26,7 @@ export function Step1({ register, errors, setCurrentStep }: OwnProps) {
                     <Input
                         autoComplete="off"
                         classes={{
-                            container:
-                                'max-w-[255px] w-full',
+                            container: 'max-w-[255px] w-full',
                             input: 'w-full',
                         }}
                         errors={errors}
@@ -38,16 +36,11 @@ export function Step1({ register, errors, setCurrentStep }: OwnProps) {
                         placeholder="Email"
                     />
                 </div>
-                <div
-                    className={
-                        'flex justify-between mt-[60px]'
-                    }
-                >
+                <div className={'flex justify-between mt-[60px]'}>
                     <Input
                         autoComplete="off"
                         classes={{
-                            container:
-                                'max-w-[255px] w-full',
+                            container: 'max-w-[255px] w-full',
                             input: 'w-full',
                         }}
                         register={register('password', {
@@ -59,17 +52,12 @@ export function Step1({ register, errors, setCurrentStep }: OwnProps) {
                     <Input
                         autoComplete="off"
                         classes={{
-                            container:
-                                'max-w-[255px] w-full',
+                            container: 'max-w-[255px] w-full',
                             input: 'w-full',
                         }}
-                        register={register(
-                            'confirmPassword',
-                            {
-                                required:
-                                    'Field is required',
-                            },
-                        )}
+                        register={register('confirmPassword', {
+                            required: 'Field is required',
+                        })}
                         errors={errors}
                         placeholder="Confirm password"
                     />

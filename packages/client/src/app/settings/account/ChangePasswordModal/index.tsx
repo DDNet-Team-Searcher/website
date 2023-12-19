@@ -91,4 +91,4 @@ export function ChangePasswordModal({ visible, onClose }: OwnProps) {
             </div>
         </Modal>
     );
-};
+}

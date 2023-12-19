@@ -10,8 +10,10 @@ export const searchApi = createApi({
             query: ({ query, page, filters }) => {
                 const filterString = new URLSearchParams(filters).toString();
 
-                return `?query=${encodeURIComponent(query)}&page=${page}&${filterString}`;
-            }
+                return `?query=${encodeURIComponent(
+                    query,
+                )}&page=${page}&${filterString}`;
+            },
         }),
     }),
 });

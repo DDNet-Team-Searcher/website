@@ -56,7 +56,7 @@ export function ActionButtons({
         deleteHappeningProp(happeningId);
     };
 
-    const happeningType = type.toLowerCase()
+    const happeningType = type.toLowerCase();
 
     return (
         <div className="relative">

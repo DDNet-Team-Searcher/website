@@ -14,7 +14,7 @@ import { Stepper } from '@/components/Stepper';
 type OwnProps = {
     currentStep: number;
     setCurrentStep: Dispatch<SetStateAction<number>>;
-}
+};
 
 export function Form({ currentStep, setCurrentStep }: OwnProps) {
     const [registerUser] = useRegisterMutation();
@@ -76,7 +76,11 @@ export function Form({ currentStep, setCurrentStep }: OwnProps) {
             className="max-w-[860px] mx-auto mt-[100px]"
         >
             <Stepper step={currentStep}>
-                <Step1 register={register} setCurrentStep={setCurrentStep} errors={errors} />
+                <Step1
+                    register={register}
+                    setCurrentStep={setCurrentStep}
+                    errors={errors}
+                />
                 <Step2 register={register} setCurrentStep={setCurrentStep} />
                 <Step3 userEmail={userEmail || ''} />
             </Stepper>

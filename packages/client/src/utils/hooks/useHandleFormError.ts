@@ -1,12 +1,15 @@
-import { hint } from "@/store/slices/hints";
-import { Fail, ResError } from "@/types/Response.type";
-import { UseFormSetError } from "react-hook-form";
-import { useAppDispatch } from "./hooks";
+import { hint } from '@/store/slices/hints';
+import { Fail, ResError } from '@/types/Response.type';
+import { UseFormSetError } from 'react-hook-form';
+import { useAppDispatch } from './hooks';
 
 export function useHandleFormError() {
     const dispatch = useAppDispatch();
 
-    return (data: Fail<object> | ResError | Fail<null>, setError: UseFormSetError<object> | null = null) => {
+    return (
+        data: Fail<object> | ResError | Fail<null>,
+        setError: UseFormSetError<object> | null = null,
+    ) => {
         const error = data;
 
         if (error.status === 'fail') {
@@ -24,5 +27,5 @@ export function useHandleFormError() {
         } else if (error.status === 'error') {
             dispatch(hint({ type: 'error', text: error.message }));
         }
-    }
+    };
 }

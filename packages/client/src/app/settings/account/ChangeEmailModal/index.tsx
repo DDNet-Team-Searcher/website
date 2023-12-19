@@ -85,4 +85,4 @@ export function ChangeEmailModal({ visible, onClose }: OwnProps) {
             </div>
         </Modal>
     );
-};
+}

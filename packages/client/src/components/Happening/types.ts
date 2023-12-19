@@ -15,16 +15,16 @@ import {
 export type BaseHappeningProps = {
     className?: string;
     setStatusDispatch:
-    | typeof setPopularHappeningStatus
-    | typeof setSearchResultsHappeningStatus
-    | typeof setHappeningStatus;
+        | typeof setPopularHappeningStatus
+        | typeof setSearchResultsHappeningStatus
+        | typeof setHappeningStatus;
     deleteDispatch:
-    | typeof deleteHappeningFromPopular
-    | typeof deleteHappeningFromSearchResults
-    | typeof deleteHappening;
+        | typeof deleteHappeningFromPopular
+        | typeof deleteHappeningFromSearchResults
+        | typeof deleteHappening;
 
     setIsInterestedDispatch:
-    | typeof setIsInterestedInPopularHappening
-    | typeof setIsInterestedInSearchResultHappening
-    | typeof setIsInterestedInHappening;
+        | typeof setIsInterestedInPopularHappening
+        | typeof setIsInterestedInSearchResultHappening
+        | typeof setIsInterestedInHappening;
 };

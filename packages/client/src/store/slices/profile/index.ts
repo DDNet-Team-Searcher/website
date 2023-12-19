@@ -24,7 +24,7 @@ const initialState: Nullable<Profile> = {
     createdAt: null,
     isFollowing: null,
     isReported: null,
-    isBanned: null
+    isBanned: null,
 };
 
 export const profileSlice = createSlice({
@@ -90,7 +90,7 @@ export const {
     setProfile,
     deleteHappening,
     setHappeningStatus,
-    setIsInterestedInHappening
+    setIsInterestedInHappening,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

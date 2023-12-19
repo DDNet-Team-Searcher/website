@@ -122,7 +122,7 @@ export function Step2({ setCurrentStep, register }: OwnProps) {
                                 {tier.description}
                             </p>
                         ))}
-                        <p className='mt-2'>
+                        <p className="mt-2">
                             You better dont try to fool me. Or I will... I
                             will.. I will do something. So ye, dont even try
                         </p>

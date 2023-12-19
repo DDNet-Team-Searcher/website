@@ -17,10 +17,10 @@ import {
 } from '@/store/slices/happenings';
 
 const selectOptions = {
-    'all': 'All',
-    'runs': 'Run',
-    'events': 'Event',
-    'users': 'User'
+    all: 'All',
+    runs: 'Run',
+    events: 'Event',
+    users: 'User',
 };
 
 export default function Search() {
@@ -90,17 +90,24 @@ export default function Search() {
 
         setFilters({
             ...filters,
-            sort: filter
+            sort: filter,
         });
-    }
+    };
 
     return (
         <div className="max-w-[725px] w-full mx-auto">
             <div className="mt-5">
-                <select onChange={setFilter} className="border-primary-3 border-[1px] px-3 py-2 bg-primary-2 rounded-[10px] text-high-emphasis">
-                    <option value="" disabled>Type</option>
+                <select
+                    onChange={setFilter}
+                    className="border-primary-3 border-[1px] px-3 py-2 bg-primary-2 rounded-[10px] text-high-emphasis"
+                >
+                    <option value="" disabled>
+                        Type
+                    </option>
                     {Object.keys(selectOptions).map((key, id) => (
-                        <option key={id} value={key}>{selectOptions[key as keyof typeof selectOptions]}</option>
+                        <option key={id} value={key}>
+                            {selectOptions[key as keyof typeof selectOptions]}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -117,8 +124,12 @@ export default function Search() {
                                 setIsInterestedDispatch={
                                     setIsInterestedInSearchResultHappening
                                 }
-                                deleteDispatch={deleteHappeningFromSearchResults}
-                                setStatusDispatch={setSearchResultsHappeningStatus}
+                                deleteDispatch={
+                                    deleteHappeningFromSearchResults
+                                }
+                                setStatusDispatch={
+                                    setSearchResultsHappeningStatus
+                                }
                             />
                         )}
                         {el.type == 'run' && (
@@ -127,14 +138,18 @@ export default function Search() {
                                 setIsInterestedDispatch={
                                     setIsInterestedInSearchResultHappening
                                 }
-                                deleteDispatch={deleteHappeningFromSearchResults}
-                                setStatusDispatch={setSearchResultsHappeningStatus}
+                                deleteDispatch={
+                                    deleteHappeningFromSearchResults
+                                }
+                                setStatusDispatch={
+                                    setSearchResultsHappeningStatus
+                                }
                             />
                         )}
                     </Fragment>
                 ))}
                 <div ref={ref} />
             </div>
-        </div >
+        </div>
     );
 }

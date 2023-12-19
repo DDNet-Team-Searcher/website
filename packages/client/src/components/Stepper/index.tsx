@@ -5,14 +5,14 @@ type OwnProps = {
     className?: string;
     step?: number;
     children:
-    | (({
-        step,
-        setStep,
-    }: {
-        step: number;
-        setStep: Dispatch<SetStateAction<number>>;
-    }) => React.ReactNode)
-    | React.ReactNode[];
+        | (({
+              step,
+              setStep,
+          }: {
+              step: number;
+              setStep: Dispatch<SetStateAction<number>>;
+          }) => React.ReactNode)
+        | React.ReactNode[];
 };
 
 export function Stepper({ children, className, step }: OwnProps) {

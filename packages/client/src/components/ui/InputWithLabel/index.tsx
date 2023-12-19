@@ -26,7 +26,7 @@ export function InputWithLabel({
     errors,
     ...props
 }: OwnProps) {
-    const labelId = label.replace(" ", "_");
+    const labelId = label.replace(' ', '_');
     const fieldName = register.name;
     const error = (errors || {})[fieldName]?.message as string;
 

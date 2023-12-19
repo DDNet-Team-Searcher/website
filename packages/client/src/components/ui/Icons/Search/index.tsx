@@ -3,7 +3,7 @@ type OwnProps = {
     className?: string;
 };
 
-export function SearchIcon({ color = "#000", className }: OwnProps) {
+export function SearchIcon({ color = '#000', className }: OwnProps) {
     return (
         <svg
             width="16"

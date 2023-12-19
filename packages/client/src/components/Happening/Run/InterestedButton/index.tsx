@@ -12,9 +12,9 @@ type OwnProps = {
     runId: number;
 
     setIsInterestedDispatch:
-    | typeof setIsInterestedInSearchResultHappening
-    | typeof setIsInterestedInPopularHappening
-    | typeof setIsInterestedInHappening;
+        | typeof setIsInterestedInSearchResultHappening
+        | typeof setIsInterestedInPopularHappening
+        | typeof setIsInterestedInHappening;
 };
 
 export function InterestedButton({

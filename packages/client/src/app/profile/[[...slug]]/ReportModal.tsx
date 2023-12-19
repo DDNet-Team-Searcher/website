@@ -1,28 +1,28 @@
-import { Button } from "@/components/ui/Button";
-import { Modal } from "@/components/ui/Modal";
-import { RadioInput } from "@/components/ui/RadioInput";
-import { TextareaWithLabel } from "@/components/ui/TextareaWithLabel";
-import { useReportUserMutation } from "@/features/api/users.api";
-import { hint } from "@/store/slices/hints";
-import { ExcludeSuccess } from "@/types/Response.type";
-import { ReportUserResponse } from "@/types/api.type";
-import { useAppDispatch } from "@/utils/hooks/hooks";
-import { useHandleFormError } from "@/utils/hooks/useHandleFormError";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import { RadioInput } from '@/components/ui/RadioInput';
+import { TextareaWithLabel } from '@/components/ui/TextareaWithLabel';
+import { useReportUserMutation } from '@/features/api/users.api';
+import { hint } from '@/store/slices/hints';
+import { ExcludeSuccess } from '@/types/Response.type';
+import { ReportUserResponse } from '@/types/api.type';
+import { useAppDispatch } from '@/utils/hooks/hooks';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import classNames from 'classnames';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form';
 
 type OwnProps = {
     visible: boolean;
     onClose: () => void;
     userId: number;
-}
+};
 
 type FormInput = {
     type: string;
     reason: string;
-}
+};
 
 export function ReportModal({ visible, onClose, userId }: OwnProps) {
     const dispatch = useAppDispatch();
@@ -35,15 +35,12 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
         handleSubmit,
         control,
         setError,
-        formState: {
-            errors,
-            isDirty
-        }
+        formState: { errors, isDirty },
     } = useForm<FormInput>({
         defaultValues: {
             type: '',
-            reason: ''
-        }
+            reason: '',
+        },
     });
     const inputValue = useWatch({ control, name: 'type' });
     const textareaValue = useWatch({ control, name: 'reason' });
@@ -57,7 +54,12 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
     }, [inputValue]);
 
     useEffect(() => {
-        if ((!Object.keys(errors).length && inputValue !== 'other' && isDirty) || (inputValue === 'other' && textareaValue !== '')) {
+        if (
+            (!Object.keys(errors).length &&
+                inputValue !== 'other' &&
+                isDirty) ||
+            (inputValue === 'other' && textareaValue !== '')
+        ) {
             setIsSubmitButtonDisabled(false);
         } else {
             setIsSubmitButtonDisabled(true);
@@ -91,25 +93,28 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
             //TODO: check if the textarea is empty
             reportReason = reason;
         } else {
-            reportReason = inputs.find(obj => obj.value === type)!.title;
+            reportReason = inputs.find((obj) => obj.value === type)!.title;
         }
 
         try {
             const response = await reportUser({
                 reason: reportReason,
-                userId
+                userId,
             }).unwrap();
 
             if (response.status === 'success') {
-                dispatch(hint({ type: 'success', text: response.message || '' }));
+                dispatch(
+                    hint({ type: 'success', text: response.message || '' }),
+                );
                 onClose();
             }
         } catch (err) {
-            const error = (err as FetchBaseQueryError).data as ExcludeSuccess<ReportUserResponse>;
+            const error = (err as FetchBaseQueryError)
+                .data as ExcludeSuccess<ReportUserResponse>;
 
             handleFormError(error, setError);
         }
-    }
+    };
 
     return (
         <Modal visible={visible} onClose={onClose} width={'600px'}>
@@ -129,7 +134,9 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
                                         'You will have less change to get ddosed.'
                                     }
                                     id={val.value}
-                                    register={register('type', { required: true })}
+                                    register={register('type', {
+                                        required: true,
+                                    })}
                                     className={{ wrapper: 'mt-5' }}
                                 />
                                 <label
@@ -141,9 +148,13 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
                             </div>
                         ))}
                     </div>
-                    {isTextareaVisible &&
-                        <TextareaWithLabel register={register('reason')} label="reason" className={{ container: "mt-5" }} />
-                    }
+                    {isTextareaVisible && (
+                        <TextareaWithLabel
+                            register={register('reason')}
+                            label="reason"
+                            className={{ container: 'mt-5' }}
+                        />
+                    )}
                 </div>
                 <div className="flex justify-between mt-6 px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
                     <Button styleType={'bordered'} onClick={onClose}>

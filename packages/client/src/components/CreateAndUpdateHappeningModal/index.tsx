@@ -4,7 +4,11 @@ import {
     useUpdateHappeningMutation,
 } from '@/features/api/happenings.api';
 import { hint } from '@/store/slices/hints';
-import { CreateEventResponse, CreateRunResponse, UpdateHappening } from '@/types/api.type';
+import {
+    CreateEventResponse,
+    CreateRunResponse,
+    UpdateHappening,
+} from '@/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
@@ -20,22 +24,22 @@ import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 export enum ModalMode {
     Create,
-    Edit
+    Edit,
 }
 
 type FormFields = {
-    place: string,
-    mapName: string,
-    teamSize: string,
-    startDate: string,
-    startTime: string,
-    description: string,
+    place: string;
+    mapName: string;
+    teamSize: string;
+    startDate: string;
+    startTime: string;
+    description: string;
 
     // event's fields
-    endDate: string,
-    endTime: string,
-    title: string,
-    thumbnail: null | File,
+    endDate: string;
+    endTime: string;
+    title: string;
+    thumbnail: null | File;
 };
 
 type OwnProps = {
@@ -49,7 +53,14 @@ type OwnProps = {
 
 //NOTE: I literally spent few fukcing hours thinking about how to name this
 //component but i couldnt come up with something good :pepeW:
-export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, data, happeningId }: OwnProps) {
+export function CreateAndUpdateHappeningModal({
+    type,
+    isVisible,
+    onClose,
+    mode,
+    data,
+    happeningId,
+}: OwnProps) {
     const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
     const [createRun] = useCreateRunMutation();
     const [createEvent] = useCreateEventMutation();
@@ -70,12 +81,12 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
         endDate: '',
         endTime: '',
         title: '',
-        thumbnail: null
+        thumbnail: null,
     };
 
     if (mode == ModalMode.Edit && data) {
         defaultValues = {
-            ...data
+            ...data,
         };
     }
 
@@ -84,7 +95,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
         register,
         setValue,
         formState: { errors },
-        clearErrors
+        clearErrors,
     } = useForm({
         defaultValues,
     });
@@ -183,7 +194,7 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                 try {
                     const res = await updateHappening({
                         id: happeningId!,
-                        data: eventData
+                        data: eventData,
                     }).unwrap();
 
                     if (res.status === 'success') {
@@ -202,12 +213,12 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     teamSize: parseInt(values.teamSize),
                     mapName: values.mapName,
                     startAt: values.startDate + ' ' + values.startTime,
-                }
+                };
 
                 try {
                     const res = await updateHappening({
                         id: happeningId!,
-                        data: runData
+                        data: runData,
                     }).unwrap();
 
                     if (res.status === 'success') {
@@ -240,12 +251,12 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
         <Modal
             className={'create-run'}
             visible={isVisible}
-            onClose={
-                () => onClose(clearErrors)
-            }
+            onClose={() => onClose(clearErrors)}
             width={'600px'}
         >
-            <p className="text-3xl m-0 pt-6 px-5">{mode == ModalMode.Create ? "Create" : "Edit"} your own {type}</p>
+            <p className="text-3xl m-0 pt-6 px-5">
+                {mode == ModalMode.Create ? 'Create' : 'Edit'} your own {type}
+            </p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-6">
                     <div>
@@ -440,14 +451,17 @@ export function CreateAndUpdateHappeningModal({ type, isVisible, onClose, mode, 
                     )}
                 </div>
                 <div className="flex justify-between mt-6 px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
-                    <Button styleType={'bordered'} onClick={() => onClose(clearErrors)}>
+                    <Button
+                        styleType={'bordered'}
+                        onClick={() => onClose(clearErrors)}
+                    >
                         Close
                     </Button>
                     <Button
                         styleType={'filled'}
                         type={'submit'} /*disabled={isSubmitButtonDisabled}*/
                     >
-                        {mode == ModalMode.Create ? "Create" : "Update"} {type}
+                        {mode == ModalMode.Create ? 'Create' : 'Update'} {type}
                     </Button>
                 </div>
             </form>

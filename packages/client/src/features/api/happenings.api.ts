@@ -39,12 +39,12 @@ export const happeningsApi = createApi({
                 body: intoFormData(body),
             }),
         }),
-        updateHappening: build.mutation<any, {id: number, data: any}>({
-            query: ({id, data}) => ({
+        updateHappening: build.mutation<any, { id: number; data: any }>({
+            query: ({ id, data }) => ({
                 url: `/${id}/update`,
                 method: 'PUT',
-                body: intoFormData(data)
-            })
+                body: intoFormData(data),
+            }),
         }),
         startHappening: build.query<StartHappeningResponse, number>({
             query: (id) => `/${id}/start`,
@@ -74,7 +74,7 @@ export const happeningsApi = createApi({
                     const { data } = await queryFulfilled;
 
                     if (data.status === 'success') {
-                        dispatch(setPopularRuns(data.data.runs))
+                        dispatch(setPopularRuns(data.data.runs));
                     }
                 } catch (e) {
                     console.log(e);

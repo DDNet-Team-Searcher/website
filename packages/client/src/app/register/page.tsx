@@ -22,7 +22,10 @@ export default function Register() {
                         <br /> and become the part of the{' '}
                         <s className="text-primary-1">community.</s>
                     </p>
-                    <Form currentStep={currentStep} setCurrentStep={setCurrentStep} />
+                    <Form
+                        currentStep={currentStep}
+                        setCurrentStep={setCurrentStep}
+                    />
                 </div>
             </div>
         </>

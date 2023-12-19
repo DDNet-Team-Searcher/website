@@ -22,7 +22,10 @@ import { StartHappeningResponse } from '@/types/api.type';
 import { ActionButtons } from '../ActionButtons';
 import Link from 'next/link';
 import { BaseHappeningProps } from '../types';
-import { CreateAndUpdateHappeningModal, ModalMode } from '@/components/CreateAndUpdateHappeningModal';
+import {
+    CreateAndUpdateHappeningModal,
+    ModalMode,
+} from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
 import { getMapUrl } from '@/utils/getMapUrl';
 
@@ -57,7 +60,8 @@ export function Event({
     const [deleteEventQuery] = useDeleteHappeningMutation();
     const [setIsUserInterestedInHappening] =
         useSetIsInterestedInHappeningMutation();
-    const [isEditEventModalVisible, setISEditEventModalVisible] = useState(false);
+    const [isEditEventModalVisible, setISEditEventModalVisible] =
+        useState(false);
 
     const endEvent = async (id: number) => {
         try {
@@ -148,7 +152,7 @@ export function Event({
 
     const onClose = () => {
         setISEditEventModalVisible(false);
-    }
+    };
 
     const eventData = {
         place,
@@ -159,8 +163,12 @@ export function Event({
         description: description || '',
 
         // event's fields
-        endDate: event.endAt ? new Date(event.endAt).toISOString().substring(0, 10) : '',
-        endTime: event.endAt ? new Date(event.endAt).toISOString().substring(11, 16) : '',
+        endDate: event.endAt
+            ? new Date(event.endAt).toISOString().substring(0, 10)
+            : '',
+        endTime: event.endAt
+            ? new Date(event.endAt).toISOString().substring(11, 16)
+            : '',
         title,
         thumbnail: null,
     };
@@ -175,7 +183,7 @@ export function Event({
         >
             <CreateAndUpdateHappeningModal
                 onClose={onClose}
-                type='event'
+                type="event"
                 data={eventData}
                 happeningId={id}
                 mode={ModalMode.Edit}
