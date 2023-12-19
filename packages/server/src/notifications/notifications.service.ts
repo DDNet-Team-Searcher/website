@@ -12,7 +12,7 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) { }
+    ) {}
 
     async sendNotification<T extends NotificationType>(
         userId: number,
@@ -165,7 +165,8 @@ export class NotificationsService {
                 id: notification.id,
                 type: notification.type as NotifType.NoEmptyServers,
                 seen: notification.seen,
-                notification: notification.notification as NotificationJson<NotifType.NoEmptyServers>,
+                notification:
+                    notification.notification as NotificationJson<NotifType.NoEmptyServers>,
                 createdAt: notification.createdAt.toString(),
             };
         }

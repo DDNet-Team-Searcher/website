@@ -8,7 +8,8 @@ async function bootstrap() {
         'http://' +
         process.env.HOST +
         (parseInt(process.env.PORT || '') === 80 ? '' : `:${process.env.PORT}`);
-    process.env.AVATAR_URL = process.env.BASE_URL! + "/" + process.env.AVATAR_PATH!;
+    process.env.AVATAR_URL =
+        process.env.BASE_URL! + '/' + process.env.AVATAR_PATH!;
 
     const app = await NestFactory.create(AppModule, {
         cors: {

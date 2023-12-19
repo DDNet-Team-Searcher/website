@@ -20,7 +20,7 @@ import { getAvatarUrl } from 'src/utils/user.util';
 export class AllServersInUseError extends Error {
     constructor(message?: string) {
         super(message);
-        this.name = "AllServersInUseError";
+        this.name = 'AllServersInUseError';
     }
 }
 
@@ -30,7 +30,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) { }
+    ) {}
 
     async createRun(data: RunDTO & { authorId: number }) {
         return await this.prismaService.happening.create({
@@ -83,7 +83,7 @@ export class HappeningsService {
     async updateRun(runId: number, data: RunDTO) {
         await this.prismaService.happening.update({
             where: {
-                id: runId
+                id: runId,
             },
             data: {
                 ...data,
@@ -99,13 +99,13 @@ export class HappeningsService {
             thumbnail: Express.Multer.File | null;
         },
     ): Promise<void> {
-        let oldThumbnail = await this.prismaService.happening.findFirst({
+        const oldThumbnail = await this.prismaService.happening.findFirst({
             where: {
                 id: happeningId,
             },
             select: {
-                thumbnail: true
-            }
+                thumbnail: true,
+            },
         });
 
         if (oldThumbnail?.thumbnail) {
@@ -120,7 +120,7 @@ export class HappeningsService {
 
         await this.prismaService.happening.update({
             where: {
-                id: happeningId
+                id: happeningId,
             },
             data: {
                 ...data,
@@ -158,7 +158,7 @@ export class HappeningsService {
                         id,
                     });
 
-                let connectString = `connect ${serverData.ip}:${port}; password ${password}`;
+                const connectString = `connect ${serverData.ip}:${port}; password ${password}`;
 
                 await this.prismaService.happening.update({
                     where: {
@@ -375,7 +375,7 @@ export class HappeningsService {
             author: {
                 id: author.id,
                 avatar: getAvatarUrl(author.avatar),
-                username: author.username
+                username: author.username,
             },
             teamSize: teamSize!,
             status: status as HappeningStatus,
@@ -465,7 +465,7 @@ export class HappeningsService {
             author: {
                 id: author.id,
                 avatar: getAvatarUrl(author.avatar),
-                username: author.username
+                username: author.username,
             },
             connectString,
             place,
@@ -587,14 +587,20 @@ export class HappeningsService {
             },
         });
 
-        for (let interestedPlayer of interestedPlayers[0]?.interestedPlayers || []) {
-            interestedPlayer.user.avatar = getAvatarUrl(interestedPlayer.user.avatar);
+        for (const interestedPlayer of interestedPlayers[0]
+            ?.interestedPlayers || []) {
+            interestedPlayer.user.avatar = getAvatarUrl(
+                interestedPlayer.user.avatar,
+            );
         }
 
         return interestedPlayers;
     }
 
-    async updateIsPlayerInTeam(happeningId: number, userId: number): Promise<void> {
+    async updateIsPlayerInTeam(
+        happeningId: number,
+        userId: number,
+    ): Promise<void> {
         const { id, inTeam } =
             (await this.prismaService.interestedHappening.findFirst({
                 where: {
@@ -659,13 +665,15 @@ export class HappeningsService {
     }
 
     async getHappeningType(id: number): Promise<HappeningType> {
-        return (await this.prismaService.happening.findFirst({
-            where: {
-                id
-            },
-            select: {
-                type: true
-            }
-        }))?.type!;
+        return (
+            await this.prismaService.happening.findFirst({
+                where: {
+                    id,
+                },
+                select: {
+                    type: true,
+                },
+            })
+        )?.type!;
     }
 }

@@ -13,8 +13,8 @@ import { RolesService } from 'src/roles/roles.service';
 export class PermissionGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
-        private readonly rolesService: RolesService
-    ) { }
+        private readonly rolesService: RolesService,
+    ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const permissionMask = this.reflector.get<number>(
@@ -26,7 +26,9 @@ export class PermissionGuard implements CanActivate {
             try {
                 const req = context.switchToHttp().getRequest();
 
-                let perms = await this.rolesService.userPermissions(req.user.id);
+                const perms = await this.rolesService.userPermissions(
+                    req.user.id,
+                );
                 console.log(perms.toString(2), permissionMask.toString(2));
                 if (!((perms & permissionMask) == permissionMask)) {
                     throw new ForbiddenException();

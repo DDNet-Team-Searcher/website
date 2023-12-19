@@ -7,4 +7,4 @@ import { ServersService } from './servers.service';
     providers: [ServersService],
     exports: [ServersService],
 })
-export class ServersModule { }
+export class ServersModule {}

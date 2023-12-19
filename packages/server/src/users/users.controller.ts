@@ -37,8 +37,8 @@ export class UsersController {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
-        private readonly mailerService: MailerService
-    ) { }
+        private readonly mailerService: MailerService,
+    ) {}
 
     @Post('/register')
     async register(@Body() data: RegisterUserDTO, @I18n() i18n: I18nContext) {
@@ -52,18 +52,17 @@ export class UsersController {
             throw new BadRequestException({
                 status: 'fail',
                 data: null,
-                message: i18n.t('user.already_exists')
+                message: i18n.t('user.already_exists'),
             });
         }
 
         try {
             const encryptedPassword = await argon2.hash(data.password);
 
-            let activationCode = await this.usersService.register({
+            const activationCode = await this.usersService.register({
                 ...data,
                 password: encryptedPassword,
             });
-
 
             await this.mailerService.sendMail({
                 to: data.email,
@@ -72,8 +71,8 @@ export class UsersController {
                 template: 'registration_confirmation',
                 context: {
                     username: data.username,
-                    link: `${process.env.BASE_URL}/api/activate-account/${activationCode}`
-                }
+                    link: `${process.env.BASE_URL}/api/activate-account/${activationCode}`,
+                },
             });
 
             return {
@@ -91,13 +90,13 @@ export class UsersController {
 
     @Get('/activate-account/:code')
     async activateAccount(@Req() req, @Res() res) {
-        let result = await this.usersService.activateAccount(req.params.code);
+        const result = await this.usersService.activateAccount(req.params.code);
 
         //TODO: do smth with these hardcoded urls
         if (result) {
-            res.redirect("http://localhost:3000/login");
+            res.redirect('http://localhost:3000/login');
         } else {
-            res.redirect("http://localhost:3000/login");
+            res.redirect('http://localhost:3000/login');
         }
     }
 
@@ -105,7 +104,7 @@ export class UsersController {
     async login(
         @Body() data: LoginUserDTO,
         @Res({ passthrough: true }) res: Response,
-        @I18n() i18n: I18nContext
+        @I18n() i18n: I18nContext,
     ) {
         const isUserExists = await this.usersService.isUserExists({
             where: {
@@ -188,7 +187,11 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/username')
-    async updateUsername(@Req() req, @Body() data: ChangeUsernameDTO, @I18n() i18n: I18nContext) {
+    async updateUsername(
+        @Req() req,
+        @Body() data: ChangeUsernameDTO,
+        @I18n() i18n: I18nContext,
+    ) {
         try {
             const isSuccess = await this.usersService.updateUsername(
                 req.user.id,
@@ -218,7 +221,11 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/email')
-    async updateEmail(@Req() req, @Body() data: ChangeEmailDTO, @I18n() i18n: I18nContext) {
+    async updateEmail(
+        @Req() req,
+        @Body() data: ChangeEmailDTO,
+        @I18n() i18n: I18nContext,
+    ) {
         try {
             const isSuccess = await this.usersService.updateEmail(
                 req.user.id,
@@ -248,7 +255,11 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/password')
-    async updatePassword(@Req() req, @Body() data: ChangePasswordDTO, @I18n() i18n: I18nContext) {
+    async updatePassword(
+        @Req() req,
+        @Body() data: ChangePasswordDTO,
+        @I18n() i18n: I18nContext,
+    ) {
         try {
             const isSuccess = await this.usersService.updatePassword(
                 req.user.id,
@@ -328,15 +339,18 @@ export class UsersController {
         @Param('id') id: string,
         @Req() req,
         @Body() body,
-        @I18n() i18n: I18nContext
+        @I18n() i18n: I18nContext,
     ) {
-        const isAlreadyReported = await this.usersService.isReported(parseInt(id), req.user.id);
+        const isAlreadyReported = await this.usersService.isReported(
+            parseInt(id),
+            req.user.id,
+        );
 
         if (isAlreadyReported) {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: i18n.t('user.already_reported')
+                message: i18n.t('user.already_reported'),
             });
         }
 
@@ -345,7 +359,7 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
-            message: i18n.t('user.reported_successfully')
+            message: i18n.t('user.reported_successfully'),
         };
     }
 
@@ -355,7 +369,7 @@ export class UsersController {
         @Param('id') id: string,
         @Req() req,
         @Body() body,
-        @I18n() i18n: I18nContext
+        @I18n() i18n: I18nContext,
     ) {
         const isBanned = await this.usersService.isBanned(parseInt(id));
 
@@ -363,17 +377,16 @@ export class UsersController {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: i18n.t('user.already_banned')
+                message: i18n.t('user.already_banned'),
             });
         }
 
         await this.usersService.ban(parseInt(id), req.user.id, body.reason);
 
-
         return {
             status: 'success',
             data: null,
-            message: i18n.t('user.banned_successfully')
+            message: i18n.t('user.banned_successfully'),
         };
     }
 
@@ -386,7 +399,7 @@ export class UsersController {
             throw new ConflictException({
                 status: 'fail',
                 data: null,
-                message: i18n.t('user.cant_unban_not_banned')
+                message: i18n.t('user.cant_unban_not_banned'),
             });
         }
 
@@ -395,7 +408,7 @@ export class UsersController {
         return {
             status: 'success',
             data: null,
-            message: i18n.t('user.unbanned_successfully')
+            message: i18n.t('user.unbanned_successfully'),
         };
     }
 }

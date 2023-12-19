@@ -10,7 +10,12 @@ import { WebsocketsModule } from './websockets/websockets.module';
 import { AuthModule } from './auth/auth.module';
 import { CronModule } from './cron/cron.module';
 import { SearchModule } from './search/search.module';
-import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import {
+    AcceptLanguageResolver,
+    HeaderResolver,
+    I18nModule,
+    QueryResolver,
+} from 'nestjs-i18n';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ConfigModule } from '@nestjs/config';
@@ -52,28 +57,25 @@ import { RolesModule } from './roles/roles.module';
                 { use: QueryResolver, options: ['lang'] },
                 AcceptLanguageResolver,
                 new HeaderResolver(['x-lang']),
-            ]
+            ],
         }),
         ConfigModule.forRoot({
-            envFilePath: [
-                '.dev.env',
-                '.env'
-            ]
+            envFilePath: ['.dev.env', '.env'],
         }),
         MailerModule.forRoot({
             transport: `${process.env.MAIL_PROTOCOL}://${process.env.MAIL_LOGIN}:${process.env.MAIL_PASSWORD}@${process.env.MAIL_HOST}:${process.env.MAIL_PORT}`,
             defaults: {
-                from: "Your mom",
+                from: 'Your mom',
             },
             preview: true,
             template: {
                 dir: 'templates',
-                adapter: new EjsAdapter()
+                adapter: new EjsAdapter(),
             },
             options: {
-                strict: true
-            }
-        })
+                strict: true,
+            },
+        }),
     ],
     providers: [
         {
@@ -82,4 +84,4 @@ import { RolesModule } from './roles/roles.module';
         },
     ],
 })
-export class AppModule { }
+export class AppModule {}

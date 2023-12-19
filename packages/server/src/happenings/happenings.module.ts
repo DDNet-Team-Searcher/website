@@ -6,13 +6,9 @@ import { HappeningsController } from './happenings.controller';
 import { HappeningsService } from './happenings.service';
 
 @Module({
-    imports: [
-        PrismaModule,
-        NotificationsModule,
-        ServersModule,
-    ],
+    imports: [PrismaModule, NotificationsModule, ServersModule],
     controllers: [HappeningsController],
     providers: [HappeningsService],
     exports: [HappeningsService],
 })
-export class HappeningsModule { }
+export class HappeningsModule {}

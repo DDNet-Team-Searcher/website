@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+import { Socket } from 'socket.io';
 
 export type AuthSocket = Socket & {
     user: {

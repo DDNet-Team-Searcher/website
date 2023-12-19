@@ -1,11 +1,13 @@
-import { User } from "@app/shared/types/User.type"
+import { User } from '@app/shared/types/User.type';
 
-export function getPermissions(permissionsArray: User['permissions'][]): User['permissions'] {
+export function getPermissions(
+    permissionsArray: User['permissions'][],
+): User['permissions'] {
     const permissions: User['permissions'] = {
         canDeleteHappenings: false,
         canBan: false,
         canManagePosts: false,
-        canManageRoles: false
+        canManageRoles: false,
     };
 
     for (const perms of permissionsArray) {
@@ -13,10 +15,9 @@ export function getPermissions(permissionsArray: User['permissions'][]): User['p
             if (enabled) {
                 permissions[perm] = enabled;
             }
-
         }
 
-        if (Object.values(permissions).every(perm => perm)) {
+        if (Object.values(permissions).every((perm) => perm)) {
             break;
         }
     }
@@ -26,8 +27,10 @@ export function getPermissions(permissionsArray: User['permissions'][]): User['p
 
 //TODO: rename it
 export function objToInt(obj: User['permissions']) {
-    return +obj.canBan
-        | +obj.canManageRoles << 1
-        | +obj.canDeleteHappenings << 2
-        | +obj.canManagePosts << 3;
+    return (
+        +obj.canBan |
+        (+obj.canManageRoles << 1) |
+        (+obj.canDeleteHappenings << 2) |
+        (+obj.canManagePosts << 3)
+    );
 }

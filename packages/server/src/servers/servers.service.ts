@@ -49,7 +49,10 @@ export class ServersService {
 
                     this.sockets.set(id, server);
 
-                    const { used, max } = await this.getServerDataAboutHowManyServersItCanRunButThisMethodNameSeemsBigIllLeaveItLikeThis(id);
+                    const { used, max } =
+                        await this.getServerDataAboutHowManyServersItCanRunButThisMethodNameSeemsBigIllLeaveItLikeThis(
+                            id,
+                        );
 
                     server.used = used;
                     server.max = max;
@@ -73,16 +76,16 @@ export class ServersService {
                 });
 
                 socket.on('data', async (bytes) => {
-                    let response = Response.decode(bytes);
+                    const response = Response.decode(bytes);
 
                     if (response.origin == Origin.DDNET) {
                         await this.prismaService.happening.update({
                             where: {
-                                id: response.id
+                                id: response.id,
                             },
                             data: {
-                                status: Status.Finished
-                            }
+                                status: Status.Finished,
+                            },
                         });
                     }
                 });
@@ -130,7 +133,7 @@ export class ServersService {
 
             const request = Request.create({
                 origin: Origin.NOT_DDNET,
-                action: Request_Action.INFO
+                action: Request_Action.INFO,
             });
 
             socket.write(Request.encode(request).finish());
@@ -139,8 +142,11 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (typeof response.max !== "number" || typeof response.used !== "number") {
-                    console.log("This bs doesnt work D:", response);
+                if (
+                    typeof response.max !== 'number' ||
+                    typeof response.used !== 'number'
+                ) {
+                    console.log('This bs doesnt work D:', response);
                 }
 
                 if (response.responseCode == Response_ResponseCode.OK) {
@@ -168,7 +174,7 @@ export class ServersService {
                 action: Request_Action.START,
                 mapName: data.mapName,
                 origin: Origin.NOT_DDNET,
-                id: data.id
+                id: data.id,
             });
 
             socket.write(Request.encode(request).finish());
@@ -178,16 +184,16 @@ export class ServersService {
                 const response = Response.decode(bytes);
 
                 if (!response.port || !response.password) {
-                    console.log("Thats.. not good #69");
+                    console.log('Thats.. not good #69');
                 }
 
                 if (response.responseCode == Response_ResponseCode.OK) {
                     res({
                         port: response.port!,
-                        password: response.password!
+                        password: response.password!,
                     });
                 } else {
-                    console.log("Couldnt start the game server");
+                    console.log('Couldnt start the game server');
                 }
 
                 socket.removeListener('data', handler);
@@ -204,7 +210,7 @@ export class ServersService {
             const request = Request.create({
                 action: Request_Action.SHUTDOWN,
                 origin: Origin.NOT_DDNET,
-                id: happeningId
+                id: happeningId,
             });
 
             socket.write(Request.encode(request).finish());
@@ -216,7 +222,7 @@ export class ServersService {
                 if (response.responseCode == Response_ResponseCode.OK) {
                     res();
                 } else {
-                    console.log("Couldnt shutdown the server owo");
+                    console.log('Couldnt shutdown the server owo');
                 }
 
                 socket.removeListener('data', handler);

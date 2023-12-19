@@ -33,7 +33,7 @@ import { I18n, I18nContext } from 'nestjs-i18n';
 @UseGuards(InnocentGuard)
 @Controller()
 export class HappeningsController {
-    constructor(private readonly happeningsService: HappeningsService) { }
+    constructor(private readonly happeningsService: HappeningsService) {}
 
     @Innocent()
     @Protected()
@@ -103,37 +103,40 @@ export class HappeningsController {
     async updateHappening(
         @UploadedFile() file: Express.Multer.File,
         @Req() req,
-        @Body() body
+        @Body() body,
     ) {
         const happeningId = parseInt(req.params.id);
 
-        const happeningType = await this.happeningsService.getHappeningType(happeningId);
+        const happeningType = await this.happeningsService.getHappeningType(
+            happeningId,
+        );
 
         if (happeningType == HappeningType.Run) {
             const run = new RunDTO();
 
             run.mapName = body.mapName;
-            run.teamSize = body.teamSize ? parseInt(body.teamSize) : body.teamSize;
+            run.teamSize = body.teamSize
+                ? parseInt(body.teamSize)
+                : body.teamSize;
             run.startAt = body.startAt;
             run.description = body.description;
             run.place = body.place ? parseInt(body.place) : body.place;
 
-            let errors = await new Validator().validate(run);
-            let obj: Record<string, string> = {};
+            const errors = await new Validator().validate(run);
+            const obj: Record<string, string> = {};
 
             if (errors.length) {
                 for (const err of errors) {
-                    obj[err.property] = Object.values(err.constraints!)[0]
+                    obj[err.property] = Object.values(err.constraints!)[0];
                 }
 
                 throw new BadRequestException({
                     status: 'fail',
-                    data: obj
+                    data: obj,
                 });
             }
 
             await this.happeningsService.updateRun(happeningId, run);
-
         } else if (happeningType == HappeningType.Event) {
             const event = new EventDTO();
 
@@ -148,22 +151,22 @@ export class HappeningsController {
             }
 
             const errors = await new Validator().validate(event);
-            let obj: Record<string, string> = {};
+            const obj: Record<string, string> = {};
 
             if (errors.length) {
                 for (const err of errors) {
-                    obj[err.property] = Object.values(err.constraints!)[0]
+                    obj[err.property] = Object.values(err.constraints!)[0];
                 }
 
                 throw new BadRequestException({
                     status: 'fail',
-                    data: obj
+                    data: obj,
                 });
             }
 
             await this.happeningsService.updateEvent(happeningId, {
                 ...event,
-                thumbnail: file
+                thumbnail: file,
             });
         }
 
@@ -179,14 +182,14 @@ export class HappeningsController {
     @Get('/:id/start')
     async startHappening(@Req() req, @I18n() i18n: I18nContext) {
         try {
-            let connectString = await this.happeningsService.startHappening(
+            const connectString = await this.happeningsService.startHappening(
                 parseInt(req.params.id),
             );
 
             return {
                 status: 'success',
                 data: {
-                    connectString
+                    connectString,
                 },
             };
         } catch (e) {
@@ -300,7 +303,10 @@ export class HappeningsController {
         const events: Event[] = [];
 
         for (const id of ids) {
-            const event = await this.happeningsService.getEventById(id.id, req.user.id);
+            const event = await this.happeningsService.getEventById(
+                id.id,
+                req.user.id,
+            );
 
             if (event) {
                 events.push(event);

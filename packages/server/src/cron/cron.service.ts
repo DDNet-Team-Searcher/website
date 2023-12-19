@@ -10,10 +10,10 @@ export class CronService implements OnModuleInit {
     constructor(
         private readonly happeningsService: HappeningsService,
         private readonly notificationsService: NotificationsService,
-    ) { }
+    ) {}
 
     async onModuleInit() {
-        let upcomingHappenings =
+        const upcomingHappenings =
             await this.happeningsService.upcomingHappenings(10);
 
         this.happenings = upcomingHappenings;

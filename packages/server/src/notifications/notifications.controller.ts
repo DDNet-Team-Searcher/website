@@ -3,7 +3,7 @@ import { NotificationsService } from './notifications.service';
 
 @Controller('/notifications')
 export class NotificationsController {
-    constructor(private readonly notificationsService: NotificationsService) { }
+    constructor(private readonly notificationsService: NotificationsService) {}
 
     @Get('/:id')
     async markAsSeen(@Param('id') id: string) {

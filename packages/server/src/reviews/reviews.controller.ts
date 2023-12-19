@@ -17,7 +17,7 @@ import { InnocentGuard } from 'src/guards/innocent.guard';
 @UseGuards(InnocentGuard)
 @Controller()
 export class ReviewsController {
-    constructor(private reviewsService: ReviewsService) { }
+    constructor(private reviewsService: ReviewsService) {}
 
     @Get()
     async getReviews(@Param('happeningId') happeningId: string) {

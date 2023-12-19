@@ -4,7 +4,7 @@ import { getAvatarUrl } from 'src/utils/user.util';
 
 @Injectable()
 export class ReviewsService {
-    constructor(private readonly prismaService: PrismaService) { }
+    constructor(private readonly prismaService: PrismaService) {}
 
     async getReviewsByHappeningId(happeningId: number) {
         const reviews = await this.prismaService.review.findMany({
@@ -34,7 +34,9 @@ export class ReviewsService {
         });
 
         for (const review of reviews) {
-            review.reviewedUser.avatar = getAvatarUrl(review.reviewedUser.avatar);
+            review.reviewedUser.avatar = getAvatarUrl(
+                review.reviewedUser.avatar,
+            );
             review.author.avatar = getAvatarUrl(review.author.avatar);
         }
 

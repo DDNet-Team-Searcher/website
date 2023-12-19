@@ -1,4 +1,4 @@
-import { IsBoolean, IsHexColor, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsHexColor, IsOptional, IsString } from 'class-validator';
 
 export class UpdateRoleDTO {
     @IsOptional()

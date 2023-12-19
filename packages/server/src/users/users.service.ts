@@ -11,7 +11,7 @@ import * as argon2 from 'argon2';
 import { Run, Event } from '@app/shared/types/Happening.type';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { getPermissions } from 'src/utils/permissions.util';
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +19,7 @@ export class UsersService {
         private readonly prismaService: PrismaService,
         private readonly happeningService: HappeningsService,
         private readonly notificationsService: NotificationsService,
-    ) { }
+    ) {}
 
     async isUserExists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
@@ -91,7 +91,7 @@ export class UsersService {
         const notifications =
             await this.notificationsService.getUserNotifications(id);
 
-        let banned: User['banned'] = {
+        const banned: User['banned'] = {
             isBanned: false,
             reason: null,
         };
@@ -101,7 +101,7 @@ export class UsersService {
             banned.reason = credentials.bans[0].reason;
         }
 
-        const permissions = getPermissions(roles.map(el => el.role));
+        const permissions = getPermissions(roles.map((el) => el.role));
 
         return {
             id,
@@ -120,12 +120,12 @@ export class UsersService {
     }
 
     async register(data: RegisterUserDTO): Promise<string> {
-        let activationCode = uuidv4();
+        const activationCode = uuidv4();
 
         await this.prismaService.user.create({
             data: {
                 ...data,
-                activationCode
+                activationCode,
             },
         });
 
@@ -206,12 +206,12 @@ export class UsersService {
                 bans: {
                     take: 1,
                     select: {
-                        banned: true
+                        banned: true,
                     },
                     where: {
-                        banned: true
-                    }
-                }
+                        banned: true,
+                    },
+                },
             },
         });
 
@@ -310,7 +310,10 @@ export class UsersService {
         };
     }
 
-    async isFollowing(followerId: number, followingId: number): Promise<boolean> {
+    async isFollowing(
+        followerId: number,
+        followingId: number,
+    ): Promise<boolean> {
         const bool = await this.prismaService.follower.count({
             where: {
                 followerId,
@@ -343,7 +346,10 @@ export class UsersService {
         }
     }
 
-    async updateAvatar(id: number, avatar: Express.Multer.File): Promise<string> {
+    async updateAvatar(
+        id: number,
+        avatar: Express.Multer.File,
+    ): Promise<string> {
         const filename = await createFile(avatar, FileTypeEnum.Avatar);
         const oldAvatar = (await this.prismaService.user.findFirst({
             where: {
@@ -393,7 +399,10 @@ export class UsersService {
         }
     }
 
-    async updateEmail(id: number, data: { email: string; password: string }): Promise<boolean> {
+    async updateEmail(
+        id: number,
+        data: { email: string; password: string },
+    ): Promise<boolean> {
         const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -414,7 +423,10 @@ export class UsersService {
         }
     }
 
-    async updatePassword(id: number, data: { old: string; new: string }): Promise<boolean> {
+    async updatePassword(
+        id: number,
+        data: { old: string; new: string },
+    ): Promise<boolean> {
         const { password } = (await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -435,46 +447,57 @@ export class UsersService {
         }
     }
 
-    async report(reportedUserId: number, authorId: number, reason: string): Promise<void> {
+    async report(
+        reportedUserId: number,
+        authorId: number,
+        reason: string,
+    ): Promise<void> {
         await this.prismaService.report.create({
             data: {
                 reportedUserId,
                 authorId,
-                report: reason
-            }
+                report: reason,
+            },
         });
     }
 
-    async isReported(reportedUserId: number, authorId: number): Promise<boolean> {
-        let res = await this.prismaService.report.findFirst({
+    async isReported(
+        reportedUserId: number,
+        authorId: number,
+    ): Promise<boolean> {
+        const res = await this.prismaService.report.findFirst({
             where: {
                 authorId,
-                reportedUserId
-            }
-        });
-
-        return res === null ? false : true;
-    }
-
-    async isBanned(bannedUserId: number): Promise<boolean> {
-        let res = await this.prismaService.ban.findFirst({
-            where: {
-                userId: bannedUserId,
-                banned: true
+                reportedUserId,
             },
         });
 
         return res === null ? false : true;
     }
 
-    async ban(userIdToBan: number, authorId: number, reason: string): Promise<void> {
+    async isBanned(bannedUserId: number): Promise<boolean> {
+        const res = await this.prismaService.ban.findFirst({
+            where: {
+                userId: bannedUserId,
+                banned: true,
+            },
+        });
+
+        return res === null ? false : true;
+    }
+
+    async ban(
+        userIdToBan: number,
+        authorId: number,
+        reason: string,
+    ): Promise<void> {
         await this.prismaService.ban.create({
             data: {
                 reason,
                 banned: true,
                 userId: userIdToBan,
-                authorId
-            }
+                authorId,
+            },
         });
     }
 
@@ -482,38 +505,38 @@ export class UsersService {
         const ban = await this.prismaService.ban.findFirst({
             where: {
                 userId: bannedUserId,
-                banned: true
+                banned: true,
             },
             select: {
-                id: true
-            }
+                id: true,
+            },
         });
 
         await this.prismaService.ban.update({
             where: {
-                id: ban!.id
+                id: ban!.id,
             },
             data: {
-                banned: false
-            }
+                banned: false,
+            },
         });
     }
 
     async activateAccount(code: string): Promise<boolean> {
-        let user = await this.prismaService.user.findFirst({
+        const user = await this.prismaService.user.findFirst({
             where: {
-                activationCode: code
-            }
+                activationCode: code,
+            },
         });
 
         if (user && !user?.activated) {
             await this.prismaService.user.update({
                 where: {
-                    id: user.id
+                    id: user.id,
                 },
                 data: {
-                    activated: true
-                }
+                    activated: true,
+                },
             });
 
             return true;

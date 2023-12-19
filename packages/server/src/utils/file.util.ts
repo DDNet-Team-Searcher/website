@@ -12,7 +12,10 @@ export enum FileTypeEnum {
     Happening = 'happening',
 }
 
-export async function createFile(file: Express.Multer.File, type: string): Promise<string> {
+export async function createFile(
+    file: Express.Multer.File,
+    type: string,
+): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const filename = uuidv4() + path.extname(file.originalname);
 
@@ -30,7 +33,10 @@ export async function createFile(file: Express.Multer.File, type: string): Promi
     });
 }
 
-export async function deleteFile(filename: string, type: string): Promise<void> {
+export async function deleteFile(
+    filename: string,
+    type: string,
+): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         fs.unlink(`./${fileType[type]}/${filename}`, (err) => {
             if (err) reject(err);

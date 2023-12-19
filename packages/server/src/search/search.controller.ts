@@ -7,7 +7,7 @@ import { Innocent } from 'src/decorators/innocent.decorator';
 @UseGuards(InnocentGuard)
 @Controller()
 export class SearchController {
-    constructor(private readonly searchService: SearchService) { }
+    constructor(private readonly searchService: SearchService) {}
 
     @Innocent()
     @Protected()
@@ -20,10 +20,10 @@ export class SearchController {
     ) {
         const searchResult = await this.searchService.search(
             req.user.id,
-            query || "",
+            query || '',
             {
                 page: (Number(page) || 1) - 1,
-                sort: (type || "all") as "all" | "events" | "runs" | "users"
+                sort: (type || 'all') as 'all' | 'events' | 'runs' | 'users',
             },
         );
 

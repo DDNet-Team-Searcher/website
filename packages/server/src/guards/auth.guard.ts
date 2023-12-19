@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
         private readonly jwtService: JwtService,
-    ) { }
+    ) {}
 
     canActivate(context: ExecutionContext): boolean {
         const isProtected = this.reflector.get(

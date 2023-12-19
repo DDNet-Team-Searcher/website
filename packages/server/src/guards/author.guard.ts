@@ -15,7 +15,7 @@ export class AuthorGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
         private readonly prismaService: PrismaService,
-    ) { }
+    ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const author = this.reflector.get<'happening' | 'review' | undefined>(
@@ -30,16 +30,16 @@ export class AuthorGuard implements CanActivate {
                 const id = parseInt(req.params.id);
 
                 //TODO: fix my 1000iq trash solution
-                const something = await this.prismaService[author as 'happening'].findFirst(
-                    {
-                        where: {
-                            id,
-                        },
-                        select: {
-                            authorId: true,
-                        },
+                const something = await this.prismaService[
+                    author as 'happening'
+                ].findFirst({
+                    where: {
+                        id,
                     },
-                );
+                    select: {
+                        authorId: true,
+                    },
+                });
 
                 if (!something) {
                     throw new NotFoundException();

@@ -23,7 +23,7 @@ export const WSAuthMiddleware = (jwtService: JwtService) => {
     return async (client: AuthSocket, next: NextFunction) => {
         try {
             const data: { id: number } = jwtService.verify(
-                parseCookies(client.handshake.headers.cookie || "")?.token,
+                parseCookies(client.handshake.headers.cookie || '')?.token,
             );
             client.user = data;
             next();

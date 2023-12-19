@@ -7,4 +7,4 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
     imports: [HappeningsModule, NotificationsModule],
     providers: [CronService],
 })
-export class CronModule { }
+export class CronModule {}

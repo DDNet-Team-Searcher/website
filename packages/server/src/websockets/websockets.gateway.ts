@@ -18,7 +18,7 @@ export class WebsocketsGateway implements NestGateway {
     server: Server;
     users: Map<number, string> = new Map();
 
-    constructor(private readonly jwtService: JwtService) { }
+    constructor(private readonly jwtService: JwtService) {}
 
     afterInit(server: Server) {
         const middleware = WSAuthMiddleware(this.jwtService);
@@ -33,7 +33,7 @@ export class WebsocketsGateway implements NestGateway {
         this.users.delete(client.user.id);
     }
 
-    sendNotification(userId: number, notification: Object) {
+    sendNotification(userId: number, notification: object) {
         if (this.users.has(userId)) {
             this.server
                 .to(this.users.get(userId)!)
