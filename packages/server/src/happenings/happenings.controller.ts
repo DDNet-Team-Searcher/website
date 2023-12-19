@@ -28,6 +28,7 @@ import { InnocentGuard } from 'src/guards/innocent.guard';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { AllServersInUseError } from './happenings.service';
 import { I18n, I18nContext } from 'nestjs-i18n';
+import { AuthedRequest } from 'src/types/AuthedRequest.type';
 
 @UseGuards(AuthorGuard)
 @UseGuards(InnocentGuard)
@@ -38,7 +39,7 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Post('/create/run')
-    async createRun(@Req() req, @Body() data: RunDTO) {
+    async createRun(@Req() req: AuthedRequest, @Body() data: RunDTO) {
         try {
             const { id } = await this.happeningsService.createRun({
                 ...data,
@@ -68,7 +69,7 @@ export class HappeningsController {
     @UseInterceptors(FileInterceptor('thumbnail'))
     async createEvent(
         @UploadedFile() file: Express.Multer.File,
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() data: EventDTO,
     ) {
         try {
@@ -102,7 +103,7 @@ export class HappeningsController {
     @UseInterceptors(FileInterceptor('thumbnail'))
     async updateHappening(
         @UploadedFile() file: Express.Multer.File,
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() body,
     ) {
         const happeningId = parseInt(req.params.id);
@@ -180,7 +181,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/start')
-    async startHappening(@Req() req, @I18n() i18n: I18nContext) {
+    async startHappening(@Req() req: AuthedRequest, @I18n() i18n: I18nContext) {
         try {
             const connectString = await this.happeningsService.startHappening(
                 parseInt(req.params.id),
@@ -214,7 +215,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/end')
-    async endHappening(@Req() req) {
+    async endHappening(@Req() req: AuthedRequest) {
         try {
             await this.happeningsService.endHappening(parseInt(req.params.id));
 
@@ -232,7 +233,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Delete('/:id/delete')
-    async deleteHappening(@Req() req) {
+    async deleteHappening(@Req() req: AuthedRequest) {
         try {
             await this.happeningsService.deleteHappening(
                 parseInt(req.params.id),
@@ -251,7 +252,7 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Post('/:id/interested')
-    async setIsInterested(@Req() req) {
+    async setIsInterested(@Req() req: AuthedRequest) {
         const happeningId = parseInt(req.params.id);
 
         const isInterested =
@@ -270,7 +271,7 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Get('/runs')
-    async getRuns(@Req() req) {
+    async getRuns(@Req() req: AuthedRequest) {
         const ids = await this.happeningsService.getAllRunsIds();
 
         const runs: Run[] = [];
@@ -297,7 +298,7 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Get('/events')
-    async getEvents(@Req() req) {
+    async getEvents(@Req() req: AuthedRequest) {
         const ids = await this.happeningsService.getAllEventsIds();
 
         const events: Event[] = [];

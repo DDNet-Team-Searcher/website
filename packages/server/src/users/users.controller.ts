@@ -31,6 +31,7 @@ import { getAvatarUrl } from 'src/utils/user.util';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { MailerService } from '@nestjs-modules/mailer';
+import { AuthedRequest } from 'src/types/AuthedRequest.type';
 
 @Controller()
 export class UsersController {
@@ -89,7 +90,7 @@ export class UsersController {
     }
 
     @Get('/activate-account/:code')
-    async activateAccount(@Req() req, @Res() res) {
+    async activateAccount(@Req() req: Request, @Res() res: Response) {
         const result = await this.usersService.activateAccount(req.params.code);
 
         //TODO: do smth with these hardcoded urls
@@ -165,7 +166,7 @@ export class UsersController {
     @UseInterceptors(FileInterceptor('avatar'))
     async updateAvatar(
         @UploadedFile() avatar: Express.Multer.File,
-        @Req() req,
+        @Req() req: AuthedRequest,
     ) {
         try {
             const filename = await this.usersService.updateAvatar(
@@ -188,7 +189,7 @@ export class UsersController {
     @Protected()
     @Post('/profile/username')
     async updateUsername(
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() data: ChangeUsernameDTO,
         @I18n() i18n: I18nContext,
     ) {
@@ -222,7 +223,7 @@ export class UsersController {
     @Protected()
     @Post('/profile/email')
     async updateEmail(
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() data: ChangeEmailDTO,
         @I18n() i18n: I18nContext,
     ) {
@@ -256,7 +257,7 @@ export class UsersController {
     @Protected()
     @Post('/profile/password')
     async updatePassword(
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() data: ChangePasswordDTO,
         @I18n() i18n: I18nContext,
     ) {
@@ -303,7 +304,7 @@ export class UsersController {
 
     @Protected()
     @Get('/profile/:id')
-    async getUserProfile(@Param('id') id: string, @Req() req) {
+    async getUserProfile(@Param('id') id: string, @Req() req: AuthedRequest) {
         const profile = await this.usersService.getUserProfile(
             req.user.id,
             parseInt(id),
@@ -322,7 +323,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Put('/user/:id/follow')
-    async follow(@Param('id') id: string, @Req() req) {
+    async follow(@Param('id') id: string, @Req() req: AuthedRequest) {
         await this.usersService.follow(req.user.id, parseInt(id));
 
         return {
@@ -337,7 +338,7 @@ export class UsersController {
     @Post('/user/:id/report')
     async report(
         @Param('id') id: string,
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
     ) {
@@ -367,7 +368,7 @@ export class UsersController {
     @Post('/user/:id/ban')
     async ban(
         @Param('id') id: string,
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
     ) {

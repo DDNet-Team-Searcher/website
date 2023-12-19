@@ -13,6 +13,7 @@ import { CreateReviewDTO } from './dto/create-review.dto';
 import { ReviewsService } from './reviews.service';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { InnocentGuard } from 'src/guards/innocent.guard';
+import { AuthedRequest } from 'src/types/AuthedRequest.type';
 
 @UseGuards(InnocentGuard)
 @Controller()
@@ -42,7 +43,7 @@ export class ReviewsController {
     @Protected()
     @Post('/:userId')
     async createReview(
-        @Req() req,
+        @Req() req: AuthedRequest,
         @Param('happeningId') happeningId: string,
         @Param('userId') userId: string,
         @Body() body: CreateReviewDTO,

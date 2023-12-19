@@ -3,6 +3,7 @@ import { Protected } from 'src/decorators/protected.decorator';
 import { SearchService } from './search.service';
 import { InnocentGuard } from 'src/guards/innocent.guard';
 import { Innocent } from 'src/decorators/innocent.decorator';
+import { AuthedRequest } from 'src/types/AuthedRequest.type';
 
 @UseGuards(InnocentGuard)
 @Controller()
@@ -16,7 +17,7 @@ export class SearchController {
         @Query('query') query: string | null,
         @Query('page') page: string | null,
         @Query('sort') type: string | null,
-        @Req() req,
+        @Req() req: AuthedRequest,
     ) {
         const searchResult = await this.searchService.search(
             req.user.id,
