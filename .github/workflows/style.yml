@@ -1,0 +1,15 @@
+name: Check style
+
+on: [push, pull_request, merge_group]
+
+jobs:
+  check-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - run: |
+          npm install -g pnpm
+          pnpm install
+          pnpm run check-style
