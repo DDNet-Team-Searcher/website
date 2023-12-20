@@ -14,6 +14,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
+#: src/components/Header/Notifications/Notification/index.tsx:34
+msgid "notification.interested_run"
+msgstr "{interestedUsername} is interested in your {mapName} run"
+
+#. js-lingui-explicit-id
+#: src/components/Header/Notifications/Notification/index.tsx:39
+msgid "notification.interested_event"
+msgstr "{interestedUsername} is interested in your {title} event"
+
+#. js-lingui-explicit-id
+#: src/components/Header/Notifications/Notification/index.tsx:45
+msgid "notification.no_empty_servers"
+msgstr "Sadly you cant play on our servers rn coz there're no empty servers"
+
+#. js-lingui-explicit-id
 #: src/components/Footer/page.tsx:15
 #~ msgid "source_code"
 #~ msgstr "Source code"
