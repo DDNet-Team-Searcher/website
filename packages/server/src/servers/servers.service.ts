@@ -71,7 +71,7 @@ export class ServersService {
                     res();
                 });
 
-                socket.on('close', (e) => {
+                socket.on('close', () => {
                     console.log('Connection closed');
                 });
 
@@ -129,7 +129,13 @@ export class ServersService {
         serverId: number,
     ): Promise<{ used: number; max: number }> {
         return new Promise((res) => {
-            const socket = this.sockets.get(serverId)?.socket!;
+            const server = this.sockets.get(serverId);
+
+            if (!server) {
+                throw new Error('whoopsie daisy');
+            }
+
+            const socket = server.socket;
 
             const request = Request.create({
                 origin: Origin.NOT_DDNET,
@@ -168,7 +174,13 @@ export class ServersService {
         data: { mapName: string; id: number },
     ): Promise<{ port: number; password: string }> {
         return new Promise((res) => {
-            const socket = this.sockets.get(serverId)?.socket!;
+            const server = this.sockets.get(serverId);
+
+            if (!server) {
+                throw new Error('whoopsie daisy');
+            }
+
+            const socket = server.socket;
 
             const request = Request.create({
                 action: Request_Action.START,
@@ -205,7 +217,13 @@ export class ServersService {
 
     shutdownServer(serverId: number, happeningId: number): Promise<void> {
         return new Promise<void>((res) => {
-            const socket = this.sockets.get(serverId)?.socket!;
+            const server = this.sockets.get(serverId);
+
+            if (!server) {
+                throw new Error('whoopsie daisy');
+            }
+
+            const socket = server.socket;
 
             const request = Request.create({
                 action: Request_Action.SHUTDOWN,

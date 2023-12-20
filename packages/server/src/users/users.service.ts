@@ -37,7 +37,6 @@ export class UsersService {
 
     async getUserCredentials(id: number): Promise<User> {
         const {
-            id: userId,
             username,
             tier,
             email,
@@ -111,7 +110,7 @@ export class UsersService {
             avatar: getAvatarUrl(credentials.avatar),
             notifications,
             updatedAt: updatedAt.toString(),
-            createdAt: updatedAt.toString(),
+            createdAt: createdAt.toString(),
             permissions,
             banned,
             verified,

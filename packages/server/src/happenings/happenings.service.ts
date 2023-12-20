@@ -65,7 +65,7 @@ export class HappeningsService {
             data: {
                 ...data,
                 thumbnail: filename,
-                //@ts-ignore NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
+                //NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
                 place: parseInt(data.place) ? 'THERE' : 'HERE',
                 endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
@@ -125,7 +125,7 @@ export class HappeningsService {
             data: {
                 ...data,
                 thumbnail: filename,
-                //@ts-ignore NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
+                //NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
                 place: parseInt(data.place) ? 'THERE' : 'HERE',
                 endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
@@ -665,15 +665,13 @@ export class HappeningsService {
     }
 
     async getHappeningType(id: number): Promise<HappeningType> {
-        return (
-            await this.prismaService.happening.findFirst({
-                where: {
-                    id,
-                },
-                select: {
-                    type: true,
-                },
-            })
-        )?.type!;
+        return (await this.prismaService.happening.findFirst({
+            where: {
+                id,
+            },
+            select: {
+                type: true,
+            },
+        }))!.type!;
     }
 }

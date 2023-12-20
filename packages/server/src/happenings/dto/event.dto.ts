@@ -23,7 +23,7 @@ export class EventDTO {
     startAt: string;
 
     @IsNumberString()
-    place: number;
+    place: string;
 
     @IsDateString()
     @IsOptional()
