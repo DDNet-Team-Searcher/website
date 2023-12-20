@@ -6,6 +6,7 @@ import { Notification } from '@app/shared/types/Notification.type';
 import { NotificationJson } from '@app/shared/types/Notification.type';
 import { WebsocketsGateway } from 'src/websockets/websockets.gateway';
 import { Happenings } from '@app/shared/types/Happening.type';
+import { getAvatarUrl } from 'src/utils/user.util';
 
 @Injectable()
 export class NotificationsService {
@@ -80,7 +81,10 @@ export class NotificationsService {
             }))!; //NOTE: this is fine
 
             return {
-                author,
+                author: {
+                    username: author.username,
+                    avatar: getAvatarUrl(author.username),
+                },
                 id: notification.id,
                 type: notification.type as
                     | NotifType.AddedInTeam
@@ -109,7 +113,10 @@ export class NotificationsService {
             }))!; //NOTE: this is fine
 
             return {
-                author,
+                author: {
+                    username: author.username,
+                    avatar: getAvatarUrl(author.avatar),
+                },
                 id: notification.id,
                 type: notification.type as NotifType.Followage,
                 seen: notification.seen,
@@ -148,7 +155,10 @@ export class NotificationsService {
             }))!; //NOTE: this is fine
 
             return {
-                author,
+                author: {
+                    username: author.username,
+                    avatar: getAvatarUrl(author.avatar),
+                },
                 id: notification.id,
                 type: notification.type as NotifType.InterestedInHappening,
                 seen: notification.seen,
