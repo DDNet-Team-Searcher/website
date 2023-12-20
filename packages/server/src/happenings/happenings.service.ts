@@ -32,7 +32,7 @@ export class HappeningsService {
         private readonly serversService: ServersService,
     ) {}
 
-    async createRun(data: RunDTO & { authorId: number }) {
+    async createRun(data: RunDTO & { authorId: number }): Promise<Happening> {
         return await this.prismaService.happening.create({
             data: {
                 ...data,
@@ -54,7 +54,7 @@ export class HappeningsService {
             authorId: number;
             thumbnail: Express.Multer.File | null;
         },
-    ) {
+    ): Promise<Happening> {
         let filename: string | null = null;
 
         if (data.thumbnail) {
@@ -80,7 +80,7 @@ export class HappeningsService {
         });
     }
 
-    async updateRun(runId: number, data: RunDTO) {
+    async updateRun(runId: number, data: RunDTO): Promise<void> {
         await this.prismaService.happening.update({
             where: {
                 id: runId,

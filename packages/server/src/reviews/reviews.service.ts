@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getAvatarUrl } from 'src/utils/user.util';
+import { Review } from '@app/shared/types/Review.type';
 
 @Injectable()
 export class ReviewsService {
     constructor(private readonly prismaService: PrismaService) {}
 
-    async getReviewsByHappeningId(happeningId: number) {
+    async getReviewsByHappeningId(happeningId: number): Promise<Review[]> {
+        const res: Review[] = [];
+
         const reviews = await this.prismaService.review.findMany({
             where: {
                 happeningId,
@@ -34,13 +37,23 @@ export class ReviewsService {
         });
 
         for (const review of reviews) {
-            review.reviewedUser.avatar = getAvatarUrl(
-                review.reviewedUser.avatar,
-            );
-            review.author.avatar = getAvatarUrl(review.author.avatar);
+            //TODO: refactor this bs, coz all these clones just to satisty ts
+            //to have createdAt as `string` instead of `Date`
+            res.push({
+                ...review,
+                createdAt: review.createdAt.toString(),
+                reviewedUser: {
+                    ...review.reviewedUser,
+                    avatar: getAvatarUrl(review.reviewedUser.avatar),
+                },
+                author: {
+                    ...review.reviewedUser,
+                    avatar: getAvatarUrl(review.author.avatar),
+                },
+            });
         }
 
-        return reviews;
+        return res;
     }
 
     async createReview({

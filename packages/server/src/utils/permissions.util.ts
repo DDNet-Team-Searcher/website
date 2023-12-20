@@ -26,7 +26,7 @@ export function getPermissions(
 }
 
 //TODO: rename it
-export function objToInt(obj: User['permissions']) {
+export function objToInt(obj: User['permissions']): number {
     return (
         +obj.canBan |
         (+obj.canManageRoles << 1) |

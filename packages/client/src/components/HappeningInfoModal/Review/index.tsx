@@ -1,4 +1,4 @@
-import { Review as ReviewT } from '@/types/Review.type';
+import { Review as ReviewT } from '@app/shared/types/Review.type';
 import Link from 'next/link';
 import { timeAgo } from '@/utils/timeago';
 
