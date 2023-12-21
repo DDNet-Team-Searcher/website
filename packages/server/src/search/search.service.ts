@@ -1,30 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Run, Event } from '@app/shared/types/Happening.type';
+import { SearchResult } from '@app/shared/types/SearchResult.type';
 import { UsersService } from 'src/users/users.service';
 import { HappeningType } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { getAvatarUrl } from 'src/utils/user.util';
 
 const PER_PAGE = 5;
-
-type User = {
-    username: string;
-    avatar: string | null;
-    tier: number;
-    id: number;
-    verified: boolean;
-    _count: {
-        followers: number;
-        following: number;
-    };
-    isFollowing: boolean;
-};
-
-type SearchResult =
-    | ({ type: 'user' } & User)
-    | ({ type: 'run' } & Run)
-    | ({ type: 'event' } & Event);
 
 @Injectable()
 export class SearchService {

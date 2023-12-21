@@ -1,6 +1,6 @@
 import { setCredentails, setIsAuthed } from '@/store/slices/user';
 import {
-    GetProfile,
+    GetProfileResponse,
     LoginUserRequest,
     LoginUserResponse,
     LogoutUserResponse,
@@ -15,7 +15,7 @@ import {
     UpdatePasswordResponse,
     UpdateUsernameRequest,
     UpdateUsernameResponse,
-} from '@/types/api.type';
+} from '@app/shared/types/api.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '.';
 
@@ -93,7 +93,7 @@ export const usersAPI = createApi({
                 body,
             }),
         }),
-        getProfile: build.query<GetProfile, number>({
+        getProfile: build.query<GetProfileResponse, number>({
             query: (userId) => `/profile/${userId}`,
         }),
         followUser: build.mutation<{}, number>({

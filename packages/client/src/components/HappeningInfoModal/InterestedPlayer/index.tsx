@@ -1,5 +1,5 @@
 import { Run, Event, Status } from '@app/shared/types/Happening.type';
-import { InterestedPlayer as InterestedPlayerT } from '@/types/api.type';
+import { InterestedPlayer as InterestedPlayerT } from '@app/shared/types/api.type';
 import classNames from 'classnames';
 import { useState } from 'react';
 import Link from 'next/link';

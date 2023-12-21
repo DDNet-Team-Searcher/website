@@ -33,7 +33,7 @@ import { BanModal } from './BanModal';
 import { hint } from '@/store/slices/hints';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { BanUserResponse } from '@/types/api.type';
+import { BanUserResponse } from '@app/shared/types/api.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 
 type OwnProps = {

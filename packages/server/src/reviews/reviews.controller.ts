@@ -14,6 +14,10 @@ import { ReviewsService } from './reviews.service';
 import { Innocent } from 'src/decorators/innocent.decorator';
 import { InnocentGuard } from 'src/guards/innocent.guard';
 import { AuthedRequest } from 'src/types/AuthedRequest.type';
+import {
+    CreateReviewResponse,
+    GetReviewsResponse,
+} from '@app/shared/types/api.type';
 
 @UseGuards(InnocentGuard)
 @Controller()
@@ -21,7 +25,9 @@ export class ReviewsController {
     constructor(private reviewsService: ReviewsService) {}
 
     @Get()
-    async getReviews(@Param('happeningId') happeningId: string) {
+    async getReviews(
+        @Param('happeningId') happeningId: string,
+    ): Promise<GetReviewsResponse> {
         try {
             const reviews = await this.reviewsService.getReviewsByHappeningId(
                 parseInt(happeningId),
@@ -47,7 +53,7 @@ export class ReviewsController {
         @Param('happeningId') happeningId: string,
         @Param('userId') userId: string,
         @Body() body: CreateReviewDTO,
-    ) {
+    ): Promise<CreateReviewResponse> {
         try {
             await this.reviewsService.createReview({
                 happeningId: parseInt(happeningId),

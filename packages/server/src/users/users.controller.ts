@@ -8,6 +8,7 @@ import {
     Get,
     HttpException,
     InternalServerErrorException,
+    NotFoundException,
     Param,
     Post,
     Put,
@@ -32,6 +33,20 @@ import { Innocent } from 'src/decorators/innocent.decorator';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { MailerService } from '@nestjs-modules/mailer';
 import { AuthedRequest } from 'src/types/AuthedRequest.type';
+import {
+    BanUserResponse,
+    GetProfileResponse,
+    LoginUserResponse,
+    LogoutUserResponse,
+    RegisterUserResponse,
+    ReportUserResponse,
+    UpdateAvatarResponse,
+    UpdateEmailRespone as UpdateEmailResponse,
+    UpdatePasswordResponse,
+    UpdateUsernameRequest,
+    UpdateUsernameResponse,
+} from '@app/shared/types/api.type';
+import { NotFoundError } from 'rxjs';
 
 @Controller()
 export class UsersController {
@@ -42,7 +57,10 @@ export class UsersController {
     ) {}
 
     @Post('/register')
-    async register(@Body() data: RegisterUserDTO, @I18n() i18n: I18nContext) {
+    async register(
+        @Body() data: RegisterUserDTO,
+        @I18n() i18n: I18nContext,
+    ): Promise<RegisterUserResponse> {
         const isUserAlreayExists = await this.usersService.isUserExists({
             where: {
                 email: data.email,
@@ -90,7 +108,10 @@ export class UsersController {
     }
 
     @Get('/activate-account/:code')
-    async activateAccount(@Res() res: Response, @Param('code') code: string) {
+    async activateAccount(
+        @Res() res: Response,
+        @Param('code') code: string,
+    ): Promise<void> {
         const result = await this.usersService.activateAccount(code);
 
         //TODO: do smth with these hardcoded urls
@@ -106,7 +127,7 @@ export class UsersController {
         @Body() data: LoginUserDTO,
         @Res({ passthrough: true }) res: Response,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<LoginUserResponse> {
         const isUserExists = await this.usersService.isUserExists({
             where: {
                 email: data.email,
@@ -151,7 +172,9 @@ export class UsersController {
 
     @Protected()
     @Delete('/logout')
-    async logout(@Res({ passthrough: true }) res: Response) {
+    async logout(
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<LogoutUserResponse> {
         res.clearCookie('token');
 
         return {
@@ -167,7 +190,7 @@ export class UsersController {
     async updateAvatar(
         @UploadedFile() avatar: Express.Multer.File,
         @Req() req: AuthedRequest,
-    ) {
+    ): Promise<UpdateAvatarResponse> {
         try {
             const filename = await this.usersService.updateAvatar(
                 req.user.id,
@@ -182,6 +205,7 @@ export class UsersController {
             };
         } catch (e) {
             console.log(e);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -192,7 +216,7 @@ export class UsersController {
         @Req() req: AuthedRequest,
         @Body() data: ChangeUsernameDTO,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<UpdateUsernameResponse> {
         try {
             const isSuccess = await this.usersService.updateUsername(
                 req.user.id,
@@ -226,7 +250,7 @@ export class UsersController {
         @Req() req: AuthedRequest,
         @Body() data: ChangeEmailDTO,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<UpdateEmailResponse> {
         try {
             const isSuccess = await this.usersService.updateEmail(
                 req.user.id,
@@ -260,7 +284,7 @@ export class UsersController {
         @Req() req: AuthedRequest,
         @Body() data: ChangePasswordDTO,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<UpdatePasswordResponse> {
         try {
             const isSuccess = await this.usersService.updatePassword(
                 req.user.id,
@@ -287,6 +311,7 @@ export class UsersController {
         }
     }
 
+    //TODO: add return type to this
     @Protected()
     @Get('/credentials')
     async getAuthedUserData(@Req() req: Request & { user: { id: number } }) {
@@ -304,7 +329,10 @@ export class UsersController {
 
     @Protected()
     @Get('/profile/:id')
-    async getUserProfile(@Param('id') id: string, @Req() req: AuthedRequest) {
+    async getUserProfile(
+        @Param('id') id: string,
+        @Req() req: AuthedRequest,
+    ): Promise<GetProfileResponse> {
         const profile = await this.usersService.getUserProfile(
             req.user.id,
             parseInt(id),
@@ -318,8 +346,11 @@ export class UsersController {
                 },
             };
         }
+
+        throw new NotFoundException();
     }
 
+    //TODO: retyurn tyyypes
     @Innocent()
     @Protected()
     @Put('/user/:id/follow')
@@ -341,7 +372,7 @@ export class UsersController {
         @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<ReportUserResponse> {
         const isAlreadyReported = await this.usersService.isReported(
             parseInt(id),
             req.user.id,
@@ -371,7 +402,7 @@ export class UsersController {
         @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
-    ) {
+    ): Promise<BanUserResponse> {
         const isBanned = await this.usersService.isBanned(parseInt(id));
 
         if (isBanned) {
@@ -391,6 +422,7 @@ export class UsersController {
         };
     }
 
+    //TODO: return tyyyypes
     @Protected()
     @Post('/user/:id/unban')
     async unban(@Param('id') id: string, @I18n() i18n: I18nContext) {

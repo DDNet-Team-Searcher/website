@@ -8,7 +8,7 @@ import {
     CreateEventResponse,
     CreateRunResponse,
     UpdateHappening,
-} from '@/types/api.type';
+} from '@app/shared/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';

@@ -16,7 +16,7 @@ import {
     StartHappeningResponse,
     UpdateIsPlayerInTeamRequest,
     UpdateIsPlayerInTeamResponse,
-} from '@/types/api.type';
+} from '@app/shared/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { createApi } from '@reduxjs/toolkit/dist/query/react';
 import { baseQuery } from '.';

@@ -1,5 +1,5 @@
 import { Event, Run, Status } from '@app/shared/types/Happening.type';
-import { SearchResult } from '@/types/SearchResult.type';
+import { SearchResult } from '@app/shared/types/SearchResult.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type HappeningsState = {

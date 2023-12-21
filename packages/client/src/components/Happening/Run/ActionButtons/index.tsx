@@ -7,7 +7,7 @@ import {
 import { hint } from '@/store/slices/hints';
 import { Happenings, Status } from '@app/shared/types/Happening.type';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { StartHappeningResponse } from '@/types/api.type';
+import { StartHappeningResponse } from '@app/shared/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { RunProps } from '../types';

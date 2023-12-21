@@ -1,12 +1,15 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { NotificationSeenResponse } from '@app/shared/types/api.type';
 
 @Controller('/notifications')
 export class NotificationsController {
     constructor(private readonly notificationsService: NotificationsService) {}
 
     @Get('/:id')
-    async markAsSeen(@Param('id') id: string) {
+    async markAsSeen(
+        @Param('id') id: string,
+    ): Promise<NotificationSeenResponse> {
         await this.notificationsService.markAsSeen(parseInt(id));
 
         return {

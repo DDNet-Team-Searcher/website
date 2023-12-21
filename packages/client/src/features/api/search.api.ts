@@ -1,4 +1,7 @@
-import { SearchQueryRequest, SearchQueryResponse } from '@/types/api.type';
+import {
+    SearchQueryRequest,
+    SearchQueryResponse,
+} from '@app/shared/types/api.type';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '.';
 

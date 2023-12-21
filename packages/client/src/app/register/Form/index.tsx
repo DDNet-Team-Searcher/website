@@ -3,7 +3,7 @@ import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useRegisterMutation } from '@/features/api/users.api';
 import { hint } from '@/store/slices/hints';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { RegisterUserResponse } from '@/types/api.type';
+import { RegisterUserResponse } from '@app/shared/types/api.type';
 import { useForm } from 'react-hook-form';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Step1 } from './Step1';

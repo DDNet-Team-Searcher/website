@@ -1,7 +1,7 @@
 import { setNotificationSeen } from '@/store/slices/user';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '.';
-import { NotificationSeenResponse } from '@/types/api.type';
+import { NotificationSeenResponse } from '@app/shared/types/api.type';
 
 export const notificationsApi = createApi({
     reducerPath: 'notificationsApi',

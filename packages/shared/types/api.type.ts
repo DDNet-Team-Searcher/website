@@ -1,7 +1,7 @@
-import type { Event, Run } from '@app/shared/types/Happening.type';
-import type { Profile } from '@app/shared/types/Profile.type';
+import type { Event, Run } from './Happening.type';
+import type { Profile } from './Profile.type';
 import type { Response as ApiResponse } from './Response.type';
-import type { Review } from '@app/shared/types/Review.type';
+import type { Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
 
 export type RegisterUserRequest = {
@@ -85,7 +85,7 @@ export type GetInterestedUsersResponse = ApiResponse<
 
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
-export type GetProfile = ApiResponse<{ profile: Profile }, null>;
+export type GetProfileResponse = ApiResponse<{ profile: Profile }, null>;
 
 export type UpdateAvatarResponse = ApiResponse<
     { avatar: string | null },

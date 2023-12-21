@@ -18,7 +18,7 @@ import { Place } from '../Place';
 import { setHappeningInfoModalData } from '@/store/slices/app';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { StartHappeningResponse } from '@/types/api.type';
+import { StartHappeningResponse } from '@app/shared/types/api.type';
 import { ActionButtons } from '../ActionButtons';
 import Link from 'next/link';
 import { BaseHappeningProps } from '../types';

@@ -1,7 +1,7 @@
 import { useLogoutMutation } from '@/features/api/users.api';
 import { clearData } from '@/store/slices/user';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { LogoutUserResponse } from '@/types/api.type';
+import { LogoutUserResponse } from '@app/shared/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';

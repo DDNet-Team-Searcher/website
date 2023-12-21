@@ -1,5 +1,5 @@
 import { useUpdateEmailMutation } from '@/features/api/users.api';
-import { UpdateEmailRespone } from '@/types/api.type';
+import { UpdateEmailRespone } from '@app/shared/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
