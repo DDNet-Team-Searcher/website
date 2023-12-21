@@ -13,17 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. js-lingui-explicit-id
 #: src/components/Header/Notifications/Notification/index.tsx:34
 msgid "notification.interested_run"
 msgstr ""
 
-#. js-lingui-explicit-id
 #: src/components/Header/Notifications/Notification/index.tsx:39
 msgid "notification.interested_event"
 msgstr ""
 
-#. js-lingui-explicit-id
 #: src/components/Header/Notifications/Notification/index.tsx:45
 msgid "notification.no_empty_servers"
 msgstr ""
