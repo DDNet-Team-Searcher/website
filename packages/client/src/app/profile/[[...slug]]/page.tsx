@@ -94,7 +94,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const follow = async () => {
         try {
             if (profile.id) {
-                followUser(profile.id);
+                await followUser(profile.id);
                 refetchUserProfile();
             }
         } catch (e) {
@@ -121,7 +121,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const unban = async () => {
         try {
             const response = await unbanUser({
-                userId: id,
+                userId: parseInt(id),
             }).unwrap();
 
             if (response.status === 'success') {

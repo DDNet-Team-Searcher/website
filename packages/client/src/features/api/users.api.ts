@@ -1,6 +1,10 @@
 import { setCredentails, setIsAuthed } from '@/store/slices/user';
 import {
+    BanUserRequest,
+    BanUserResponse,
+    FollowUserResponse,
     GetProfileResponse,
+    GetUserCredentialsResponse,
     LoginUserRequest,
     LoginUserResponse,
     LogoutUserResponse,
@@ -8,6 +12,8 @@ import {
     RegisterUserResponse,
     ReportUserRequest,
     ReportUserResponse,
+    UnbanUserRequest,
+    UnbanUserResponse,
     UpdateAvatarResponse,
     UpdateEmailRequest,
     UpdateEmailRespone,
@@ -43,13 +49,13 @@ export const usersAPI = createApi({
                 method: 'DELETE',
             }),
         }),
-        getCredentials: build.query<{ data: any }, void>({
+        getCredentials: build.query<GetUserCredentialsResponse, void>({
             query: () => `/credentials`,
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
 
-                    if (data.data) {
+                    if (data.status === 'success' && data.data) {
                         dispatch(setCredentails(data.data.user));
                         dispatch(setIsAuthed(true));
                     }
@@ -96,7 +102,7 @@ export const usersAPI = createApi({
         getProfile: build.query<GetProfileResponse, number>({
             query: (userId) => `/profile/${userId}`,
         }),
-        followUser: build.mutation<{}, number>({
+        followUser: build.mutation<FollowUserResponse, number>({
             query: (userId) => ({
                 url: `user/${userId}/follow`,
                 method: 'PUT',
@@ -109,14 +115,14 @@ export const usersAPI = createApi({
                 body: { reason },
             }),
         }),
-        banUser: build.mutation({
+        banUser: build.mutation<BanUserResponse, BanUserRequest>({
             query: ({ userId, reason }) => ({
                 url: `user/${userId}/ban`,
                 method: 'POST',
                 body: { reason },
             }),
         }),
-        unbanUser: build.mutation({
+        unbanUser: build.mutation<UnbanUserResponse, UnbanUserRequest>({
             query: ({ userId }) => ({
                 url: `user/${userId}/unban`,
                 method: 'POST',

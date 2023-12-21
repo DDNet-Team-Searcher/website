@@ -7,7 +7,7 @@ import { hint } from '@/store/slices/hints';
 import {
     CreateEventResponse,
     CreateRunResponse,
-    UpdateHappening,
+    UpdateHappeningResponse,
 } from '@app/shared/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
@@ -173,8 +173,8 @@ export function CreateAndUpdateHappeningModal({
                     title: string;
                     mapName: string;
                     startAt: string;
-                    thumbnail: null | File;
-                    description: string | null;
+                    thumbnail: File | null | undefined;
+                    description: string | null | undefined;
                     endAt?: string;
                 };
 
@@ -202,7 +202,7 @@ export function CreateAndUpdateHappeningModal({
                     }
                 } catch (err) {
                     const error = (err as FetchBaseQueryError)
-                        .data as ExcludeSuccess<UpdateHappening>;
+                        .data as ExcludeSuccess<UpdateHappeningResponse>;
 
                     handleFormError(error);
                 }
@@ -226,7 +226,7 @@ export function CreateAndUpdateHappeningModal({
                     }
                 } catch (err) {
                     const error = (err as FetchBaseQueryError)
-                        .data as ExcludeSuccess<UpdateHappening>;
+                        .data as ExcludeSuccess<UpdateHappeningResponse>;
 
                     handleFormError(error);
                 }

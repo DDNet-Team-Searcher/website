@@ -14,6 +14,8 @@ import {
     GetReviewsResponse,
     SetIsInterestedInHappeningResponse,
     StartHappeningResponse,
+    UpdateHappeningRequest,
+    UpdateHappeningResponse,
     UpdateIsPlayerInTeamRequest,
     UpdateIsPlayerInTeamResponse,
 } from '@app/shared/types/api.type';
@@ -39,7 +41,10 @@ export const happeningsApi = createApi({
                 body: intoFormData(body),
             }),
         }),
-        updateHappening: build.mutation<any, { id: number; data: any }>({
+        updateHappening: build.mutation<
+            UpdateHappeningResponse,
+            UpdateHappeningRequest
+        >({
             query: ({ id, data }) => ({
                 url: `/${id}/update`,
                 method: 'PUT',

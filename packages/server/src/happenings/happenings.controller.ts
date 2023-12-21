@@ -39,6 +39,7 @@ import {
     GetInterestedUsersResponse,
     SetIsInterestedInHappeningResponse,
     StartHappeningResponse,
+    UpdateHappeningResponse,
     UpdateIsPlayerInTeamResponse,
 } from '@app/shared/types/api.type';
 
@@ -113,7 +114,6 @@ export class HappeningsController {
         }
     }
 
-    //NOTE: return tyyyyypes
     @Innocent()
     @Protected()
     @Author('happening')
@@ -123,7 +123,7 @@ export class HappeningsController {
         @UploadedFile() file: Express.Multer.File,
         @Body() body,
         @Param('id') id: string,
-    ) {
+    ): Promise<UpdateHappeningResponse> {
         const happeningId = parseInt(id);
 
         const happeningType = await this.happeningsService.getHappeningType(
@@ -351,10 +351,11 @@ export class HappeningsController {
         };
     }
 
-    //TODO: return types
     @Protected()
     @Get('/:id/interested')
-    async getHappeningInterestedPlayers(@Param('id') id: string) {
+    async getHappeningInterestedPlayers(
+        @Param('id') id: string,
+    ): Promise<GetInterestedUsersResponse> {
         const players =
             await this.happeningsService.getHappeningInterestedPlayers(
                 parseInt(id),
@@ -362,7 +363,7 @@ export class HappeningsController {
 
         return {
             status: 'success',
-            data: players[0],
+            data: players[0]!,
         };
     }
 

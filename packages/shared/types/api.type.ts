@@ -3,6 +3,7 @@ import type { Profile } from './Profile.type';
 import type { Response as ApiResponse } from './Response.type';
 import type { Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
+import { User } from './User.type';
 
 export type RegisterUserRequest = {
     username: string;
@@ -21,6 +22,8 @@ export type LoginUserRequest = {
 export type LoginUserResponse = ApiResponse<null, LoginUserRequest>;
 
 export type LogoutUserResponse = ApiResponse<null, null>;
+
+export type GetUserCredentialsResponse = ApiResponse<{ user: User }, null>;
 
 export type CreateRunRequest = {
     mapName: string;
@@ -49,7 +52,23 @@ export type CreateEventResponse = ApiResponse<
     Omit<CreateEventRequest, 'startAt' | 'endAt'>
 >;
 
-export type UpdateHappening = ApiResponse<null, { [key: string]: string }>;
+export type UpdateHappeningRequest = {
+    id: number;
+    data: Partial<{
+        place: number;
+        mapName: string;
+        teamSize: number;
+        startDate: string;
+        startTime: string;
+        description: string | null;
+        endDate: string;
+        endTime: string;
+        title: string;
+        thumbnail: null | File;
+    }>;
+};
+
+export type UpdateHappeningResponse = ApiResponse<null, { [key: string]: string }>;
 
 export type StartHappeningResponse = ApiResponse<
     { connectString: string | null },
@@ -77,11 +96,19 @@ export type GetInterestedUsersResponse = ApiResponse<
     {
         interestedPlayers: InterestedPlayer[];
         _count: {
-            InterestedPlayers: number;
+            interestedPlayers: number;
         };
     },
     null
 >;
+
+export type FollowUserResponse = ApiResponse<null, null>;
+
+export type UnbanUserResponse = ApiResponse<null, null>;
+
+export type UnbanUserRequest = {
+    userId: number;
+};
 
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 

@@ -35,18 +35,19 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { AuthedRequest } from 'src/types/AuthedRequest.type';
 import {
     BanUserResponse,
+    FollowUserResponse,
     GetProfileResponse,
+    GetUserCredentialsResponse,
     LoginUserResponse,
     LogoutUserResponse,
     RegisterUserResponse,
     ReportUserResponse,
+    UnbanUserResponse,
     UpdateAvatarResponse,
     UpdateEmailRespone as UpdateEmailResponse,
     UpdatePasswordResponse,
-    UpdateUsernameRequest,
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
-import { NotFoundError } from 'rxjs';
 
 @Controller()
 export class UsersController {
@@ -311,10 +312,11 @@ export class UsersController {
         }
     }
 
-    //TODO: add return type to this
     @Protected()
     @Get('/credentials')
-    async getAuthedUserData(@Req() req: Request & { user: { id: number } }) {
+    async getAuthedUserData(
+        @Req() req: Request & { user: { id: number } },
+    ): Promise<GetUserCredentialsResponse> {
         const credentials = await this.usersService.getUserCredentials(
             req.user.id,
         );
@@ -350,11 +352,13 @@ export class UsersController {
         throw new NotFoundException();
     }
 
-    //TODO: retyurn tyyypes
     @Innocent()
     @Protected()
     @Put('/user/:id/follow')
-    async follow(@Param('id') id: string, @Req() req: AuthedRequest) {
+    async follow(
+        @Param('id') id: string,
+        @Req() req: AuthedRequest,
+    ): Promise<FollowUserResponse> {
         await this.usersService.follow(req.user.id, parseInt(id));
 
         return {
@@ -422,10 +426,12 @@ export class UsersController {
         };
     }
 
-    //TODO: return tyyyypes
     @Protected()
     @Post('/user/:id/unban')
-    async unban(@Param('id') id: string, @I18n() i18n: I18nContext) {
+    async unban(
+        @Param('id') id: string,
+        @I18n() i18n: I18nContext,
+    ): Promise<UnbanUserResponse> {
         const isBanned = await this.usersService.isBanned(parseInt(id));
 
         if (!isBanned) {
