@@ -15,6 +15,8 @@ import {
 import { useState } from 'react';
 import { getMapUrl } from '@/utils/getMapUrl';
 import { HappeningPeopleIcon } from '@/components/ui/Icons/HappeningPeople';
+import { cropString } from '@/utils/cropString';
+import { MAX_DESCRIPTION_LENGTH } from '../constants';
 
 export function Run({
     className,
@@ -100,7 +102,7 @@ export function Run({
                 <Place place={place} />
                 <Title title={mapName} run={run} />
                 <p className="mt-1 text-medium-emphasis break-words">
-                    {description}
+                    {cropString(description || "", MAX_DESCRIPTION_LENGTH)}
                 </p>
                 <div className="mt-auto flex items-center justify-between">
                     <Link href={`/profile/${authorId}`}>

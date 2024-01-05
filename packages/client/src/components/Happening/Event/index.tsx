@@ -31,6 +31,8 @@ import { getMapUrl } from '@/utils/getMapUrl';
 import { HappeningPeopleIcon } from '@/components/ui/Icons/HappeningPeople';
 import { BellIcon } from '@/components/ui/Icons/Bell';
 import { CheckMarkIcon } from '@/components/ui/Icons/CheckMark';
+import { MAX_DESCRIPTION_LENGTH } from '../constants';
+import { cropString } from '@/utils/cropString';
 
 type OwnProps = BaseHappeningProps & {
     event: EventType;
@@ -214,12 +216,12 @@ export function Event({
                             {title}
                         </p>
                         <p className="mt-1 text-medium-emphasis">
-                            {description}
+                            {cropString(description || "", MAX_DESCRIPTION_LENGTH)}
                         </p>
                     </div>
                     <img
                         src={thumbnailUrl}
-                        className="max-w-[220px] w-full max-h-[95px] rounded-[10px] object-cover"
+                        className="max-w-[220px] w-full shrink-0 ml-3 max-h-[95px] rounded-[10px] object-cover"
                         alt="map thumbnail"
                     />
                 </div>
