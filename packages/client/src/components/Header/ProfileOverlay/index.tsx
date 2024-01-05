@@ -64,6 +64,7 @@ export const ProfileOverlay = forwardRef(
                         </Link>
                     </li>
                 ))}
+                {/*NOTE: make it visible only for certain users? */}
                 <li className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer">
                     <Link href="/admin">Link for big bois</Link>
                 </li>

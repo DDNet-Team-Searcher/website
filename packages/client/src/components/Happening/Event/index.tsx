@@ -28,6 +28,9 @@ import {
 } from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
 import { getMapUrl } from '@/utils/getMapUrl';
+import { HappeningPeopleIcon } from '@/components/ui/Icons/HappeningPeople';
+import { BellIcon } from '@/components/ui/Icons/Bell';
+import { CheckMarkIcon } from '@/components/ui/Icons/CheckMark';
 
 type OwnProps = BaseHappeningProps & {
     event: EventType;
@@ -196,7 +199,7 @@ export function Event({
                         <Avatar src={avatar} username={username} />
                     </Link>
                     <div className="bg-primary-3 text-high-emphasis px-[7px] py-[3px] rounded-full flex items-center ml-2.5">
-                        <img src="/run-people.svg" />
+                        <HappeningPeopleIcon color="var(--high-emphasis)" />
                         <span className="text-[12px] ml-1">
                             {interestedPlayers}
                         </span>
@@ -244,14 +247,14 @@ export function Event({
                             )}
                             onClick={setIsInterestedCb(id)}
                         >
-                            <img
-                                className="mr-2.5"
-                                src={
-                                    isInterested
-                                        ? '/check-mark.png'
-                                        : '/run-bell.svg'
-                                }
-                            />
+                            {isInterested ?
+                                <CheckMarkIcon className="mr-2.5" color="var(--app-primary-1)" />
+                                :
+                                <BellIcon
+                                    className="mr-2.5"
+                                    color="var(--high-emphasis)"
+                                />
+                            }
                             Interested
                         </button>
                     </div>

@@ -17,6 +17,7 @@ import { InterestedPlayer } from './InterestedPlayer';
 import { Review } from './Review';
 import { setHappeningInfoModalData } from '@/store/slices/app';
 import { getMapUrl } from '@/utils/getMapUrl';
+import { MapIcon } from '../ui/Icons/Map';
 
 export function HappeningInfoModal() {
     const dispatch = useAppDispatch();
@@ -145,6 +146,10 @@ export function HappeningInfoModal() {
                         {happening.description}
                     </p>
                     <Place place={happening.place} />
+                    <div className="flex">
+                        <MapIcon color="var(--medium-emphasis)" />
+                        <span className="ml-2.5">{happening.mapName}</span>
+                    </div>
                     <div className="text-medium-emphasis flex mt-2.5 items-center">
                         <Avatar
                             src={happening.author.avatar}

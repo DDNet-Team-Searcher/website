@@ -1,3 +1,5 @@
+import { BellIcon } from '@/components/ui/Icons/Bell';
+import { CheckMarkIcon } from '@/components/ui/Icons/CheckMark';
 import { useSetIsInterestedInHappeningMutation } from '@/features/api/happenings.api';
 import {
     setIsInterestedInPopularHappening,
@@ -12,9 +14,9 @@ type OwnProps = {
     runId: number;
 
     setIsInterestedDispatch:
-        | typeof setIsInterestedInSearchResultHappening
-        | typeof setIsInterestedInPopularHappening
-        | typeof setIsInterestedInHappening;
+    | typeof setIsInterestedInSearchResultHappening
+    | typeof setIsInterestedInPopularHappening
+    | typeof setIsInterestedInHappening;
 };
 
 export function InterestedButton({
@@ -51,12 +53,11 @@ export function InterestedButton({
             )}
             onClick={setIsInterested}
         >
-            <img
-                className="mr-2.5"
-                src={
-                    isUserInterestedInRun ? '/check-mark.png' : '/run-bell.svg'
-                }
-            />
+            {isUserInterestedInRun ?
+                <CheckMarkIcon className="mr-2.5" color="var(--app-primary-1)" />
+                :
+                <BellIcon className="mr-2.5" color="var(--high-emphasis)" />
+            }
             Interested
         </button>
     );

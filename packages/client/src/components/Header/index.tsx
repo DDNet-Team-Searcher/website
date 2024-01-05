@@ -20,6 +20,8 @@ import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
 import { useRouter } from 'next/navigation';
 import { ProfileOverlay } from './ProfileOverlay';
+import { AddIcon } from '../ui/Icons/Add';
+import { NotificationIcon } from '../ui/Icons/Notification';
 
 export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
@@ -178,11 +180,7 @@ export function Header() {
                                 )
                             }
                         >
-                            <img
-                                className="!m-0"
-                                src={'/add.svg'}
-                                alt="add icon"
-                            />
+                            <AddIcon className="!m-0" color="#fff" />
                         </Button>
                         <div
                             ref={ref}
@@ -211,13 +209,13 @@ export function Header() {
                         className="!p-0 max-w-[25px] w-full ml-5 relative"
                         styleType={'bordered'}
                     >
-                        <img
+                        <div
                             onClick={() =>
                                 setIsNotificationOverlayVisible(true)
                             }
-                            src="/notification.svg"
-                            alt="notification icon"
-                        />
+                        >
+                            <NotificationIcon color={'var(--high-emphasis)'} />
+                        </div>
                         {unreadNotificationsCount !== null && (
                             <span
                                 className={classNames(

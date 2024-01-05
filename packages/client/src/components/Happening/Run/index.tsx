@@ -14,6 +14,7 @@ import {
 } from '@/components/CreateAndUpdateHappeningModal';
 import { useState } from 'react';
 import { getMapUrl } from '@/utils/getMapUrl';
+import { HappeningPeopleIcon } from '@/components/ui/Icons/HappeningPeople';
 
 export function Run({
     className,
@@ -90,7 +91,7 @@ export function Run({
                             'bg-primary-3 text-high-emphasis py-[3px] px-[7px] rounded-full flex items-center'
                         }
                     >
-                        <img src="/run-people.svg" />
+                        <HappeningPeopleIcon color="var(--high-emphasis)" />
                         <span className="text-[12px] ml-1">
                             {interestedPlayers}
                         </span>
