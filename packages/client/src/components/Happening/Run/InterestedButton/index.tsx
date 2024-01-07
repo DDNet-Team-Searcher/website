@@ -14,9 +14,9 @@ type OwnProps = {
     runId: number;
 
     setIsInterestedDispatch:
-    | typeof setIsInterestedInSearchResultHappening
-    | typeof setIsInterestedInPopularHappening
-    | typeof setIsInterestedInHappening;
+        | typeof setIsInterestedInSearchResultHappening
+        | typeof setIsInterestedInPopularHappening
+        | typeof setIsInterestedInHappening;
 };
 
 export function InterestedButton({
@@ -53,11 +53,14 @@ export function InterestedButton({
             )}
             onClick={setIsInterested}
         >
-            {isUserInterestedInRun ?
-                <CheckMarkIcon className="mr-2.5" color="var(--app-primary-1)" />
-                :
+            {isUserInterestedInRun ? (
+                <CheckMarkIcon
+                    className="mr-2.5"
+                    color="var(--app-primary-1)"
+                />
+            ) : (
                 <BellIcon className="mr-2.5" color="var(--high-emphasis)" />
-            }
+            )}
             Interested
         </button>
     );

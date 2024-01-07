@@ -2,6 +2,8 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
+import { WinstonModule } from 'nest-winston';
+import { logger } from './logger';
 
 async function bootstrap() {
     process.env.BASE_URL =
@@ -16,6 +18,9 @@ async function bootstrap() {
             origin: `http://${process.env.HOST}:3000`,
             credentials: true,
         },
+        logger: WinstonModule.createLogger({
+            instance: logger,
+        }),
     });
     app.use(cookieParser());
     app.useGlobalPipes(

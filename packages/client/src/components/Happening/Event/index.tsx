@@ -216,7 +216,10 @@ export function Event({
                             {title}
                         </p>
                         <p className="mt-1 text-medium-emphasis">
-                            {cropString(description || "", MAX_DESCRIPTION_LENGTH)}
+                            {cropString(
+                                description || '',
+                                MAX_DESCRIPTION_LENGTH,
+                            )}
                         </p>
                     </div>
                     <img
@@ -249,14 +252,17 @@ export function Event({
                             )}
                             onClick={setIsInterestedCb(id)}
                         >
-                            {isInterested ?
-                                <CheckMarkIcon className="mr-2.5" color="var(--app-primary-1)" />
-                                :
+                            {isInterested ? (
+                                <CheckMarkIcon
+                                    className="mr-2.5"
+                                    color="var(--app-primary-1)"
+                                />
+                            ) : (
                                 <BellIcon
                                     className="mr-2.5"
                                     color="var(--high-emphasis)"
                                 />
-                            }
+                            )}
                             Interested
                         </button>
                     </div>

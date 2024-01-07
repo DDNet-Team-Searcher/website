@@ -6,6 +6,7 @@ import {
     Get,
     HttpException,
     InternalServerErrorException,
+    Logger,
     Param,
     Post,
     Put,
@@ -47,7 +48,10 @@ import {
 @UseGuards(InnocentGuard)
 @Controller()
 export class HappeningsController {
-    constructor(private readonly happeningsService: HappeningsService) {}
+    constructor(
+        private readonly happeningsService: HappeningsService,
+        private readonly logger: Logger,
+    ) {}
 
     @Innocent()
     @Protected()
@@ -301,6 +305,7 @@ export class HappeningsController {
     @Protected()
     @Get('/runs')
     async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
+        this.logger.debug('uwu');
         const ids = await this.happeningsService.getAllRunsIds();
 
         const runs: Run[] = [];

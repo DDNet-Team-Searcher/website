@@ -18,6 +18,8 @@ packages/server/public/happenings/*
 !packages/server/public/happenings/.gitkeep
 packages/server/src/protos/*.ts
 packages/server/.env
+packages/server/logs/*
+!packages/server/logs/.gitkeep
 
 naked-tees
 hentai

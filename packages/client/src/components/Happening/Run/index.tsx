@@ -102,7 +102,7 @@ export function Run({
                 <Place place={place} />
                 <Title title={mapName} run={run} />
                 <p className="mt-1 text-medium-emphasis break-words">
-                    {cropString(description || "", MAX_DESCRIPTION_LENGTH)}
+                    {cropString(description || '', MAX_DESCRIPTION_LENGTH)}
                 </p>
                 <div className="mt-auto flex items-center justify-between">
                     <Link href={`/profile/${authorId}`}>

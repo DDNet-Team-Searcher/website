@@ -1,1 +1,1 @@
-export const MAX_DESCRIPTION_LENGTH = 80
+export const MAX_DESCRIPTION_LENGTH = 80;
