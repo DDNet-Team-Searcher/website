@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
@@ -20,9 +20,21 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ConfigModule } from '@nestjs/config';
 import { RolesModule } from './roles/roles.module';
+import { v4 as uuidV4 } from 'uuid';
+import { ClsModule } from 'nestjs-cls';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
     imports: [
+        ClsModule.forRoot({
+            global: true,
+            middleware: {
+                mount: true,
+                generateId: true,
+                idGenerator: () => uuidV4(),
+            },
+        }),
+        LoggerModule,
         ServeStaticModule.forRoot({
             rootPath: path.join(__dirname, '../public'),
             serveRoot: '/public',

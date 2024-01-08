@@ -305,7 +305,7 @@ export class HappeningsController {
     @Protected()
     @Get('/runs')
     async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
-        this.logger.debug('uwu');
+        this.logger.log('uwu');
         const ids = await this.happeningsService.getAllRunsIds();
 
         const runs: Run[] = [];
