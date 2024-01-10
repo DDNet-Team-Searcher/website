@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     InternalServerErrorException,
+    Logger,
     Param,
     Post,
     Req,
@@ -18,13 +19,18 @@ import {
     CreateReviewResponse,
     GetReviewsResponse,
 } from '@app/shared/types/api.type';
+import { log } from 'src/decorators/log.decorator';
 
 @UseGuards(InnocentGuard)
 @Controller()
 export class ReviewsController {
-    constructor(private reviewsService: ReviewsService) {}
+    constructor(
+        private reviewsService: ReviewsService,
+        private readonly logger: Logger,
+    ) {}
 
     @Get()
+    @log("get happening's reviews")
     async getReviews(
         @Param('happeningId') happeningId: string,
     ): Promise<GetReviewsResponse> {
@@ -40,7 +46,7 @@ export class ReviewsController {
                 },
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error("failed to load happening's reviews"));
             throw new InternalServerErrorException();
         }
     }
@@ -48,6 +54,7 @@ export class ReviewsController {
     @Innocent()
     @Protected()
     @Post('/:userId')
+    @log('create a new review')
     async createReview(
         @Req() req: AuthedRequest,
         @Param('happeningId') happeningId: string,
@@ -68,7 +75,7 @@ export class ReviewsController {
                 data: null,
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to create a new review'));
             throw new InternalServerErrorException();
         }
     }

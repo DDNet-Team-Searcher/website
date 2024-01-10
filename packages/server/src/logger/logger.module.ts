@@ -3,8 +3,6 @@ import { DDTSLoggerService } from './logger.service';
 
 @Global()
 @Module({
-    imports: [],
-    controllers: [],
     providers: [DDTSLoggerService],
     exports: [DDTSLoggerService],
 })

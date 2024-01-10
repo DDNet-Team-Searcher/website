@@ -43,6 +43,7 @@ import {
     UpdateHappeningResponse,
     UpdateIsPlayerInTeamResponse,
 } from '@app/shared/types/api.type';
+import { log } from 'src/decorators/log.decorator';
 
 @UseGuards(AuthorGuard)
 @UseGuards(InnocentGuard)
@@ -51,11 +52,12 @@ export class HappeningsController {
     constructor(
         private readonly happeningsService: HappeningsService,
         private readonly logger: Logger,
-    ) {}
+    ) { }
 
     @Innocent()
     @Protected()
     @Post('/create/run')
+    @log('create a new run')
     async createRun(
         @Req() req: AuthedRequest,
         @Body() data: RunDTO,
@@ -79,7 +81,7 @@ export class HappeningsController {
                 },
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to create a new run'));
             throw new InternalServerErrorException();
         }
     }
@@ -88,6 +90,7 @@ export class HappeningsController {
     @Protected()
     @Post('/create/event')
     @UseInterceptors(FileInterceptor('thumbnail'))
+    @log('create a new event')
     async createEvent(
         @UploadedFile() file: Express.Multer.File,
         @Req() req: AuthedRequest,
@@ -113,7 +116,7 @@ export class HappeningsController {
                 },
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to create a new event'));
             throw new InternalServerErrorException();
         }
     }
@@ -203,6 +206,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/start')
+    @log('start a happening')
     async startHappening(
         @I18n() i18n: I18nContext,
         @Param('id') id: string,
@@ -230,7 +234,7 @@ export class HappeningsController {
                     message: i18n.t('happening.no_empty_servers'),
                 });
             } else {
-                console.log(e);
+                this.logger.error(new Error('failed to start a happening'));
                 throw new InternalServerErrorException();
             }
         }
@@ -240,6 +244,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Get('/:id/end')
+    @log('end happening')
     async endHappening(@Param('id') id: string): Promise<EndHappeningResponse> {
         try {
             await this.happeningsService.endHappening(parseInt(id));
@@ -249,7 +254,7 @@ export class HappeningsController {
                 data: null,
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to end happening'));
             throw new InternalServerErrorException();
         }
     }
@@ -258,6 +263,7 @@ export class HappeningsController {
     @Protected()
     @Author('happening')
     @Delete('/:id/delete')
+    @log('delete happening')
     async deleteHappening(
         @Param('id') id: string,
     ): Promise<DeleteHappeningResponse> {
@@ -269,7 +275,7 @@ export class HappeningsController {
                 data: null,
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to delete happening'));
             throw new InternalServerErrorException();
         }
     }
@@ -305,7 +311,6 @@ export class HappeningsController {
     @Protected()
     @Get('/runs')
     async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
-        this.logger.log('uwu');
         const ids = await this.happeningsService.getAllRunsIds();
 
         const runs: Run[] = [];
@@ -375,6 +380,7 @@ export class HappeningsController {
     @Innocent()
     @Protected()
     @Put('/:happeningId/in-team/:userId')
+    @log('update whether a player in team or not')
     async updateIsPlayerInTeam(
         @Param('happeningId') happeningId: string,
         @Param('userId') userId: string,
@@ -390,7 +396,9 @@ export class HappeningsController {
                 data: null,
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(
+                new Error('failed to update whether a player in team or not')
+            );
             throw new InternalServerErrorException();
         }
     }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AuthModule } from 'src/auth/auth.module';
 import { HappeningsModule } from 'src/happenings/happenings.module';
 import { NotificationsModule } from 'src/notifications/notifications.module';
@@ -9,7 +9,7 @@ import { UsersService } from './users.service';
 @Module({
     imports: [AuthModule, PrismaModule, HappeningsModule, NotificationsModule],
     controllers: [UsersController],
-    providers: [UsersService],
+    providers: [Logger, UsersService],
     exports: [UsersService],
 })
 export class UsersModule {}

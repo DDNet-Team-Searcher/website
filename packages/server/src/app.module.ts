@@ -42,7 +42,6 @@ import { LoggerModule } from './logger/logger.module';
         AuthModule,
         UsersModule,
         HappeningsModule,
-        ReviewsModule,
         RouterModule.register([
             {
                 path: '/happenings',

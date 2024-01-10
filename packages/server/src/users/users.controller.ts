@@ -8,6 +8,7 @@ import {
     Get,
     HttpException,
     InternalServerErrorException,
+    Logger,
     NotFoundException,
     Param,
     Post,
@@ -48,6 +49,7 @@ import {
     UpdatePasswordResponse,
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
+import { log } from 'src/decorators/log.decorator';
 
 @Controller()
 export class UsersController {
@@ -55,20 +57,22 @@ export class UsersController {
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
         private readonly mailerService: MailerService,
-    ) {}
+        private readonly logger: Logger,
+    ) { }
 
     @Post('/register')
+    @log('register a user')
     async register(
         @Body() data: RegisterUserDTO,
         @I18n() i18n: I18nContext,
     ): Promise<RegisterUserResponse> {
-        const isUserAlreayExists = await this.usersService.isUserExists({
+        const doesUserAlreadyExist = await this.usersService.isUserExists({
             where: {
                 email: data.email,
             },
         });
 
-        if (isUserAlreayExists) {
+        if (doesUserAlreadyExist) {
             throw new BadRequestException({
                 status: 'fail',
                 data: null,
@@ -100,7 +104,7 @@ export class UsersController {
                 data: null,
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error('failed to register a user'));
             throw new InternalServerErrorException({
                 status: 'error',
                 message: 'Something bad happened on server xD',
@@ -109,6 +113,7 @@ export class UsersController {
     }
 
     @Get('/activate-account/:code')
+    @log('active user account')
     async activateAccount(
         @Res() res: Response,
         @Param('code') code: string,
@@ -188,6 +193,7 @@ export class UsersController {
     @Protected()
     @Post('/profile/avatar')
     @UseInterceptors(FileInterceptor('avatar'))
+    @log("update user's avatar")
     async updateAvatar(
         @UploadedFile() avatar: Express.Multer.File,
         @Req() req: AuthedRequest,
@@ -205,7 +211,7 @@ export class UsersController {
                 },
             };
         } catch (e) {
-            console.log(e);
+            this.logger.error(new Error("failed to update user's avatar"));
             throw new InternalServerErrorException();
         }
     }
@@ -213,6 +219,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/username')
+    @log("update user's username")
     async updateUsername(
         @Req() req: AuthedRequest,
         @Body() data: ChangeUsernameDTO,
@@ -239,6 +246,7 @@ export class UsersController {
             if (e instanceof HttpException) {
                 throw e;
             } else {
+                this.logger.error(new Error("failed to update user's username"));
                 throw new InternalServerErrorException();
             }
         }
@@ -247,6 +255,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/email')
+    @log("update user's email")
     async updateEmail(
         @Req() req: AuthedRequest,
         @Body() data: ChangeEmailDTO,
@@ -273,6 +282,7 @@ export class UsersController {
             if (e instanceof HttpException) {
                 throw e;
             } else {
+                this.logger.error(new Error("failed to update user's email"));
                 throw new InternalServerErrorException();
             }
         }
@@ -281,6 +291,7 @@ export class UsersController {
     @Innocent()
     @Protected()
     @Post('/profile/password')
+    @log("update user's password")
     async updatePassword(
         @Req() req: AuthedRequest,
         @Body() data: ChangePasswordDTO,
@@ -307,6 +318,9 @@ export class UsersController {
             if (e instanceof HttpException) {
                 throw e;
             } else {
+                this.logger.error(
+                    new Error("failed to update user's password"),
+                );
                 throw new InternalServerErrorException();
             }
         }
