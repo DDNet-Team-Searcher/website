@@ -1,4 +1,4 @@
-import React, { Ref, useState } from "react";
+import React, { Ref, useState } from 'react';
 
 type OwnProps = {
     children: React.ReactNode;
@@ -8,47 +8,56 @@ export type CarouselRef = {
     goTo: (n: number) => void;
     next: () => void;
     prev: () => void;
-}
+};
 
-export const Carousel = React.forwardRef<CarouselRef, OwnProps>(({ children }: OwnProps, ref: Ref<any>) => {
-    const [cur, setCur] = useState(0);
-    let max = React.Children.count(children) - 1;
+export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
+    ({ children }: OwnProps, ref: Ref<any>) => {
+        const [cur, setCur] = useState(0);
+        let max = React.Children.count(children) - 1;
 
-    const next = () => {
-        if (cur + 1 > max) {
-            setCur(0);
-        } else {
-            setCur(cur + 1);
-        }
-    }
+        const next = () => {
+            if (cur + 1 > max) {
+                setCur(0);
+            } else {
+                setCur(cur + 1);
+            }
+        };
 
-    const prev = () => {
-        if (cur == 0) {
-            setCur(max);
-        } else {
-            setCur(cur - 1);
-        }
-    }
+        const prev = () => {
+            if (cur == 0) {
+                setCur(max);
+            } else {
+                setCur(cur - 1);
+            }
+        };
 
-    const goTo = (n: number) => {
-        if (0 <= n && n <= max) {
-            setCur(n);
-        } else {
-            setCur(0);
-        }
-    }
+        const goTo = (n: number) => {
+            if (0 <= n && n <= max) {
+                setCur(n);
+            } else {
+                setCur(0);
+            }
+        };
 
-    React.useImperativeHandle<CarouselRef, CarouselRef>(ref, () => ({
-        goTo,
-        next,
-        prev
-    }), [cur]);
+        React.useImperativeHandle<CarouselRef, CarouselRef>(
+            ref,
+            () => ({
+                goTo,
+                next,
+                prev,
+            }),
+            [cur],
+        );
 
-    return (
-        <div ref={ref} className="overflow-hidden">
-            <div className="[&>*]:min-w-full flex relative duration-200 ease-in-out transition-all" style={{ right: `${cur}00%` }}>
-                {children}
+        return (
+            <div ref={ref} className="overflow-hidden">
+                <div
+                    className="[&>*]:min-w-full flex relative duration-200 ease-in-out transition-all"
+                    style={{ right: `${cur}00%` }}
+                >
+                    {children}
+                </div>
             </div>
-        </div>
-    );
-});
+        );
+    },
+);
