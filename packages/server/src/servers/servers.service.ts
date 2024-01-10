@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Socket } from 'net';
 import { Request_Action, Request } from 'src/protos/request';
@@ -22,7 +22,10 @@ export class ServersService {
     sockets: Map<number, Server>;
     failed: Map<number, Host>;
 
-    constructor(private readonly prismaService: PrismaService) {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly logger: Logger,
+    ) {
         this.sockets = new Map();
         this.failed = new Map();
     }
@@ -37,7 +40,7 @@ export class ServersService {
             await new Promise<void>((res) => {
                 socket.connect(port, ip, async () => {
                     //TODO: fix this bs
-                    console.log(
+                    this.logger.verbose(
                         `TCP connection established with ${ip}:${port}`,
                     );
 
@@ -61,10 +64,7 @@ export class ServersService {
                 });
 
                 socket.on('error', (err) => {
-                    console.log(
-                        `Uh oh, we are fucked lmao. Couldnt connect to ${ip}:${port}`,
-                    );
-                    console.log(err);
+                    this.logger.warn(err);
 
                     this.sockets.delete(id);
                     this.failed.set(servers[i].id, { ip, port });
@@ -72,7 +72,7 @@ export class ServersService {
                 });
 
                 socket.on('close', () => {
-                    console.log('Connection closed');
+                    this.logger.verbose('Connection closed');
                 });
 
                 socket.on('data', async (bytes) => {

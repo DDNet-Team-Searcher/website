@@ -58,7 +58,7 @@ export class UsersController {
         private readonly jwtService: JwtService,
         private readonly mailerService: MailerService,
         private readonly logger: Logger,
-    ) { }
+    ) {}
 
     @Post('/register')
     @log('register a user')
@@ -246,7 +246,9 @@ export class UsersController {
             if (e instanceof HttpException) {
                 throw e;
             } else {
-                this.logger.error(new Error("failed to update user's username"));
+                this.logger.error(
+                    new Error("failed to update user's username"),
+                );
                 throw new InternalServerErrorException();
             }
         }

@@ -52,7 +52,7 @@ export class HappeningsController {
     constructor(
         private readonly happeningsService: HappeningsService,
         private readonly logger: Logger,
-    ) { }
+    ) {}
 
     @Innocent()
     @Protected()
@@ -397,7 +397,7 @@ export class HappeningsController {
             };
         } catch (e) {
             this.logger.error(
-                new Error('failed to update whether a player in team or not')
+                new Error('failed to update whether a player in team or not'),
             );
             throw new InternalServerErrorException();
         }

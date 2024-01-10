@@ -23,7 +23,7 @@ export class RolesController {
     constructor(
         private readonly logger: Logger,
         private readonly rolesService: RolesService,
-    ) { }
+    ) {}
 
     @Protected()
     @Permission(CAN_MANAGE_ROLES)
