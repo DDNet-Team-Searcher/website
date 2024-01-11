@@ -1,14 +1,11 @@
 import { setNotificationSeen } from '@/store/slices/user';
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '.';
 import { NotificationSeenResponse } from '@app/shared/types/api.type';
+import { baseApi } from './base.api';
 
-export const notificationsApi = createApi({
-    reducerPath: 'notificationsApi',
-    baseQuery: baseQuery('notifications'),
+export const notificationsApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         setNotificationSeen: build.query<NotificationSeenResponse, number>({
-            query: (id) => `/${id}`,
+            query: (id) => `/notifications/${id}`,
             onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
                 try {
                     await queryFulfilled;

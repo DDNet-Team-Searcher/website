@@ -22,12 +22,9 @@ import {
     UpdateUsernameRequest,
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '.';
+import { baseApi } from './base.api';
 
-export const usersAPI = createApi({
-    reducerPath: 'usersAPI',
-    baseQuery: baseQuery(),
+export const usersAPI = baseApi.injectEndpoints({
     endpoints: (build) => ({
         register: build.mutation<RegisterUserResponse, RegisterUserRequest>({
             query: (body) => ({

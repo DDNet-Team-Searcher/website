@@ -20,23 +20,22 @@ import {
     UpdateIsPlayerInTeamResponse,
 } from '@app/shared/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
-import { createApi } from '@reduxjs/toolkit/dist/query/react';
-import { baseQuery } from '.';
+import { baseApi } from './base.api';
 
-export const happeningsApi = createApi({
-    reducerPath: 'happeningsApi',
-    baseQuery: baseQuery('happenings'),
+const PREFIX = '/happenings';
+
+export const happeningsApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         createRun: build.mutation<CreateRunResponse, CreateRunRequest>({
             query: (body) => ({
-                url: `/create/run`,
+                url: `${PREFIX}/create/run`,
                 method: 'POST',
                 body,
             }),
         }),
         createEvent: build.mutation<CreateEventResponse, CreateEventRequest>({
             query: (body) => ({
-                url: `/create/event`,
+                url: `${PREFIX}/create/event`,
                 method: 'POST',
                 body: intoFormData(body),
             }),
@@ -46,20 +45,20 @@ export const happeningsApi = createApi({
             UpdateHappeningRequest
         >({
             query: ({ id, data }) => ({
-                url: `/${id}/update`,
+                url: `${PREFIX}/${id}/update`,
                 method: 'PUT',
                 body: intoFormData(data),
             }),
         }),
         startHappening: build.query<StartHappeningResponse, number>({
-            query: (id) => `/${id}/start`,
+            query: (id) => `${PREFIX}/${id}/start`,
         }),
         endHappening: build.query<EndHappeningResponse, number>({
-            query: (id) => `/${id}/end`,
+            query: (id) => `${PREFIX}/${id}/end`,
         }),
         deleteHappening: build.mutation<DeleteHappeningResponse, number>({
             query: (id) => ({
-                url: `/${id}/delete`,
+                url: `${PREFIX}/${id}/delete`,
                 method: 'DELETE',
             }),
         }),
@@ -68,12 +67,12 @@ export const happeningsApi = createApi({
             number
         >({
             query: (id) => ({
-                url: `/${id}/interested`,
+                url: `${PREFIX}/${id}/interested`,
                 method: 'POST',
             }),
         }),
         getAllRuns: build.query<GetAllRunsResponse, void>({
-            query: () => `/runs`,
+            query: () => `${PREFIX}/runs`,
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -87,7 +86,7 @@ export const happeningsApi = createApi({
             },
         }),
         getAllEvents: build.query<GetAllEventsResponse, void>({
-            query: () => `/events`,
+            query: () => `${PREFIX}/events`,
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
@@ -104,14 +103,14 @@ export const happeningsApi = createApi({
             GetInterestedUsersResponse,
             number
         >({
-            query: (id) => `/${id}/interested`,
+            query: (id) => `${PREFIX}/${id}/interested`,
         }),
         updateIsPlayerInTeam: build.mutation<
             UpdateIsPlayerInTeamResponse,
             UpdateIsPlayerInTeamRequest
         >({
             query: ({ userId, happeningId }) => ({
-                url: `/${happeningId}/in-team/${userId}`,
+                url: `${PREFIX}/${happeningId}/in-team/${userId}`,
                 method: 'PUT',
             }),
         }),
@@ -121,7 +120,7 @@ export const happeningsApi = createApi({
         createReview: build.mutation<CreateReviewResponse, CreateReviewRequest>(
             {
                 query: ({ happeningId, userId, data }) => ({
-                    url: `/${happeningId}/reviews/${userId}`,
+                    url: `${PREFIX}/${happeningId}/reviews/${userId}`,
                     method: 'POST',
                     body: data,
                 }),
