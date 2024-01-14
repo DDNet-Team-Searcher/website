@@ -13,7 +13,6 @@ export function VerifiedIcon({ color, className }: OwnProps) {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
-            <title>Verified user</title>
             <rect
                 x="2.9292"
                 y="2.92871"

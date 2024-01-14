@@ -8,6 +8,8 @@ export type CarouselRef = {
     goTo: (n: number) => void;
     next: () => void;
     prev: () => void;
+    current: () => number;
+    count: () => number;
 };
 
 export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
@@ -39,12 +41,22 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
             }
         };
 
+        const current = () => {
+            return cur;
+        }
+
+        const count = () => {
+            return max;
+        }
+
         React.useImperativeHandle<CarouselRef, CarouselRef>(
             ref,
             () => ({
                 goTo,
                 next,
                 prev,
+                current,
+                count
             }),
             [cur],
         );

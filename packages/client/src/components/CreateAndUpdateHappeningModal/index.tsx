@@ -21,6 +21,7 @@ import { Modal } from '../ui/Modal';
 import { RadioInput } from '../ui/RadioInput';
 import { TextareaWithLabel } from '../ui/TextareaWithLabel';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
+import { Carousel, CarouselRef } from '../ui/Carousel';
 
 export enum ModalMode {
     Create,
@@ -51,6 +52,19 @@ type OwnProps = {
     happeningId?: number;
 };
 
+const inputs = [
+    {
+        title: 'Somewhere else.',
+        subtitle: 'You can get team and go play on official DDnet servers.',
+        value: 'THERE',
+    },
+    {
+        title: 'Our own shitty servers.',
+        subtitle: 'You will have less change to get ddosed.',
+        value: 'HERE',
+    },
+];
+
 //NOTE: I literally spent few fukcing hours thinking about how to name this
 //component but i couldnt come up with something good :pepeW:
 export function CreateAndUpdateHappeningModal({
@@ -66,9 +80,11 @@ export function CreateAndUpdateHappeningModal({
     const [createEvent] = useCreateEventMutation();
     const [updateHappening] = useUpdateHappeningMutation();
     const dispatch = useAppDispatch();
-    const ref = useRef<null | HTMLInputElement>(null);
+    const ref = useRef<HTMLInputElement>(null);
     const [isEndFieldsVisible, setIsEndFieldsVisible] = useState(false);
     const handleFormError = useHandleFormError();
+    const carouselRef = useRef<CarouselRef>(null);
+    const [cur, setCur] = useState(0);
     let defaultValues: FormFields = {
         place: '',
         mapName: '',
@@ -234,18 +250,15 @@ export function CreateAndUpdateHappeningModal({
         }
     };
 
-    const inputs = [
-        {
-            title: 'Somewhere else.',
-            subtitle: 'You can get team and go play on official DDnet servers.',
-            value: 'THERE',
-        },
-        {
-            title: 'Our own shitty servers.',
-            subtitle: 'You will have less change to get ddosed.',
-            value: 'HERE',
-        },
-    ];
+    const next = () => {
+        carouselRef.current?.next();
+        setCur(cur => cur + 1);
+    }
+
+    const prev = () => {
+        carouselRef.current?.prev();
+        setCur(cur => cur - 1);
+    }
 
     return (
         <Modal
@@ -259,196 +272,200 @@ export function CreateAndUpdateHappeningModal({
             </p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-6">
-                    <div>
-                        <p
-                            className="text-xl mt-5"
-                            style={{ margin: '40px 0 0' }}
-                        >
-                            Where&apos;s your {type}?
-                        </p>
-                        <p className={'text-sm mt-1 text-high-emphasis'}>
-                            So noone gets lost on where to go?
-                        </p>
+                    <Carousel ref={carouselRef}>
+                        <div>
+                            <p
+                                className="text-xl mt-5"
+                                style={{ margin: '40px 0 0' }}
+                            >
+                                Where&apos;s your {type}?
+                            </p>
+                            <p className={'text-sm mt-1 text-high-emphasis'}>
+                                So noone gets lost on where to go?
+                            </p>
 
-                        {inputs.map((val, id) => (
-                            <div
-                                className="flex items-center py-[5px] px-2.5 rounded-[5px] bg-primary-3 mt-5"
-                                key={id}
-                            >
-                                <RadioInput
-                                    title={'Our own servers.'}
-                                    value={val.value}
-                                    subtitle={
-                                        'You will have less change to get ddosed.'
-                                    }
-                                    id={val.value}
-                                    register={register('place')}
-                                    className={{ wrapper: 'mt-5' }}
-                                />
-                                <label
-                                    htmlFor={val.value}
-                                    className={classNames('ml-2.5 grow-[1]')}
+                            {inputs.map((val, id) => (
+                                <div
+                                    className="flex items-center py-[5px] px-2.5 rounded-[5px] bg-primary-3 mt-5"
+                                    key={id}
                                 >
-                                    <p className={'font-medium'}>{val.title}</p>
-                                    <p
-                                        className={
-                                            'text-[12px] text-medium-emphasis'
+                                    <RadioInput
+                                        title={'Our own servers.'}
+                                        value={val.value}
+                                        subtitle={
+                                            'You will have less change to get ddosed.'
                                         }
+                                        id={val.value}
+                                        register={register('place')}
+                                        className={{ wrapper: 'mt-5' }}
+                                    />
+                                    <label
+                                        htmlFor={val.value}
+                                        className={classNames('ml-2.5 grow-[1]')}
                                     >
-                                        {val.subtitle}
-                                    </p>
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <p className={'text-xl mt-5'}>
-                            Tell us more about your {type}
-                        </p>
-                        <p className={'text-sm mt-1 text-high-emphasis'}>
-                            Fill fields down below!
-                        </p>
-                        <div className="flex justify-between mt-4">
-                            {type === 'event' ? (
-                                <InputWithLabel
-                                    errors={errors}
-                                    className={{ container: 'max-w-[256px]' }}
-                                    register={register('title')}
-                                    label="event title"
-                                    placeholder="How would you name event?"
-                                    required
-                                />
-                            ) : (
-                                <InputWithLabel
-                                    errors={errors}
-                                    className={{ container: 'max-w-[256px]' }}
-                                    register={register('mapName')}
-                                    label="map name"
-                                    placeholder="Map you're gonna play?"
-                                    required
-                                />
-                            )}
-                            {type === 'event' ? (
-                                <InputWithLabel
-                                    errors={errors}
-                                    className={{ container: 'max-w-[256px]' }}
-                                    register={register('mapName')}
-                                    label="map name"
-                                    placeholder="Map you're gonna play?"
-                                    required
-                                />
-                            ) : (
-                                <InputWithLabel
-                                    errors={errors}
-                                    className={{ container: 'max-w-[256px]' }}
-                                    register={register('teamSize')}
-                                    label="team size"
-                                    placeholder="What team size do you want?"
-                                    required
-                                    type="number"
-                                    min={2}
-                                    max={64}
-                                />
-                            )}
+                                        <p className={'font-medium'}>{val.title}</p>
+                                        <p
+                                            className={
+                                                'text-[12px] text-medium-emphasis'
+                                            }
+                                        >
+                                            {val.subtitle}
+                                        </p>
+                                    </label>
+                                </div>
+                            ))}
                         </div>
-                        <div className="flex justify-between mt-4 w-full">
-                            <InputWithLabel
-                                errors={errors}
-                                className={{ container: 'max-w-[256px]' }}
-                                register={register('startDate')}
-                                label="start date"
-                                required
-                                type="date"
-                            />
-                            <InputWithLabel
-                                errors={errors}
-                                className={{ container: 'max-w-[256px]' }}
-                                register={register('startTime')}
-                                label="start time"
-                                required
-                                type="time"
-                                pattern="[0-9]{2}:[0-9]{2}"
-                            />
-                        </div>
-                    </div>
-                    {type == 'event' && (
-                        <div className="mt-5 flex content-center">
-                            <input
-                                onChange={onChange}
-                                className="appearance-none w-4 h-4 bg-[rgba(0,0,0,.45)] bordered-[2px] checked:bg-[url('/check-mark.png')] bg-no-repeat bg-center"
-                                id="show-end-fields"
-                                type="checkbox"
-                            />
-                            <label
-                                htmlFor="show-end-fields"
-                                className="text-[12px] uppercase ml-2.5"
-                            >
-                                Add end date & time
-                            </label>
-                        </div>
-                    )}
-                    {type == 'event' && isEndFieldsVisible && (
-                        <div className="flex justify-between mt-4">
-                            <InputWithLabel
-                                errors={errors}
-                                className={{ container: 'max-w-[256px]' }}
-                                register={register('endDate')}
-                                label="end date"
-                                required
-                                type="date"
-                            />
-                            <InputWithLabel
-                                errors={errors}
-                                className={{ container: 'max-w-[256px]' }}
-                                register={register('endTime')}
-                                label="end time"
-                                required
-                                type="time"
-                                pattern="[0-9]{2}:[0-9]{2}"
-                            />
-                        </div>
-                    )}
-                    <TextareaWithLabel
-                        className={{ container: 'mt-5' }}
-                        register={register('description')}
-                        label="Description"
-                        placeholder="Here you can describe a teammate of dream, are weebs people or whatever you want"
-                    />
-                    {type == 'event' && (
                         <div>
                             <div>
-                                <label
-                                    htmlFor="coverImage"
-                                    className="uppercase mt-[15px] text-[12px]"
-                                >
-                                    Cover image
-                                </label>
-                                <input
-                                    {...register('thumbnail', {
-                                        onChange: (e) => {
-                                            if (e?.target?.files?.length) {
-                                                setValue(
-                                                    'thumbnail',
-                                                    e.target.files[0],
-                                                );
-                                            }
-                                        },
-                                    })}
-                                    ref={ref}
-                                    type="file"
-                                    className="hidden"
-                                />
-                                <Button
-                                    className="mt-2.5"
-                                    onClick={() => ref?.current?.click()}
-                                    type="button"
-                                    styleType="filled"
-                                >
-                                    Upload cover image
-                                </Button>
+                                <p className={'text-xl mt-5'}>
+                                    Tell us more about your {type}
+                                </p>
+                                <p className={'text-sm mt-1 text-high-emphasis'}>
+                                    Fill fields down below!
+                                </p>
+                                <div className="flex justify-between mt-4">
+                                    {type === 'event' ? (
+                                        <InputWithLabel
+                                            errors={errors}
+                                            className={{ container: 'max-w-[256px]' }}
+                                            register={register('title')}
+                                            label="event title"
+                                            placeholder="How would you name event?"
+                                            required
+                                        />
+                                    ) : (
+                                        <InputWithLabel
+                                            errors={errors}
+                                            className={{ container: 'max-w-[256px]' }}
+                                            register={register('mapName')}
+                                            label="map name"
+                                            placeholder="Map you're gonna play?"
+                                            required
+                                        />
+                                    )}
+                                    {type === 'event' ? (
+                                        <InputWithLabel
+                                            errors={errors}
+                                            className={{ container: 'max-w-[256px]' }}
+                                            register={register('mapName')}
+                                            label="map name"
+                                            placeholder="Map you're gonna play?"
+                                            required
+                                        />
+                                    ) : (
+                                        <InputWithLabel
+                                            errors={errors}
+                                            className={{ container: 'max-w-[256px]' }}
+                                            register={register('teamSize')}
+                                            label="team size"
+                                            placeholder="What team size do you want?"
+                                            required
+                                            type="number"
+                                            min={2}
+                                            max={64}
+                                        />
+                                    )}
+                                </div>
+                                <div className="flex justify-between mt-4 w-full">
+                                    <InputWithLabel
+                                        errors={errors}
+                                        className={{ container: 'max-w-[256px]' }}
+                                        register={register('startDate')}
+                                        label="start date"
+                                        required
+                                        type="date"
+                                    />
+                                    <InputWithLabel
+                                        errors={errors}
+                                        className={{ container: 'max-w-[256px]' }}
+                                        register={register('startTime')}
+                                        label="start time"
+                                        required
+                                        type="time"
+                                        pattern="[0-9]{2}:[0-9]{2}"
+                                    />
+                                </div>
                             </div>
+                            {type == 'event' && (
+                                <div className="mt-5 flex content-center">
+                                    <input
+                                        onChange={onChange}
+                                        className="appearance-none w-4 h-4 bg-[rgba(0,0,0,.45)] bordered-[2px] checked:bg-[url('/check-mark.png')] bg-no-repeat bg-center"
+                                        id="show-end-fields"
+                                        type="checkbox"
+                                    />
+                                    <label
+                                        htmlFor="show-end-fields"
+                                        className="text-[12px] uppercase ml-2.5"
+                                    >
+                                        Add end date & time
+                                    </label>
+                                </div>
+                            )}
+                            {type == 'event' && isEndFieldsVisible && (
+                                <div className="flex justify-between mt-4">
+                                    <InputWithLabel
+                                        errors={errors}
+                                        className={{ container: 'max-w-[256px]' }}
+                                        register={register('endDate')}
+                                        label="end date"
+                                        required
+                                        type="date"
+                                    />
+                                    <InputWithLabel
+                                        errors={errors}
+                                        className={{ container: 'max-w-[256px]' }}
+                                        register={register('endTime')}
+                                        label="end time"
+                                        required
+                                        type="time"
+                                        pattern="[0-9]{2}:[0-9]{2}"
+                                    />
+                                </div>
+                            )}
+                            <TextareaWithLabel
+                                className={{ container: 'mt-5' }}
+                                register={register('description')}
+                                label="Description"
+                                placeholder="Here you can describe a teammate of dream, are weebs people or whatever you want"
+                            />
+                            {type == 'event' && (
+                                <div>
+                                    <div>
+                                        <label
+                                            htmlFor="coverImage"
+                                            className="uppercase mt-[15px] text-[12px]"
+                                        >
+                                            Cover image
+                                        </label>
+                                        <input
+                                            {...register('thumbnail', {
+                                                onChange: (e) => {
+                                                    if (e?.target?.files?.length) {
+                                                        setValue(
+                                                            'thumbnail',
+                                                            e.target.files[0],
+                                                        );
+                                                    }
+                                                },
+                                            })}
+                                            ref={ref}
+                                            type="file"
+                                            className="hidden"
+                                        />
+                                        <Button
+                                            className="mt-2.5"
+                                            onClick={() => ref?.current?.click()}
+                                            type="button"
+                                            styleType="filled"
+                                        >
+                                            Upload cover image
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </Carousel>
                 </div>
                 <div className="flex justify-between mt-6 px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
                     <Button
@@ -457,12 +474,26 @@ export function CreateAndUpdateHappeningModal({
                     >
                         Close
                     </Button>
-                    <Button
-                        styleType={'filled'}
-                        type={'submit'} /*disabled={isSubmitButtonDisabled}*/
-                    >
-                        {mode == ModalMode.Create ? 'Create' : 'Update'} {type}
-                    </Button>
+                    <div className='flex'>
+                        {cur > 0 &&
+                            <Button styleType={"bordered"} onClick={prev}>
+                                Back
+                            </Button>
+                        }
+                        {cur == (carouselRef.current?.count() || 0) ?
+                            <Button
+                                styleType={'filled'}
+                                type={'submit'} /*disabled={isSubmitButtonDisabled}*/
+                                className='ml-5'
+                            >
+                                {mode == ModalMode.Create ? 'Create' : 'Update'} {type}
+                            </Button>
+                            :
+                            <Button styleType='filled' onClick={next}>
+                                Next
+                            </Button>
+                        }
+                    </div>
                 </div>
             </form>
         </Modal>
