@@ -3,17 +3,15 @@ import {
     useCreateRunMutation,
     useUpdateHappeningMutation,
 } from '@/features/api/happenings.api';
-import { hint } from '@/store/slices/hints';
 import {
     CreateEventResponse,
     CreateRunResponse,
     UpdateHappeningResponse,
 } from '@app/shared/types/api.type';
 import { ExcludeSuccess } from '@/types/Response.type';
-import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '../ui/Button';
 import { InputWithLabel } from '../ui/InputWithLabel';
@@ -79,12 +77,12 @@ export function CreateAndUpdateHappeningModal({
     const [createRun] = useCreateRunMutation();
     const [createEvent] = useCreateEventMutation();
     const [updateHappening] = useUpdateHappeningMutation();
-    const dispatch = useAppDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const [isEndFieldsVisible, setIsEndFieldsVisible] = useState(false);
     const handleFormError = useHandleFormError();
     const carouselRef = useRef<CarouselRef>(null);
     const [cur, setCur] = useState(0);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     let defaultValues: FormFields = {
         place: '',
         mapName: '',
@@ -112,9 +110,11 @@ export function CreateAndUpdateHappeningModal({
         setValue,
         formState: { errors },
         clearErrors,
+        watch
     } = useForm({
         defaultValues,
     });
+    const watchThumbnail = watch('thumbnail');
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsEndFieldsVisible(e.target.checked);
@@ -250,6 +250,12 @@ export function CreateAndUpdateHappeningModal({
         }
     };
 
+    useEffect(() => {
+        if (watchThumbnail) {
+            setPreviewUrl(URL.createObjectURL(watchThumbnail));
+        }
+    }, [watchThumbnail]);
+
     const next = () => {
         carouselRef.current?.next();
         setCur(cur => cur + 1);
@@ -260,9 +266,13 @@ export function CreateAndUpdateHappeningModal({
         setCur(cur => cur - 1);
     }
 
+    const removeThumbnail = () => {
+        setValue('thumbnail', null);
+        setPreviewUrl(null);
+    }
+
     return (
         <Modal
-            className={'create-run'}
             visible={isVisible}
             onClose={() => onClose(clearErrors)}
             width={'600px'}
@@ -271,7 +281,7 @@ export function CreateAndUpdateHappeningModal({
                 {mode == ModalMode.Create ? 'Create' : 'Edit'} your own {type}
             </p>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="px-6">
+                <div className="px-6 pb-6 !max-h-[75vh] overflow-y-auto">
                     <Carousel ref={carouselRef}>
                         <div>
                             <p
@@ -438,36 +448,46 @@ export function CreateAndUpdateHappeningModal({
                                         >
                                             Cover image
                                         </label>
-                                        <input
-                                            {...register('thumbnail', {
-                                                onChange: (e) => {
-                                                    if (e?.target?.files?.length) {
-                                                        setValue(
-                                                            'thumbnail',
-                                                            e.target.files[0],
-                                                        );
-                                                    }
-                                                },
-                                            })}
-                                            ref={ref}
-                                            type="file"
-                                            className="hidden"
-                                        />
-                                        <Button
-                                            className="mt-2.5"
-                                            onClick={() => ref?.current?.click()}
-                                            type="button"
-                                            styleType="filled"
-                                        >
-                                            Upload cover image
-                                        </Button>
+                                        {!previewUrl &&
+                                            <>
+                                                <input
+                                                    {...register('thumbnail', {
+                                                        onChange: (e) => {
+                                                            if (e?.target?.files?.length) {
+                                                                setValue(
+                                                                    'thumbnail',
+                                                                    e.target.files[0],
+                                                                );
+                                                            }
+                                                        },
+                                                    })}
+                                                    ref={ref}
+                                                    type="file"
+                                                    className="hidden"
+                                                />
+                                                <Button
+                                                    className="mt-2.5"
+                                                    onClick={() => ref?.current?.click()}
+                                                    type="button"
+                                                    styleType="filled"
+                                                >
+                                                    Upload cover image
+                                                </Button>
+                                            </>
+                                        }
+                                        {previewUrl &&
+                                            <>
+                                                <img src={previewUrl} className="mt-2.5 w-full object-cover rounded-[10px] max-h-[100px]" />
+                                                <Button styleType='filled' className='mt-2' onClick={removeThumbnail}>Remove thumbnail</Button>
+                                            </>
+                                        }
                                     </div>
                                 </div>
                             )}
                         </div>
                     </Carousel>
                 </div>
-                <div className="flex justify-between mt-6 px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
+                <div className="flex justify-between px-5 py-6 bg-[#1A1714] rounded-b-[10px]">
                     <Button
                         styleType={'bordered'}
                         onClick={() => onClose(clearErrors)}
@@ -476,26 +496,27 @@ export function CreateAndUpdateHappeningModal({
                     </Button>
                     <div className='flex'>
                         {cur > 0 &&
-                            <Button styleType={"bordered"} onClick={prev}>
+                            <Button styleType="bordered" onClick={prev}>
                                 Back
                             </Button>
                         }
                         {cur == (carouselRef.current?.count() || 0) ?
                             <Button
+                                key='submit'
                                 styleType={'filled'}
-                                type={'submit'} /*disabled={isSubmitButtonDisabled}*/
+                                type='submit' /*disabled={isSubmitButtonDisabled}*/
                                 className='ml-5'
                             >
                                 {mode == ModalMode.Create ? 'Create' : 'Update'} {type}
                             </Button>
                             :
-                            <Button styleType='filled' onClick={next}>
+                            <Button key='next' styleType='filled' onClick={next}>
                                 Next
                             </Button>
                         }
                     </div>
                 </div>
-            </form>
-        </Modal>
+            </form >
+        </Modal >
     );
 }
