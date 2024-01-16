@@ -7,9 +7,9 @@ type OwnProps = {
 
 export function Place({ place }: OwnProps) {
     return (
-        <div className="flex items-center font-semibold mt-2.5">
+        <div className="flex items-center font-medium mt-2.5">
             <PlaceIcon color="var(--medium-emphasis)" />
-            <span className="ml-2.5 text-medium-emphasis text-[12px]">
+            <span className="ml-2.5 text-medium-emphasis text-sm">
                 {place == 'THERE' ? 'Other place' : 'Our servers'}
             </span>
         </div>
