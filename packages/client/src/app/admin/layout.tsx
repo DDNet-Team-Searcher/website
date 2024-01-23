@@ -29,7 +29,7 @@ const urls = [
 
 export default function AdminLayout({ children }: OwnProps) {
     return (
-        <NoNameLayout title="Cul title" urls={urls}>
+        <NoNameLayout title="Admin stuff" urls={urls}>
             {children}
         </NoNameLayout>
     );
