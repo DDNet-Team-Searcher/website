@@ -1,4 +1,5 @@
 import { Notification } from "./Notification.type";
+import { Role } from "./Role.type";
 
 export type User = {
     id: number;
@@ -7,16 +8,10 @@ export type User = {
     tier: number;
     createdAt: string;
     updatedAt: string;
-    verified: boolean;
+    role: keyof typeof Role | null;
     avatar: string | null;
     notifications: Notification[];
     _count: { unreadNotifications: number };
-    permissions: {
-        canBan: boolean;
-        canDeleteHappenings: boolean;
-        canManageRoles: boolean;
-        canManagePosts: boolean;
-    };
     banned: {
         isBanned: boolean;
         reason: string | null;

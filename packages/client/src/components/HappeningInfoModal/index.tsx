@@ -148,7 +148,9 @@ export function HappeningInfoModal() {
                     <Place place={happening.place} />
                     <div className="flex mt-1">
                         <MapIcon color="var(--medium-emphasis)" />
-                        <span className="ml-2.5 text-medium-emphasis font-medium text-sm">{happening.mapName}</span>
+                        <span className="ml-2.5 text-medium-emphasis font-medium text-sm">
+                            {happening.mapName}
+                        </span>
                     </div>
                     <div className="text-medium-emphasis flex mt-2.5 items-center">
                         <Avatar

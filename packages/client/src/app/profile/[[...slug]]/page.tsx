@@ -11,7 +11,6 @@ import {
     useLazyGetProfileQuery,
     useUnbanUserMutation,
 } from '@/features/api/users.api';
-import { VerifiedIcon } from '@/components/ui/Icons/Verified';
 import { Graph } from '@/components/Graph';
 import { PeopleIcon } from '@/components/ui/Icons/People';
 import { ClockIcon } from '@/components/ui/Icons/Clock';
@@ -35,11 +34,27 @@ import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { BanUserResponse } from '@app/shared/types/api.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { Role } from '@app/shared/types/Role.type';
 
 type OwnProps = {
     params: {
         slug?: string[];
     };
+};
+
+const roles = {
+    Admin: {
+        icon: 'https://cdn.7tv.app/emote/60ae958e229664e8667aea38/4x.webp',
+        color: '#f6a740',
+    },
+    Mod: {
+        icon: 'https://cdn.7tv.app/emote/6134bc74f67d73ea27e44b0f/4x.webp',
+        color: '#3498db',
+    },
+    Verified: {
+        icon: 'https://cdn.7tv.app/emote/60ae958e229664e8667aea38/4x.webp',
+        color: '#ffffff',
+    },
 };
 
 export default function Profile({ params: { slug } }: OwnProps) {
@@ -48,14 +63,12 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const [followUser] = useFollowUserMutation();
     const profile = useAppSelector((state) => state.profile);
     const authedUserId = useAppSelector((state) => state.user.user.id);
+    const userRole = useAppSelector((state) => state.user.user.role);
     const id = slug ? slug[0] : authedUserId?.toString()!;
     const sameUser = authedUserId === parseInt(id);
     const [favServer, setFavServer] = useState('');
     const [isReportModalVisible, setIsReportModalVisible] = useState(false);
     const [isBanModalVisible, setIsBanModalVisible] = useState(false);
-    const canBan = useAppSelector(
-        (state) => state.user.user.permissions.canBan,
-    );
     const [unbanUser] = useUnbanUserMutation();
     const handleFormError = useHandleFormError();
 
@@ -163,34 +176,36 @@ export default function Profile({ params: { slug } }: OwnProps) {
                             username={profile.username || ''}
                         />
                         <div className="text-high-emphasis ml-[65px]">
-                            <p className="text-2xl mt-9">
-                                {profile.username}{' '}
-                                {profile.verified && (
-                                    <VerifiedIcon
-                                        className="inline-block"
-                                        color="blue"
-                                    />
-                                )}
-                            </p>
+                            <p className="text-2xl mt-9">{profile.username}</p>
                             <div className="flex flex-wrap">
-                                {profile.roles &&
-                                    profile.roles.map((role, id) => (
+                                {Object.keys(roles)
+                                    .filter((role) => role == profile.role)
+                                    .map((role) => (
                                         <div
-                                            className="mr-3 mt-2 p-1.5 rounded-[5px]"
+                                            className="mr-3 mt-2 p-1.5 rounded-[5px] flex items-center"
                                             style={{
-                                                backgroundColor: `${role.color}1A`,
-                                                border: `1px solid ${role.color}`,
+                                                backgroundColor: `${
+                                                    roles[
+                                                        role as keyof typeof roles
+                                                    ].color
+                                                }1A`,
+                                                border: `1px solid ${
+                                                    roles[
+                                                        role as keyof typeof roles
+                                                    ].color
+                                                }`,
                                             }}
-                                            key={id}
                                         >
-                                            {role.url && (
-                                                <img
-                                                    className="w-4 h-4 mr-2.5 inline-block"
-                                                    src={role.url}
-                                                    alt="Role image"
-                                                />
-                                            )}
-                                            <span>{role.name}</span>
+                                            <img
+                                                className="w-5 h-5 mr-2 inline-block"
+                                                src={
+                                                    roles[
+                                                        role as keyof typeof roles
+                                                    ].icon
+                                                }
+                                                alt="Role image"
+                                            />
+                                            <span>{role}</span>
                                         </div>
                                     ))}
                             </div>
@@ -231,7 +246,8 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         ? 'Unfollow'
                                         : 'Follow'}
                                 </Button>
-                                {canBan ? (
+                                {userRole == Role.Admin ||
+                                userRole == Role.Mod ? (
                                     profile.isBanned ? (
                                         <Button
                                             className="max-w-[120px] ml-3 w-full !block text-center !border-error"

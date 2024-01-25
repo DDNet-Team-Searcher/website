@@ -6,9 +6,8 @@ export type Profile = {
     username: string;
     avatar: string | null;
     createdAt: string;
-    roles: Role[];
     tier: number;
-    verified: boolean;
+    role: keyof typeof Role | null;
     isFollowing: boolean;
     isReported: boolean;
     reviews: {

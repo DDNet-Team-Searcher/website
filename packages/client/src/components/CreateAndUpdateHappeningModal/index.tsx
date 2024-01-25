@@ -110,7 +110,7 @@ export function CreateAndUpdateHappeningModal({
         setValue,
         formState: { errors },
         clearErrors,
-        watch
+        watch,
     } = useForm({
         defaultValues,
     });
@@ -258,18 +258,18 @@ export function CreateAndUpdateHappeningModal({
 
     const next = () => {
         carouselRef.current?.next();
-        setCur(cur => cur + 1);
-    }
+        setCur((cur) => cur + 1);
+    };
 
     const prev = () => {
         carouselRef.current?.prev();
-        setCur(cur => cur - 1);
-    }
+        setCur((cur) => cur - 1);
+    };
 
     const removeThumbnail = () => {
         setValue('thumbnail', null);
         setPreviewUrl(null);
-    }
+    };
 
     return (
         <Modal
@@ -311,9 +311,13 @@ export function CreateAndUpdateHappeningModal({
                                     />
                                     <label
                                         htmlFor={val.value}
-                                        className={classNames('ml-2.5 grow-[1]')}
+                                        className={classNames(
+                                            'ml-2.5 grow-[1]',
+                                        )}
                                     >
-                                        <p className={'font-medium'}>{val.title}</p>
+                                        <p className={'font-medium'}>
+                                            {val.title}
+                                        </p>
                                         <p
                                             className={
                                                 'text-[12px] text-medium-emphasis'
@@ -330,14 +334,20 @@ export function CreateAndUpdateHappeningModal({
                                 <p className={'text-xl mt-5'}>
                                     Tell us more about your {type}
                                 </p>
-                                <p className={'text-sm mt-1 text-high-emphasis'}>
+                                <p
+                                    className={
+                                        'text-sm mt-1 text-high-emphasis'
+                                    }
+                                >
                                     Fill fields down below!
                                 </p>
                                 <div className="flex justify-between mt-4">
                                     {type === 'event' ? (
                                         <InputWithLabel
                                             errors={errors}
-                                            className={{ container: 'max-w-[256px]' }}
+                                            className={{
+                                                container: 'max-w-[256px]',
+                                            }}
                                             register={register('title')}
                                             label="event title"
                                             placeholder="How would you name event?"
@@ -346,7 +356,9 @@ export function CreateAndUpdateHappeningModal({
                                     ) : (
                                         <InputWithLabel
                                             errors={errors}
-                                            className={{ container: 'max-w-[256px]' }}
+                                            className={{
+                                                container: 'max-w-[256px]',
+                                            }}
                                             register={register('mapName')}
                                             label="map name"
                                             placeholder="Map you're gonna play?"
@@ -356,7 +368,9 @@ export function CreateAndUpdateHappeningModal({
                                     {type === 'event' ? (
                                         <InputWithLabel
                                             errors={errors}
-                                            className={{ container: 'max-w-[256px]' }}
+                                            className={{
+                                                container: 'max-w-[256px]',
+                                            }}
                                             register={register('mapName')}
                                             label="map name"
                                             placeholder="Map you're gonna play?"
@@ -365,7 +379,9 @@ export function CreateAndUpdateHappeningModal({
                                     ) : (
                                         <InputWithLabel
                                             errors={errors}
-                                            className={{ container: 'max-w-[256px]' }}
+                                            className={{
+                                                container: 'max-w-[256px]',
+                                            }}
                                             register={register('teamSize')}
                                             label="team size"
                                             placeholder="What team size do you want?"
@@ -379,7 +395,9 @@ export function CreateAndUpdateHappeningModal({
                                 <div className="flex justify-between mt-4 w-full">
                                     <InputWithLabel
                                         errors={errors}
-                                        className={{ container: 'max-w-[256px]' }}
+                                        className={{
+                                            container: 'max-w-[256px]',
+                                        }}
                                         register={register('startDate')}
                                         label="start date"
                                         required
@@ -387,7 +405,9 @@ export function CreateAndUpdateHappeningModal({
                                     />
                                     <InputWithLabel
                                         errors={errors}
-                                        className={{ container: 'max-w-[256px]' }}
+                                        className={{
+                                            container: 'max-w-[256px]',
+                                        }}
                                         register={register('startTime')}
                                         label="start time"
                                         required
@@ -416,7 +436,9 @@ export function CreateAndUpdateHappeningModal({
                                 <div className="flex justify-between mt-4">
                                     <InputWithLabel
                                         errors={errors}
-                                        className={{ container: 'max-w-[256px]' }}
+                                        className={{
+                                            container: 'max-w-[256px]',
+                                        }}
                                         register={register('endDate')}
                                         label="end date"
                                         required
@@ -424,7 +446,9 @@ export function CreateAndUpdateHappeningModal({
                                     />
                                     <InputWithLabel
                                         errors={errors}
-                                        className={{ container: 'max-w-[256px]' }}
+                                        className={{
+                                            container: 'max-w-[256px]',
+                                        }}
                                         register={register('endTime')}
                                         label="end time"
                                         required
@@ -448,15 +472,19 @@ export function CreateAndUpdateHappeningModal({
                                         >
                                             Cover image
                                         </label>
-                                        {!previewUrl &&
+                                        {!previewUrl && (
                                             <>
                                                 <input
                                                     {...register('thumbnail', {
                                                         onChange: (e) => {
-                                                            if (e?.target?.files?.length) {
+                                                            if (
+                                                                e?.target?.files
+                                                                    ?.length
+                                                            ) {
                                                                 setValue(
                                                                     'thumbnail',
-                                                                    e.target.files[0],
+                                                                    e.target
+                                                                        .files[0],
                                                                 );
                                                             }
                                                         },
@@ -467,20 +495,31 @@ export function CreateAndUpdateHappeningModal({
                                                 />
                                                 <Button
                                                     className="mt-2.5"
-                                                    onClick={() => ref?.current?.click()}
+                                                    onClick={() =>
+                                                        ref?.current?.click()
+                                                    }
                                                     type="button"
                                                     styleType="filled"
                                                 >
                                                     Upload cover image
                                                 </Button>
                                             </>
-                                        }
-                                        {previewUrl &&
+                                        )}
+                                        {previewUrl && (
                                             <>
-                                                <img src={previewUrl} className="mt-2.5 w-full object-cover rounded-[10px] max-h-[100px]" />
-                                                <Button styleType='filled' className='mt-2' onClick={removeThumbnail}>Remove thumbnail</Button>
+                                                <img
+                                                    src={previewUrl}
+                                                    className="mt-2.5 w-full object-cover rounded-[10px] max-h-[100px]"
+                                                />
+                                                <Button
+                                                    styleType="filled"
+                                                    className="mt-2"
+                                                    onClick={removeThumbnail}
+                                                >
+                                                    Remove thumbnail
+                                                </Button>
                                             </>
-                                        }
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -494,29 +533,34 @@ export function CreateAndUpdateHappeningModal({
                     >
                         Close
                     </Button>
-                    <div className='flex'>
-                        {cur > 0 &&
+                    <div className="flex">
+                        {cur > 0 && (
                             <Button styleType="bordered" onClick={prev}>
                                 Back
                             </Button>
-                        }
-                        {cur == (carouselRef.current?.count() || 0) ?
+                        )}
+                        {cur == (carouselRef.current?.count() || 0) ? (
                             <Button
-                                key='submit'
+                                key="submit"
                                 styleType={'filled'}
-                                type='submit' /*disabled={isSubmitButtonDisabled}*/
-                                className='ml-5'
+                                type="submit" /*disabled={isSubmitButtonDisabled}*/
+                                className="ml-5"
                             >
-                                {mode == ModalMode.Create ? 'Create' : 'Update'} {type}
+                                {mode == ModalMode.Create ? 'Create' : 'Update'}{' '}
+                                {type}
                             </Button>
-                            :
-                            <Button key='next' styleType='filled' onClick={next}>
+                        ) : (
+                            <Button
+                                key="next"
+                                styleType="filled"
+                                onClick={next}
+                            >
                                 Next
                             </Button>
-                        }
+                        )}
                     </div>
                 </div>
-            </form >
-        </Modal >
+            </form>
+        </Modal>
     );
 }

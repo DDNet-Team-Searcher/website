@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+    Admin
+    Mod
+    Verified
+}
+
 model User {
     id Int @id @default(autoincrement())
     username String @db.VarChar(255)
@@ -19,7 +25,7 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
     tier Int @db.SmallInt
-    verified Boolean @default(false)
+    role Role?
     activated Boolean @default(false)
     activationCode String @db.VarChar(255)
     happenings Happening[]
@@ -33,29 +39,6 @@ model User {
     reports Report[] @relation(name: "reports")
     bannedUsers Ban[] @relation(name: "bannedUsers")
     bans Ban[] @relation(name: "bans")
-    roles RolesOnUsers[]
-}
-
-model Role {
-    id Int @id @default(autoincrement())
-    name String @db.VarChar(50)
-    color String @db.VarChar(24) @default("#ffffff")
-    url String?
-    users RolesOnUsers[]
-
-    canBan Boolean @default(false)
-    canManageRoles Boolean @default(false)
-    canDeleteHappenings Boolean @default(false)
-    canManagePosts Boolean @default(false)
-}
-
-model RolesOnUsers {
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId Int
-    role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
-    roleId Int
-
-    @@id([userId, roleId])
 }
 
 model Server {

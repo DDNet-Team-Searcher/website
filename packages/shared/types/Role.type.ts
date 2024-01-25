@@ -1,6 +1,5 @@
-export type Role = {
-    id: number;
-    name: string;
-    color: string;
-    url: string | null;
-};
+export enum Role {
+    Admin = 'Admin',
+    Mod = 'Mod',
+    Verified = 'Verified'
+}

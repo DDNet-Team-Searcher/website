@@ -43,11 +43,11 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
 
         const current = () => {
             return cur;
-        }
+        };
 
         const count = () => {
             return max;
-        }
+        };
 
         React.useImperativeHandle<CarouselRef, CarouselRef>(
             ref,
@@ -56,7 +56,7 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
                 next,
                 prev,
                 current,
-                count
+                count,
             }),
             [cur],
         );

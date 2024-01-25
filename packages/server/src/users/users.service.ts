@@ -10,8 +10,8 @@ import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
 import { Run, Event } from '@app/shared/types/Happening.type';
 import { getAvatarUrl } from 'src/utils/user.util';
-import { getPermissions } from 'src/utils/permissions.util';
 import { v4 as uuidv4 } from 'uuid';
+import { Role } from '@app/shared/types/Role.type';
 
 @Injectable()
 export class UsersService {
@@ -42,8 +42,7 @@ export class UsersService {
             email,
             createdAt,
             updatedAt,
-            roles,
-            verified,
+            role,
             ...credentials
         } = (await this.prismaService.user.findFirst({
             where: {
@@ -56,20 +55,8 @@ export class UsersService {
                 tier: true,
                 createdAt: true,
                 updatedAt: true,
-                verified: true,
+                role: true,
                 avatar: true,
-                roles: {
-                    select: {
-                        role: {
-                            select: {
-                                canBan: true,
-                                canManagePosts: true,
-                                canManageRoles: true,
-                                canDeleteHappenings: true,
-                            },
-                        },
-                    },
-                },
                 bans: {
                     take: 1,
                     select: {
@@ -100,20 +87,17 @@ export class UsersService {
             banned.reason = credentials.bans[0].reason;
         }
 
-        const permissions = getPermissions(roles.map((el) => el.role));
-
         return {
             id,
             username,
             tier,
             email,
+            role,
             avatar: getAvatarUrl(credentials.avatar),
             notifications,
             updatedAt: updatedAt.toString(),
             createdAt: createdAt.toString(),
-            permissions,
             banned,
-            verified,
             _count: { unreadNotifications: unreadNotificationsCount },
         };
     }
@@ -145,7 +129,6 @@ export class UsersService {
                 username: true,
                 avatar: true,
                 tier: true,
-                verified: true,
                 _count: {
                     select: {
                         followers: true,
@@ -166,20 +149,8 @@ export class UsersService {
                 username: true,
                 avatar: true,
                 createdAt: true,
-                roles: {
-                    select: {
-                        role: {
-                            select: {
-                                id: true,
-                                name: true,
-                                color: true,
-                                url: true,
-                            },
-                        },
-                    },
-                },
                 tier: true,
-                verified: true,
+                role: true,
                 reviews: {
                     take: 5,
                     select: {
@@ -221,9 +192,9 @@ export class UsersService {
         const {
             id: profileUserId,
             avatar,
-            verified,
             createdAt,
             tier,
+            role,
             username,
             _count: { followers, following },
         } = profile;
@@ -278,7 +249,6 @@ export class UsersService {
             });
         }
 
-        const roles = profile.roles.map((el) => el.role);
         const isReported = await this.isReported(id, userId);
 
         //TODO: return boolean only to users who can ban
@@ -289,9 +259,8 @@ export class UsersService {
             reviews,
             username,
             tier,
-            roles,
+            role,
             createdAt: createdAt.toString(),
-            verified,
             avatar: getAvatarUrl(avatar),
             happenings: {
                 runs,
@@ -542,5 +511,17 @@ export class UsersService {
         }
 
         return false;
+    }
+
+    async role(userId: number): Promise<keyof typeof Role | null> {
+        return (await this.prismaService.user.findFirst({
+            where: {
+                id: userId,
+            },
+            select: {
+                role: true,
+            },
+        }))!.role;
+        // ^ is this gud?
     }
 }

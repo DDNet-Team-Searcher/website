@@ -15,7 +15,6 @@ type OwnProps = {
         avatar: string | null;
         tier: number;
         id: number;
-        verified: boolean;
         _count: {
             followers: number;
             following: number;

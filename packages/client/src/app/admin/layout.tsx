@@ -6,23 +6,19 @@ type OwnProps = {
 
 const urls = [
     {
-        path: 'roles',
-        name: 'Roles',
-    },
-    {
-        path: 'verified-users',
-        name: 'Verified Users',
+        path: 'users',
+        name: 'Users',
     },
     {
         path: 'banned-users',
         name: 'Banned Users',
     },
     {
-        path: 'servers',
-        name: 'Servers',
+        path: 'reports',
+        name: 'Reports',
     },
     {
-        path: 'servers-users',
+        path: 'servers',
         name: 'Servers',
     },
 ];

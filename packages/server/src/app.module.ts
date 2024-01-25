@@ -19,7 +19,6 @@ import {
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ConfigModule } from '@nestjs/config';
-import { RolesModule } from './roles/roles.module';
 import { v4 as uuidV4 } from 'uuid';
 import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from './logger/logger.module';
@@ -55,7 +54,6 @@ import { LoggerModule } from './logger/logger.module';
             },
         ]),
         SearchModule,
-        RolesModule,
         WebsocketsModule,
         CronModule,
         I18nModule.forRoot({

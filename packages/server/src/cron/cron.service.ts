@@ -10,7 +10,7 @@ export class CronService implements OnModuleInit {
     constructor(
         private readonly happeningsService: HappeningsService,
         private readonly notificationsService: NotificationsService,
-    ) { }
+    ) {}
 
     async onModuleInit() {
         const upcomingHappenings =
@@ -37,7 +37,9 @@ export class CronService implements OnModuleInit {
                         this.happenings.shift();
 
                         const upcomingHappening =
-                            await this.happeningsService.nthUpcomingHappenings(10);
+                            await this.happeningsService.nthUpcomingHappenings(
+                                10,
+                            );
                         if (upcomingHappening)
                             this.happenings.push(upcomingHappening);
 

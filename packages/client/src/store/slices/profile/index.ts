@@ -10,7 +10,7 @@ const initialState: Nullable<Profile> = {
     },
     id: null,
     tier: null,
-    roles: [],
+    role: null,
     _count: {
         followers: null,
         following: null,
@@ -20,7 +20,6 @@ const initialState: Nullable<Profile> = {
     avatar: null,
     reviews: [],
     username: null,
-    verified: null,
     createdAt: null,
     isFollowing: null,
     isReported: null,
