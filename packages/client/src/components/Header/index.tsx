@@ -9,10 +9,6 @@ import { useGetCredentialsQuery } from '@/features/api/users.api';
 import { Avatar } from '../Avatar';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import {
-    setIsCreateEventModalHidden,
-    setIsCreateRunModalHidden,
-} from '@/store/slices/app';
-import {
     CreateAndUpdateHappeningModal,
     ModalMode,
 } from '../CreateAndUpdateHappeningModal';
@@ -22,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { ProfileOverlay } from './ProfileOverlay';
 import { AddIcon } from '../ui/Icons/Add';
 import { NotificationIcon } from '../ui/Icons/Notification';
+import { Happenings } from '@app/shared/types/Happening.type';
 
 export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
@@ -32,9 +29,9 @@ export function Header() {
     const profileOverlayRef = useRef<null | HTMLUListElement>(null);
     const [isProfileOverlayHidden, setIsProfileOverlayHidden] = useState(true);
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
-    const [currentHappening, setCurrentHappening] = useState<
-        'run' | 'event' | null
-    >(null);
+    const [currentHappening, setCurrentHappening] = useState<Happenings | null>(
+        null,
+    );
     const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
     const { username, avatar } = useAppSelector((state) => state.user.user);
     const [isNotificationOverlayVisible, setIsNotificationOverlayVisible] =
@@ -66,17 +63,13 @@ export function Header() {
     };
 
     const createRun = () => {
-        setCurrentHappening('run');
+        setCurrentHappening(Happenings.Run);
         setIsCreateModalVisible(true);
-        // setIsSelectionMenuHidden(true);
-        // dispatch(setIsCreateRunModalHidden(false))
     };
 
     const createEvent = () => {
-        setCurrentHappening('event');
+        setCurrentHappening(Happenings.Event);
         setIsCreateModalVisible(true);
-        // setIsSelectionMenuHidden(true);
-        // dispatch(setIsCreateEventModalHidden(false))
     };
 
     const onCreateHappeningModalClose = (cb: () => void) => {
@@ -105,7 +98,7 @@ export function Header() {
             <CreateAndUpdateHappeningModal
                 isVisible={isCreateModalVisible}
                 onClose={onCreateHappeningModalClose}
-                type={currentHappening as 'run' | 'event'}
+                type={currentHappening as Happenings}
                 mode={ModalMode.Create}
             />
             <div className="flex items-end max-w-[1110px] mx-auto">

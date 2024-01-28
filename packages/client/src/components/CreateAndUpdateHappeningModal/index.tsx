@@ -20,13 +20,14 @@ import { RadioInput } from '../ui/RadioInput';
 import { TextareaWithLabel } from '../ui/TextareaWithLabel';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { Carousel, CarouselRef } from '../ui/Carousel';
+import { Happenings } from '@app/shared/types/Happening.type';
 
 export enum ModalMode {
     Create,
     Edit,
 }
 
-type FormFields = {
+export type FormFields = {
     place: string;
     mapName: string;
     teamSize: string;
@@ -44,7 +45,7 @@ type FormFields = {
 type OwnProps = {
     isVisible: boolean;
     onClose: (cb: () => void) => void;
-    type: 'run' | 'event';
+    type: Happenings;
     mode: ModalMode;
     data?: FormFields;
     happeningId?: number;
@@ -122,7 +123,7 @@ export function CreateAndUpdateHappeningModal({
 
     const onSubmit = async (values: typeof defaultValues) => {
         if (mode === ModalMode.Create) {
-            if (type === 'event') {
+            if (type === Happenings.Event) {
                 try {
                     const endAt = values.endDate + ' ' + values.endTime;
 
@@ -160,7 +161,7 @@ export function CreateAndUpdateHappeningModal({
 
                     handleFormError(error);
                 }
-            } else if (type === 'run') {
+            } else if (type === Happenings.Run) {
                 try {
                     const res = await createRun({
                         place: values.place === 'HERE' ? 0 : 1,
@@ -181,7 +182,7 @@ export function CreateAndUpdateHappeningModal({
                 }
             }
         } else if (mode === ModalMode.Edit) {
-            if (type === 'event') {
+            if (type === Happenings.Event) {
                 const endAt = values.endDate + ' ' + values.endTime;
 
                 type EventDataT = {
@@ -222,7 +223,7 @@ export function CreateAndUpdateHappeningModal({
 
                     handleFormError(error);
                 }
-            } else if (type === 'run') {
+            } else if (type === Happenings.Run) {
                 const runData = {
                     place: values.place === 'HERE' ? 0 : 1,
                     description: values.description ?? null,
@@ -342,7 +343,7 @@ export function CreateAndUpdateHappeningModal({
                                     Fill fields down below!
                                 </p>
                                 <div className="flex justify-between mt-4">
-                                    {type === 'event' ? (
+                                    {type === Happenings.Event ? (
                                         <InputWithLabel
                                             errors={errors}
                                             className={{
@@ -365,7 +366,7 @@ export function CreateAndUpdateHappeningModal({
                                             required
                                         />
                                     )}
-                                    {type === 'event' ? (
+                                    {type === Happenings.Event ? (
                                         <InputWithLabel
                                             errors={errors}
                                             className={{
@@ -416,7 +417,7 @@ export function CreateAndUpdateHappeningModal({
                                     />
                                 </div>
                             </div>
-                            {type == 'event' && (
+                            {type == Happenings.Event && (
                                 <div className="mt-5 flex content-center">
                                     <input
                                         onChange={onChange}
@@ -432,7 +433,7 @@ export function CreateAndUpdateHappeningModal({
                                     </label>
                                 </div>
                             )}
-                            {type == 'event' && isEndFieldsVisible && (
+                            {type == Happenings.Event && isEndFieldsVisible && (
                                 <div className="flex justify-between mt-4">
                                     <InputWithLabel
                                         errors={errors}
@@ -463,7 +464,7 @@ export function CreateAndUpdateHappeningModal({
                                 label="Description"
                                 placeholder="Here you can describe a teammate of dream, are weebs people or whatever you want"
                             />
-                            {type == 'event' && (
+                            {type == Happenings.Event && (
                                 <div>
                                     <div>
                                         <label

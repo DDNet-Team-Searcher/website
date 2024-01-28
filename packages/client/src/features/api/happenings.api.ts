@@ -1,4 +1,3 @@
-import { setPopularEvents, setPopularRuns } from '@/store/slices/happenings';
 import {
     CreateEventRequest,
     CreateEventResponse,
@@ -21,6 +20,7 @@ import {
 } from '@app/shared/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { baseApi } from './base.api';
+import { mergeHappenings } from '@/store/slices/happenings';
 
 const PREFIX = '/happenings';
 
@@ -73,31 +73,9 @@ export const happeningsApi = baseApi.injectEndpoints({
         }),
         getAllRuns: build.query<GetAllRunsResponse, void>({
             query: () => `${PREFIX}/runs`,
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-
-                    if (data.status === 'success') {
-                        dispatch(setPopularRuns(data.data.runs));
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            },
         }),
         getAllEvents: build.query<GetAllEventsResponse, void>({
             query: () => `${PREFIX}/events`,
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled;
-
-                    if (data.status === 'success') {
-                        dispatch(setPopularEvents(data.data.events));
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            },
         }),
         getHappeningInterestedPlayers: build.query<
             GetInterestedUsersResponse,

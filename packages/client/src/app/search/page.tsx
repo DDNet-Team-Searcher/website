@@ -1,20 +1,16 @@
 'use client';
 
-import { Fragment } from 'react';
-import { Event } from '@/components/Happening/Event';
 import { useLazySearchQuery } from '@/features/api/search.api';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
+import { Happening } from '@/components/Happening';
+import { SearchResult } from '@app/shared/types/SearchResult.type';
+import { mergeHappenings } from '@/store/slices/happenings';
+import { Happening as HappeningType } from '@app/shared/types/Happening.type';
 import { User } from './User';
-import { SearchResultRun } from '@/components/Happening/Run/SearchResultRun';
-import {
-    deleteHappeningFromSearchResults,
-    setIsInterestedInSearchResultHappening,
-    setSearchResults,
-    setSearchResultsHappeningStatus,
-} from '@/store/slices/happenings';
+import { User as UserType } from '@app/shared/types/SearchResult.type';
 
 const selectOptions = {
     all: 'All',
@@ -25,13 +21,13 @@ const selectOptions = {
 
 export default function Search() {
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.user.user.id);
     const searchParams = useSearchParams();
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Record<string, string>>({});
     const [moreResultsAvailable, setMoreResultsAvailable] = useState(false);
+    const [isReady, setIsReady] = useState(false);
     const [searchQuery] = useLazySearchQuery();
-    const { ref, inView, entry } = useInView({
+    const { ref } = useInView({
         threshold: 0,
         onChange: (inView) => {
             if (inView && moreResultsAvailable) {
@@ -39,16 +35,16 @@ export default function Search() {
             }
         },
     });
-    const happenings = useAppSelector(
-        (state) => state.happenings.searchResults,
-    );
+    const [results, setResults] = useState<SearchResult[]>([]);
     const query = searchParams?.get('query') || '';
 
     useEffect(() => {
         setPage(1);
+        setIsReady(false);
     }, [filters]);
 
     useEffect(() => {
+        console.log('ME BHERE');
         setMoreResultsAvailable(false);
         if (query !== '') {
             searchQuery({ query, page, filters })
@@ -56,7 +52,16 @@ export default function Search() {
                 .then((res) => {
                     if (res.status === 'success') {
                         if (res.data.results.length) {
-                            dispatch(setSearchResults(res.data.results));
+                            if (filters?.sort !== 'users') {
+                                dispatch(
+                                    mergeHappenings(
+                                        res.data.results as HappeningType[],
+                                    ),
+                                );
+                                setIsReady(true);
+                            }
+
+                            setResults(res.data.results);
                         } else {
                             // no results, show something
                         }
@@ -67,16 +72,23 @@ export default function Search() {
 
     useEffect(() => {
         if (query !== '' && page != 1) {
+            setIsReady(false);
             searchQuery({ query, page, filters })
                 .unwrap()
                 .then((res) => {
                     if (res.status === 'success') {
                         if (res.data.results.length) {
+                            if (filters?.sort !== 'users') {
+                                dispatch(
+                                    mergeHappenings(
+                                        res.data.results as HappeningType[],
+                                    ),
+                                );
+                                setIsReady(true);
+                            }
+
                             setMoreResultsAvailable(res.data.next);
-                            setSearchResults([
-                                ...happenings,
-                                ...res.data.results,
-                            ]);
+                            setResults([...results, ...res.data.results]);
                         } else {
                             // no results, show something
                         }
@@ -95,7 +107,7 @@ export default function Search() {
     };
 
     return (
-        <div className="max-w-[725px] w-full mx-auto">
+        <div className="max-w-[1110px] w-full mx-auto">
             <div className="mt-5">
                 <select
                     onChange={setFilter}
@@ -111,45 +123,26 @@ export default function Search() {
                     ))}
                 </select>
             </div>
-            <div className="[&>*]:mt-7">
-                {happenings.map((el) => (
-                    <Fragment key={el.id}>
-                        {el.type == 'user' && (
-                            <User authedUserId={userId} user={el} />
-                        )}
-                        {el.type == 'event' && (
-                            <Event
-                                className="!max-w-[100%]"
-                                event={el}
-                                setIsInterestedDispatch={
-                                    setIsInterestedInSearchResultHappening
-                                }
-                                deleteDispatch={
-                                    deleteHappeningFromSearchResults
-                                }
-                                setStatusDispatch={
-                                    setSearchResultsHappeningStatus
-                                }
+            {filters?.sort !== 'users' && isReady && (
+                <div className="flex flex-wrap justify-between [&>*]:mt-7">
+                    {results.map((happening) => (
+                        <Happening id={happening.id} key={happening.id} />
+                    ))}
+                </div>
+            )}
+            {filters?.sort === 'users' && results[0].type === 'User' && (
+                <div className="max-w-[725px] w-full mx-auto [&>*]:mt-7">
+                    {results.map((user) => {
+                        return (
+                            <User
+                                user={user as unknown as UserType}
+                                key={user.id}
                             />
-                        )}
-                        {el.type == 'run' && (
-                            <SearchResultRun
-                                run={el}
-                                setIsInterestedDispatch={
-                                    setIsInterestedInSearchResultHappening
-                                }
-                                deleteDispatch={
-                                    deleteHappeningFromSearchResults
-                                }
-                                setStatusDispatch={
-                                    setSearchResultsHappeningStatus
-                                }
-                            />
-                        )}
-                    </Fragment>
-                ))}
-                <div ref={ref} />
-            </div>
+                        );
+                    })}
+                </div>
+            )}
+            <div ref={ref} />
         </div>
     );
 }

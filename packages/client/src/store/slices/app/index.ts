@@ -25,12 +25,6 @@ export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setIsCreateEventModalHidden(state, action: PayloadAction<boolean>) {
-            state.isCreateEventModalHidden = action.payload;
-        },
-        setIsCreateRunModalHidden(state, action: PayloadAction<boolean>) {
-            state.isCreateRunModalHidden = action.payload;
-        },
         setHappeningInfoModalData(
             state,
             action: PayloadAction<{
@@ -46,10 +40,6 @@ export const appSlice = createSlice({
     },
 });
 
-export const {
-    setIsCreateEventModalHidden,
-    setIsCreateRunModalHidden,
-    setHappeningInfoModalData,
-} = appSlice.actions;
+export const { setHappeningInfoModalData } = appSlice.actions;
 
 export default appSlice.reducer;

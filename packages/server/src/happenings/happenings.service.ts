@@ -7,10 +7,14 @@ import {
     Place,
     Status,
 } from '@prisma/client';
-import { Status as HappeningStatus } from '@app/shared/types/Happening.type';
+import {
+    Status as HappeningStatus,
+    Run,
+    Event,
+    Happenings,
+} from '@app/shared/types/Happening.type';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Run, Event } from '@app/shared/types/Happening.type';
 import { EventDTO } from './dto/event.dto';
 import { RunDTO } from './dto/run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
@@ -382,6 +386,7 @@ export class HappeningsService {
             connectString,
             createdAt: createdAt.toString(),
             startAt: startAt.toString(),
+            type: HappeningType.Run as Happenings.Run,
             description,
             _count,
             place,
@@ -471,6 +476,7 @@ export class HappeningsService {
             place,
             mapName,
             description,
+            type: HappeningType.Event as Happenings.Event,
             status: status as HappeningStatus,
             createdAt: createdAt.toString(),
             startAt: startAt.toString(),

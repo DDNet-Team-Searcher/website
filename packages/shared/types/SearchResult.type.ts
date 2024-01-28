@@ -1,6 +1,6 @@
 import { Run, Event } from './Happening.type';
 
-type User = {
+export type User = {
     username: string;
     avatar: string | null;
     tier: number;
@@ -10,9 +10,10 @@ type User = {
         following: number;
     };
     isFollowing: boolean;
+    type: 'User';
 };
 
 export type SearchResult =
-    | ({ type: 'user' } & User)
-    | ({ type: 'run' } & Run)
-    | ({ type: 'event' } & Event);
+    | User
+    | Run
+    | Event;

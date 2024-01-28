@@ -26,7 +26,7 @@ export default function Authed() {
     }, []);
 
     return (
-        <div className="max-w-[1110px] w-full mx-auto">
+        <div className="max-w-[1110px] mt-20 flex flex-wrap gap-7 justify-center w-full mx-auto">
             <Events />
             <Runs />
         </div>

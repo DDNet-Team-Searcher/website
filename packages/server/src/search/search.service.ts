@@ -23,37 +23,6 @@ export class SearchService {
     ): Promise<{ results: SearchResult[]; next: boolean }> {
         const searchResults: SearchResult[] = [];
 
-        const user: number | undefined = (
-            await this.prismaService.$queryRaw<{ id: number }[]>`
-            SELECT id FROM "User"
-            WHERE LOWER(username) LIKE ${query} LIMIT 1
-        `
-        )[0]?.id;
-
-        if (user) {
-            const profile = await this.usersService.searchUserById(
-                userId,
-                user,
-            );
-
-            if (profile) {
-                profile.avatar = getAvatarUrl(profile.avatar);
-
-                const isFollowing = await this.usersService.isFollowing(
-                    userId,
-                    profile.id,
-                );
-
-                if (page === 0) {
-                    searchResults.push({
-                        type: 'user',
-                        ...profile,
-                        isFollowing,
-                    });
-                }
-            }
-        }
-
         const totalCountBigInt = (
             await this.prismaService.$queryRaw<[{ count: bigint }]>`
             SELECT COUNT(*) FROM "Happening"
@@ -88,14 +57,14 @@ export class SearchService {
                     userId,
                 );
 
-                if (run) searchResults.push({ type: 'run', ...run });
+                if (run) searchResults.push(run);
             } else if ((happening.type = 'Event')) {
                 const event = await this.happeningsService.getEventById(
                     happening.id,
                     userId,
                 );
 
-                if (event) searchResults.push({ type: 'event', ...event });
+                if (event) searchResults.push(event);
             }
         }
 
@@ -141,7 +110,7 @@ export class SearchService {
         for (const { id } of runIds) {
             const run = await this.happeningsService.getRunById(id, userId);
 
-            if (run) searchResults.push({ type: 'run', ...run });
+            if (run) searchResults.push(run);
         }
 
         return {
@@ -186,7 +155,7 @@ export class SearchService {
         for (const { id } of eventIds) {
             const event = await this.happeningsService.getEventById(id, userId);
 
-            if (event) searchResults.push({ type: 'event', ...event });
+            if (event) searchResults.push(event);
         }
 
         return {
@@ -214,13 +183,13 @@ export class SearchService {
         const userIds = await this.prismaService.$queryRaw<
             { id: number; type: HappeningType }[]
         >`
-            SELECT COUNT(*) FROM "User"
+            SELECT id FROM "User"
             WHERE LOWER(username) LIKE ${query}
             LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}
         `;
 
         for (const { id } of userIds) {
-            const profile = await this.usersService.searchUserById(id, userId);
+            const profile = await this.usersService.searchUserById(id);
 
             if (profile) {
                 profile.avatar = getAvatarUrl(profile.avatar);
@@ -231,7 +200,7 @@ export class SearchService {
                 );
 
                 searchResults.push({
-                    type: 'user',
+                    type: 'User',
                     ...profile,
                     isFollowing,
                 });

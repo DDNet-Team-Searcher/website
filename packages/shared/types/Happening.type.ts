@@ -34,11 +34,17 @@ type HappeningCommon = {
 };
 
 export type Run = HappeningCommon & {
+    //NOTE: stackoverflow answer, lets hope it wont break everything in future
+    type: Happenings.Run;
     teamSize: number;
 };
 
 export type Event = HappeningCommon & {
+    //NOTE: stackoverflow answer, lets hope it wont break everything in future
+    type: Happenings.Event;
     title: string;
     thumbnail: string | null;
     endAt: string | null;
 };
+
+export type Happening = Run | Event;

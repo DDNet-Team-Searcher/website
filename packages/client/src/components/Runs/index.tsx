@@ -1,31 +1,28 @@
 import { useGetAllRunsQuery } from '@/features/api/happenings.api';
-import { useAppSelector } from '@/utils/hooks/hooks';
-import { Run } from '@/components/Happening/Run';
-import {
-    deleteHappeningFromPopular,
-    setIsInterestedInPopularHappening,
-    setPopularHappeningStatus,
-} from '@/store/slices/happenings';
+import { Happening } from '@/components/Happening';
+import { useEffect, useState } from 'react';
+import { useAppDispatch } from '@/utils/hooks/hooks';
+import { mergeHappenings } from '@/store/slices/happenings';
 
 export function Runs() {
-    useGetAllRunsQuery();
-    const runs = useAppSelector((state) => state.happenings.popular.runs);
+    let { data, isLoading, isSuccess } = useGetAllRunsQuery();
+    const dispatch = useAppDispatch();
+    const [isReady, setIsReady] = useState(false);
+
+    useEffect(() => {
+        if (!isLoading && data && data.status === 'success' && isSuccess) {
+            dispatch(mergeHappenings(data.data.runs));
+            setIsReady(true);
+        }
+    }, [data, isLoading, isSuccess]);
 
     return (
         <>
-            <div className="flex flex-wrap [&>*]:m-2.5">
-                {runs.map((run) => (
-                    <Run
-                        key={run.id}
-                        run={run}
-                        setStatusDispatch={setPopularHappeningStatus}
-                        deleteDispatch={deleteHappeningFromPopular}
-                        setIsInterestedDispatch={
-                            setIsInterestedInPopularHappening
-                        }
-                    />
+            {isReady &&
+                data?.status === 'success' &&
+                data.data.runs.map((run) => (
+                    <Happening key={run.id} id={run.id} />
                 ))}
-            </div>
         </>
     );
 }

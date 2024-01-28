@@ -1,141 +1,73 @@
-import { Event, Run, Status } from '@app/shared/types/Happening.type';
-import { SearchResult } from '@app/shared/types/SearchResult.type';
+import { Happening, Status } from '@app/shared/types/Happening.type';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type HappeningsState = {
-    popular: {
-        runs: Run[];
-        events: Event[];
-    };
-    searchResults: SearchResult[];
+    happenings: Happening[];
 };
 
 const initialState: HappeningsState = {
-    popular: {
-        runs: [],
-        events: [],
-    },
-    searchResults: [],
+    happenings: [],
 };
-
-//TODO: there has to be a better way to organize happenings
-// so there would be only one object of one happening
 
 export const happeningsSlice = createSlice({
     name: 'happenings',
     initialState,
     reducers: {
-        setPopularRuns(state, action: PayloadAction<Run[]>) {
-            state.popular.runs = action.payload;
-        },
-        setPopularEvents(state, action: PayloadAction<Event[]>) {
-            state.popular.events = action.payload;
-        },
-        setSearchResults(state, action: PayloadAction<SearchResult[]>) {
-            state.searchResults = action.payload;
-        },
+        mergeHappenings(state, action: PayloadAction<Happening[]>) {
+            for (let i = 0; i < action.payload.length; i++) {
+                let replaced = false;
 
-        setPopularHappeningStatus(
-            state,
-            action: PayloadAction<{
-                id: number;
-                type: 'run' | 'event';
-                status: Status;
-            }>,
-        ) {
-            const type = (action.payload.type + 's') as 'events' | 'runs';
-
-            //@ts-ignore NOTE: idk how to write it in other way :p
-            state.popular[type] = state.popular[type].map((happening) => {
-                if (happening.id == action.payload.id) {
-                    happening.status = action.payload.status;
+                for (let j = 0; j < state.happenings.length; j++) {
+                    if (state.happenings[j].id === action.payload[i].id) {
+                        state.happenings[j] = action.payload[i];
+                        replaced = true;
+                    }
                 }
 
-                return happening;
-            });
+                if (!replaced) {
+                    state.happenings.push(action.payload[i]);
+                }
+            }
         },
-        setSearchResultsHappeningStatus(
+        setStatus(
             state,
             action: PayloadAction<{ id: number; status: Status }>,
         ) {
-            state.searchResults = state.searchResults.map((result) => {
-                if (result.type != 'user' && result.id == action.payload.id) {
-                    result.status = action.payload.status;
-                }
-
-                return result;
-            });
-        },
-
-        deleteHappeningFromSearchResults(
-            state,
-            action: PayloadAction<{ id: number }>,
-        ) {
-            state.searchResults = state.searchResults.filter(
-                (happening) => happening.id !== action.payload.id,
+            let id = state.happenings.findIndex(
+                (happening) => happening.id === action.payload.id,
             );
-        },
-        deleteHappeningFromPopular(
-            state,
-            action: PayloadAction<{ id: number; type: 'run' | 'event' }>,
-        ) {
-            const type = (action.payload.type + 's') as 'runs' | 'events';
 
-            //@ts-ignore NOTE: idk how to write it in other way :p
-            state.popular[type] = [...state.popular[type]].filter(
-                (happening) => happening.id !== action.payload.id,
-            );
+            state.happenings[id].status = action.payload.status;
         },
-
-        setIsInterestedInSearchResultHappening(
+        setIsInterestedInHappening(
             state,
             action: PayloadAction<{ id: number; isInterested: boolean }>,
         ) {
-            const happening = state.searchResults.filter(
+            let id = state.happenings.findIndex(
                 (happening) => happening.id === action.payload.id,
-            )[0] as Run | Event;
+            );
 
-            happening.isInterested = action.payload.isInterested;
-
-            happening._count.interestedPlayers =
-                happening._count.interestedPlayers +
-                (action.payload.isInterested ? 1 : -1);
+            state.happenings[id].isInterested = action.payload.isInterested;
+            state.happenings[id]._count.interestedPlayers += action.payload
+                .isInterested
+                ? 1
+                : -1;
         },
-        setIsInterestedInPopularHappening(
-            state,
-            action: PayloadAction<{
-                type: 'run' | 'event';
-                id: number;
-                isInterested: boolean;
-            }>,
-        ) {
-            const type = (action.payload.type + 's') as 'runs' | 'events';
-            const happening = [...state.popular[type]].filter(
-                (happening) => happening.id === action.payload.id,
-            )[0];
+        deleteHappening(state, action: PayloadAction<number>) {
+            let id = state.happenings.findIndex(
+                (happening) => happening.id === action.payload,
+            );
 
-            happening.isInterested = action.payload.isInterested;
-
-            happening._count.interestedPlayers =
-                happening._count.interestedPlayers +
-                (action.payload.isInterested ? 1 : -1);
+            state.happenings.splice(id, 1);
         },
     },
 });
 
 export const {
-    setPopularRuns,
-    setPopularEvents,
-    setSearchResults,
-
-    setPopularHappeningStatus,
-    setSearchResultsHappeningStatus,
-
-    deleteHappeningFromPopular,
-    deleteHappeningFromSearchResults,
-
-    setIsInterestedInPopularHappening,
-    setIsInterestedInSearchResultHappening,
+    mergeHappenings,
+    setStatus,
+    setIsInterestedInHappening,
+    deleteHappening,
 } = happeningsSlice.actions;
 
 export default happeningsSlice.reducer;

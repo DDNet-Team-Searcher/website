@@ -115,11 +115,7 @@ export class UsersService {
         return activationCode;
     }
 
-    /*
-     * userId - id of user youre trying to find
-     * id - if of user who is looking for it
-     */
-    async searchUserById(userId: number, id: number) {
+    async searchUserById(id: number) {
         return (await this.prismaService.user.findFirst({
             where: {
                 id,
@@ -139,6 +135,10 @@ export class UsersService {
         }))!; //NOTE: this is fine
     }
 
+    /*
+     * userId - id of user youre trying to find
+     * id - if of user who is looking for it
+     */
     async getUserProfile(userId: number, id: number): Promise<null | Profile> {
         const profile = await this.prismaService.user.findFirst({
             where: {

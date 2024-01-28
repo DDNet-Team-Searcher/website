@@ -7,9 +7,9 @@ import { useAppDispatch } from '@/utils/hooks/hooks';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getUserFavoriteServer } from '@/store/slices/user';
+import { useAppSelector } from '@/utils/hooks/hooks';
 
 type OwnProps = {
-    authedUserId: number | null;
     user: {
         username: string;
         avatar: string | null;
@@ -24,7 +24,6 @@ type OwnProps = {
 };
 
 export function User({
-    authedUserId,
     user: {
         username,
         tier,
@@ -35,6 +34,7 @@ export function User({
     },
 }: OwnProps) {
     const dispatch = useAppDispatch();
+    const userId = useAppSelector((state) => state.user.user.id);
     const tierName = getTier(tier);
     const [favoriteServer, setFavoriteServer] = useState<string>();
     const [followUser] = useFollowUserMutation();
@@ -78,7 +78,7 @@ export function User({
                     </span>
                 </p>
             </div>
-            {id != authedUserId && (
+            {id != userId && (
                 <Button
                     className="ml-auto"
                     styleType="filled"

@@ -1,11 +1,10 @@
-import {
-    deleteHappeningFromPopular,
-    deleteHappeningFromSearchResults,
-    setIsInterestedInPopularHappening,
-    setIsInterestedInSearchResultHappening,
-    setPopularHappeningStatus,
-    setSearchResultsHappeningStatus,
-} from '@/store/slices/happenings';
+import //deleteHappeningFromPopular,
+//deleteHappeningFromSearchResults,
+//setIsInterestedInPopularHappening,
+//setIsInterestedInSearchResultHappening,
+//setPopularHappeningStatus,
+//setSearchResultsHappeningStatus,
+'@/store/slices/happenings';
 import {
     deleteHappening,
     setHappeningStatus,
@@ -14,17 +13,17 @@ import {
 
 export type BaseHappeningProps = {
     className?: string;
-    setStatusDispatch:
-        | typeof setPopularHappeningStatus
-        | typeof setSearchResultsHappeningStatus
-        | typeof setHappeningStatus;
-    deleteDispatch:
-        | typeof deleteHappeningFromPopular
-        | typeof deleteHappeningFromSearchResults
-        | typeof deleteHappening;
+    //setStatusDispatch:
+    //    | typeof setPopularHappeningStatus
+    //    | typeof setSearchResultsHappeningStatus
+    //    | typeof setHappeningStatus;
+    //deleteDispatch:
+    //    | typeof deleteHappeningFromPopular
+    //    | typeof deleteHappeningFromSearchResults
+    //    | typeof deleteHappening;
 
-    setIsInterestedDispatch:
-        | typeof setIsInterestedInPopularHappening
-        | typeof setIsInterestedInSearchResultHappening
-        | typeof setIsInterestedInHappening;
+    //setIsInterestedDispatch:
+    //    | typeof setIsInterestedInPopularHappening
+    //    | typeof setIsInterestedInSearchResultHappening
+    //    | typeof setIsInterestedInHappening;
 };

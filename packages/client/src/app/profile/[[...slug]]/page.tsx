@@ -4,8 +4,6 @@ import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { Run } from '@/components/Happening/Run';
-import { Event } from '@/components/Happening/Event';
 import {
     useFollowUserMutation,
     useLazyGetProfileQuery,
@@ -25,6 +23,8 @@ import {
 } from '@/store/slices/profile';
 import {
     Event as EventType,
+    Happenings,
+    Run,
     Run as RunType,
 } from '@app/shared/types/Happening.type';
 import { ReportModal } from './ReportModal';
@@ -35,6 +35,7 @@ import { ExcludeSuccess } from '@/types/Response.type';
 import { BanUserResponse } from '@app/shared/types/api.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Role } from '@app/shared/types/Role.type';
+import { Happening } from '@/components/Happening';
 
 type OwnProps = {
     params: {
@@ -52,7 +53,7 @@ const roles = {
         color: '#3498db',
     },
     Verified: {
-        icon: 'https://cdn.7tv.app/emote/60ae958e229664e8667aea38/4x.webp',
+        icon: 'https://cdn.7tv.app/emote/6268904f4f54759b7184fa72/4x.webp',
         color: '#ffffff',
     },
 };
@@ -306,15 +307,12 @@ export default function Profile({ params: { slug } }: OwnProps) {
                         </h2>
                         <div className="w-full flex justify-around flex-wrap">
                             {profile.happenings.events.map((event, id) => (
-                                <Event
-                                    className="mt-5"
-                                    event={event as EventType}
-                                    key={id}
-                                    setStatusDispatch={setHappeningStatus}
-                                    deleteDispatch={deleteHappening}
-                                    setIsInterestedDispatch={
-                                        setIsInterestedInHappening
+                                <Happening
+                                    {
+                                        ...{} /*className="mt-5"*/
                                     }
+                                    id={event.id!}
+                                    key={id}
                                 />
                             ))}
                         </div>
@@ -325,15 +323,12 @@ export default function Profile({ params: { slug } }: OwnProps) {
                         </h2>
                         <div className="max-w-[80%] w-full mx-auto flex flex-wrap justify-around">
                             {profile.happenings.runs.map((run, id) => (
-                                <Run
-                                    className="mt-5"
-                                    run={run as RunType}
-                                    key={id}
-                                    setStatusDispatch={setHappeningStatus}
-                                    deleteDispatch={deleteHappening}
-                                    setIsInterestedDispatch={
-                                        setIsInterestedInHappening
+                                <Happening
+                                    {
+                                        ...{} /*className="mt-5"*/
                                     }
+                                    id={run.id!}
+                                    key={id}
                                 />
                             ))}
                         </div>
