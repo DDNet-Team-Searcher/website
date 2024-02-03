@@ -45,12 +45,18 @@ export const getUserStats = (username: string) => {
 };
 
 export const getUserFavoriteServer = (username: string) => {
-    return async (): Promise<string | undefined> => {
+    return async (): Promise<string | null> => {
         const req = await fetch(
             `https://db.ddstats.org/ddnet-0f28546.json?sql=SELECT+Server+FROM%0D%0A%28SELECT+race.Timestamp%2C+race.Server%2C+maps.Points+FROM+race+INNER+JOIN+maps+ON+maps.Map+%3D+race.Map+WHERE+race.Name+%3D+%22${username}%22+GROUP+BY+race.Map%29%0D%0AGROUP+BY+Server+ORDER+BY+COUNT%28Server%29+DESC+LIMIT+1`,
         );
 
-        return await ((await req.json()) as Response<[[string]]>).rows[0][0];
+        const json: Response<[[string]]> = await req.json();
+
+        if (!json.rows.length) {
+            return null
+        }
+
+        return json.rows[0][0];
     };
 };
 

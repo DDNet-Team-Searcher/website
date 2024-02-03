@@ -36,7 +36,7 @@ export function User({
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.user.user.id);
     const tierName = getTier(tier);
-    const [favoriteServer, setFavoriteServer] = useState<string>();
+    const [favoriteServer, setFavoriteServer] = useState<string | null>();
     const [followUser] = useFollowUserMutation();
     const [isFollowing, setIsFollowing] = useState(isFollowingIDK);
 
@@ -66,7 +66,7 @@ export function User({
                     <span className="mx-1 text-xl font-bold">∙</span>
                     <img
                         className="max-w-[30px]"
-                        src={`https://ddnet.org/countryflags/${favoriteServer}.png`}
+                        src={`https://ddnet.org/countryflags/${favoriteServer || "UNK"}.png`}
                     />
                     <span className="mx-1 text-xl font-bold">∙</span>
                     <span className="flex items-center">
