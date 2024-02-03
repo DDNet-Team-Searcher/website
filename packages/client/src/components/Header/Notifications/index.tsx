@@ -31,7 +31,7 @@ export const Notifications = forwardRef(
                         <p>Notifications</p>
                         <SettingsIcon size={25} />
                     </div>
-                    <ul className="pl-[20px] pr-[30px] mb-[20px]">
+                    <ul className="max-h-[350px] overflow-scroll pl-[20px] pr-[30px] mb-[20px]">
                         {notifications.map((notification, id) => (
                             <Notification
                                 key={id}
