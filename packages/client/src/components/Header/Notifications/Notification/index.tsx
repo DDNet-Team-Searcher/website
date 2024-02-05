@@ -27,24 +27,28 @@ export function Notification({ notification }: OwnProps) {
 
     let text = '';
 
-    if (notification.type == NotificationType.InterestedInHappening) {
-        let interestedUsername = notification.author.username || 'deleted user';
+    switch (notification.type) {
+        case NotificationType.InterestedInHappening:
+            let interestedUsername = notification.author.username || 'deleted user';
 
-        if (notification.happening.type == Happenings.Run) {
-            text = i18n._('notification.interested_run', {
-                interestedUsername,
-                mapName: notification.happening.mapName,
-            });
-        } else if (notification.happening.type == Happenings.Event) {
-            text = i18n._('notification.interested_event', {
-                interestedUsername,
-                title: notification.happening.title,
-            });
-        }
-    } else if (notification.type === NotificationType.NoEmptyServers) {
-        text = i18n._('notification.no_empty_servers');
+            if (notification.happening.type == Happenings.Run) {
+                text = i18n._('notification.interested_run', {
+                    interestedUsername,
+                    mapName: notification.happening.mapName,
+                });
+            } else if (notification.happening.type == Happenings.Event) {
+                text = i18n._('notification.interested_event', {
+                    interestedUsername,
+                    title: notification.happening.title,
+                });
+            }
+
+            break;
+        case NotificationType.NoEmptyServers:
+            text = i18n._('notification.no_empty_servers');
+
+            break;
     }
-    //TODO: add other types of notifications
 
     return (
         <li className="mt-[15px] flex" ref={ref}>
