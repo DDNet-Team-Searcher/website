@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationType } from '@prisma/client';
-import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
+import {
+    AddedInTeamNotification,
+    FollowNotification,
+    InterestedInHappeningNotification,
+    NoEmptyServersNotification,
+    NotificationType as NotifType,
+    RemovedFromTeamNotification,
+} from '@app/shared/types/Notification.type';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Notification } from '@app/shared/types/Notification.type';
 import { NotificationJson } from '@app/shared/types/Notification.type';
@@ -13,12 +20,12 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) {}
+    ) { }
 
-    async sendNotification<T extends NotificationType>(
+    async sendNotification(
         userId: number,
-        type: T,
-        notificationJson: NotificationJson<T>,
+        type: NotificationType,
+        notificationJson: NotificationJson,
     ): Promise<void> {
         const res = await this.prismaService.notification.create({
             data: {
@@ -48,140 +55,137 @@ export class NotificationsService {
             return null;
         }
 
-        if (
-            notification.type === NotificationType.AddedInTeam ||
-            notification.type === NotificationType.RemovedFromTeam
-        ) {
-            const { authorId, ...happeningInfo } =
-                (await this.prismaService.happening.findFirst({
+        switch (notification.type as NotifType) {
+            case NotificationType.AddedInTeam:
+            case NotificationType.RemovedFromTeam: {
+                const { authorId, ...happeningInfo } =
+                    (await this.prismaService.happening.findFirst({
+                        where: {
+                            id: (
+                                notification.notification as AddedInTeamNotification
+                            ).happeningId,
+                        },
+                        select: {
+                            authorId: true,
+                            mapName: true,
+                            title: true,
+                            type: true,
+                        },
+                    }))!; //NOTE: this is fine
+
+                const author = (await this.prismaService.user.findFirst({
                     where: {
-                        id: (
-                            notification.notification as NotificationJson<
-                                | NotifType.AddedInTeam
-                                | NotifType.RemovedFromTeam
-                            >
-                        ).happeningId,
+                        id: authorId,
                     },
                     select: {
-                        authorId: true,
-                        mapName: true,
-                        title: true,
-                        type: true,
+                        username: true,
+                        avatar: true,
                     },
                 }))!; //NOTE: this is fine
 
-            const author = (await this.prismaService.user.findFirst({
-                where: {
-                    id: authorId,
-                },
-                select: {
-                    username: true,
-                    avatar: true,
-                },
-            }))!; //NOTE: this is fine
-
-            return {
-                author: {
-                    username: author.username,
-                    avatar: getAvatarUrl(author.username),
-                },
-                id: notification.id,
-                type: notification.type as
-                    | NotifType.AddedInTeam
-                    | NotifType.RemovedFromTeam,
-                seen: notification.seen,
-                happening: {
-                    ...happeningInfo,
-                    type: happeningInfo.type as Happenings,
-                },
-                notification: notification.notification as NotificationJson<
-                    NotifType.AddedInTeam | NotifType.RemovedFromTeam
-                >,
-                createdAt: notification.createdAt.toString(),
-            };
-        } else if (notification.type === NotificationType.Followage) {
-            const author = (await this.prismaService.user.findFirst({
-                where: {
-                    id: (
-                        notification.notification as NotificationJson<NotifType.Followage>
-                    ).userId,
-                },
-                select: {
-                    username: true,
-                    avatar: true,
-                },
-            }))!; //NOTE: this is fine
-
-            return {
-                author: {
-                    username: author.username,
-                    avatar: getAvatarUrl(author.avatar),
-                },
-                id: notification.id,
-                type: notification.type as NotifType.Followage,
-                seen: notification.seen,
-                notification:
-                    notification.notification as NotificationJson<NotifType.Followage>,
-                createdAt: notification.createdAt.toString(),
-            };
-        } else if (
-            notification.type === NotificationType.InterestedInHappening
-        ) {
-            const happeningInfo = (await this.prismaService.happening.findFirst(
-                {
+                return {
+                    author: {
+                        username: author.username,
+                        avatar: getAvatarUrl(author.username),
+                    },
+                    id: notification.id,
+                    type: notification.type as NotifType.AddedInTeam | NotifType.RemovedFromTeam,
+                    seen: notification.seen,
+                    happening: {
+                        ...happeningInfo,
+                        type: happeningInfo.type as Happenings,
+                    },
+                    notification: notification.notification as
+                        | AddedInTeamNotification
+                        | RemovedFromTeamNotification,
+                    createdAt: notification.createdAt.toString(),
+                };
+            }
+            case NotificationType.Followage: {
+                const author = (await this.prismaService.user.findFirst({
                     where: {
                         id: (
-                            notification.notification as NotificationJson<NotifType.InterestedInHappening>
-                        ).happeningId,
+                            notification.notification as FollowNotification
+                        ).userId,
                     },
                     select: {
-                        mapName: true,
-                        title: true,
-                        type: true,
+                        username: true,
+                        avatar: true,
                     },
-                },
-            ))!; //NOTE: this is fine
+                }))!; //NOTE: this is fine
 
-            const author = (await this.prismaService.user.findFirst({
-                where: {
-                    id: (
-                        notification.notification as NotificationJson<NotifType.InterestedInHappening>
-                    ).userId,
-                },
-                select: {
-                    username: true,
-                    avatar: true,
-                },
-            }))!; //NOTE: this is fine
+                return {
+                    author: {
+                        username: author.username,
+                        avatar: getAvatarUrl(author.avatar),
+                    },
+                    id: notification.id,
+                    type: notification.type as NotifType.Followage,
+                    seen: notification.seen,
+                    notification:
+                        notification.notification as FollowNotification,
+                    createdAt: notification.createdAt.toString(),
+                };
+            }
+            case NotificationType.InterestedInHappening: {
+                const happeningInfo = (await this.prismaService.happening.findFirst(
+                    {
+                        where: {
+                            id: (
+                                notification.notification as InterestedInHappeningNotification
+                            ).happeningId,
+                        },
+                        select: {
+                            mapName: true,
+                            title: true,
+                            type: true,
+                        },
+                    },
+                ))!; //NOTE: this is fine
 
-            return {
-                author: {
-                    username: author.username,
-                    avatar: getAvatarUrl(author.avatar),
-                },
-                id: notification.id,
-                type: notification.type as NotifType.InterestedInHappening,
-                seen: notification.seen,
-                happening: {
-                    ...happeningInfo,
-                    type: happeningInfo.type as Happenings,
-                },
-                notification:
-                    notification.notification as NotificationJson<NotifType.InterestedInHappening>,
-                createdAt: notification.createdAt.toString(),
-            };
-        } else if (notification.type == NotificationType.NoEmptyServers) {
-            return {
-                id: notification.id,
-                type: notification.type as NotifType.NoEmptyServers,
-                seen: notification.seen,
-                notification:
-                    notification.notification as NotificationJson<NotifType.NoEmptyServers>,
-                createdAt: notification.createdAt.toString(),
-            };
+                const author = (await this.prismaService.user.findFirst({
+                    where: {
+                        id: (
+                            notification.notification as InterestedInHappeningNotification
+                        ).userId,
+                    },
+                    select: {
+                        username: true,
+                        avatar: true,
+                    },
+                }))!; //NOTE: this is fine
+
+                return {
+                    author: {
+                        username: author.username,
+                        avatar: getAvatarUrl(author.avatar),
+                    },
+                    id: notification.id,
+                    type: notification.type as NotifType.InterestedInHappening,
+                    seen: notification.seen,
+                    happening: {
+                        ...happeningInfo,
+                        type: happeningInfo.type as Happenings,
+                    },
+                    notification:
+                        notification.notification as InterestedInHappeningNotification,
+                    createdAt: notification.createdAt.toString(),
+                };
+            }
+            case NotificationType.NoEmptyServers: {
+                return {
+                    id: notification.id,
+                    type: notification.type as NotifType.NoEmptyServers,
+                    seen: notification.seen,
+                    notification:
+                        notification.notification as NoEmptyServersNotification,
+                    createdAt: notification.createdAt.toString(),
+                };
+            }
+
+            default:
+                return null;
         }
-
-        return null;
     }
 
     async getUserNotifications(userId: number): Promise<Notification[]> {

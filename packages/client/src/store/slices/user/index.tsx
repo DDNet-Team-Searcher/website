@@ -53,7 +53,7 @@ export const getUserFavoriteServer = (username: string) => {
         const json: Response<[[string]]> = await req.json();
 
         if (!json.rows.length) {
-            return null
+            return null;
         }
 
         return json.rows[0][0];

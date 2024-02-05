@@ -15,9 +15,7 @@ import { ClockIcon } from '@/components/ui/Icons/Clock';
 import { getUserFavoriteServer } from '@/store/slices/user';
 import { timeAgo } from '@/utils/timeago';
 import { Button } from '@/components/ui/Button';
-import {
-    setProfile,
-} from '@/store/slices/profile';
+import { setProfile } from '@/store/slices/profile';
 import { ReportModal } from './ReportModal';
 import { BanModal } from './BanModal';
 import { hint } from '@/store/slices/hints';
@@ -176,14 +174,16 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         <div
                                             className="mr-3 mt-2 p-1.5 rounded-[5px] flex items-center"
                                             style={{
-                                                backgroundColor: `${roles[
-                                                    role as keyof typeof roles
-                                                ].color
-                                                    }1A`,
-                                                border: `1px solid ${roles[
-                                                    role as keyof typeof roles
-                                                ].color
-                                                    }`,
+                                                backgroundColor: `${
+                                                    roles[
+                                                        role as keyof typeof roles
+                                                    ].color
+                                                }1A`,
+                                                border: `1px solid ${
+                                                    roles[
+                                                        role as keyof typeof roles
+                                                    ].color
+                                                }`,
                                             }}
                                         >
                                             <img
@@ -237,7 +237,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         : 'Follow'}
                                 </Button>
                                 {userRole == Role.Admin ||
-                                    userRole == Role.Mod ? (
+                                userRole == Role.Mod ? (
                                     profile.isBanned ? (
                                         <Button
                                             className="max-w-[120px] ml-3 w-full !block text-center !border-error"
@@ -296,10 +296,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                         </h2>
                         <div className="w-full flex justify-around flex-wrap">
                             {profile.happenings.events.map((event, id) => (
-                                <Happening
-                                    id={event.id!}
-                                    key={id}
-                                />
+                                <Happening id={event.id!} key={id} />
                             ))}
                         </div>
                     </section>
@@ -309,10 +306,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                         </h2>
                         <div className="max-w-[80%] w-full mx-auto flex flex-wrap justify-around">
                             {profile.happenings.runs.map((run, id) => (
-                                <Happening
-                                    id={run.id!}
-                                    key={id}
-                                />
+                                <Happening id={run.id!} key={id} />
                             ))}
                         </div>
                     </section>

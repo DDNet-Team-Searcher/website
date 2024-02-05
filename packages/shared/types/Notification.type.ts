@@ -1,7 +1,5 @@
 import { Happenings } from './Happening.type';
 
-//NOTE: god bless your fucking soul if you have to edit this shit
-
 export enum NotificationType {
     Followage = 'Followage',
     InterestedInHappening = 'InterestedInHappening',
@@ -11,29 +9,34 @@ export enum NotificationType {
     NoEmptyServers = 'NoEmptyServers',
 }
 
-export type NotificationJson<T = NotificationType> =
-    T extends NotificationType.Followage
-        ? {
-              userId: number;
-          }
-        : T extends NotificationType.AddedInTeam
-        ? {
-              happeningId: number;
-          }
-        : T extends NotificationType.RemovedFromTeam
-        ? {
-              happeningId: number;
-          }
-        : T extends NotificationType.InterestedInHappening
-        ? {
-              userId: number;
-              happeningId: number;
-          }
-        : T extends NotificationType.MadeAnAccountPOG
-        ? {}
-        : T extends NotificationType.NoEmptyServers
-        ? {}
-        : {}; // this looks stupid, ngl
+export type FollowNotification = {
+    userId: number;
+}
+
+export type AddedInTeamNotification = {
+    happeningId: number;
+}
+
+export type RemovedFromTeamNotification = {
+    happeningId: number;
+}
+
+export type InterestedInHappeningNotification = {
+    userId: number;
+    happeningId: number;
+}
+
+export type NewAccountNotification = {}
+
+export type NoEmptyServersNotification = {}
+
+export type NotificationJson =
+    FollowNotification |
+    AddedInTeamNotification |
+    RemovedFromTeamNotification |
+    InterestedInHappeningNotification |
+    NewAccountNotification |
+    NoEmptyServersNotification;
 
 type Author = {
     author: {
@@ -50,18 +53,18 @@ type Happening = {
     };
 };
 
-type Common<T extends NotificationType> = {
+type Common<N extends Record<string, any>, T extends NotificationType> = {
     id: number;
-    notification: NotificationJson<T>;
-    type: T;
+    notification: N;
     createdAt: string;
+    type: T;
     seen: boolean;
 };
 
 export type Notification =
-    | (Common<NotificationType.Followage> & Author)
-    | (Common<NotificationType.InterestedInHappening> & Author & Happening)
-    | (Common<NotificationType.AddedInTeam> & Author & Happening)
-    | (Common<NotificationType.RemovedFromTeam> & Author & Happening)
-    | Common<NotificationType.MadeAnAccountPOG>
-    | Common<NotificationType.NoEmptyServers>;
+    (Common<FollowNotification, NotificationType.Followage> & Author)
+    | (Common<InterestedInHappeningNotification, NotificationType.InterestedInHappening> & Author & Happening)
+    | (Common<AddedInTeamNotification, NotificationType.AddedInTeam> & Author & Happening)
+    | (Common<RemovedFromTeamNotification, NotificationType.RemovedFromTeam> & Author & Happening)
+    | Common<NewAccountNotification, NotificationType.MadeAnAccountPOG>
+    | Common<NoEmptyServersNotification, NotificationType.NoEmptyServers>;

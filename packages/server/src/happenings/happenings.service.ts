@@ -20,6 +20,7 @@ import { RunDTO } from './dto/run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
+import { NotificationType as NotifType } from "@app/shared/types/Notification.type";
 
 export class AllServersInUseError extends Error {
     constructor(message?: string) {
@@ -34,7 +35,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) {}
+    ) { }
 
     async createRun(data: RunDTO & { authorId: number }): Promise<Happening> {
         return await this.prismaService.happening.create({
@@ -297,7 +298,7 @@ export class HappeningsService {
 
             await this.notificationsService.sendNotification(
                 author.authorId,
-                NotificationType.InterestedInHappening,
+                NotificationType.InterestedInHappening as NotifType.InterestedInHappening,
                 { happeningId, userId },
             );
         } else {

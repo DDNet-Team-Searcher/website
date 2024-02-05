@@ -66,7 +66,9 @@ export function User({
                     <span className="mx-1 text-xl font-bold">∙</span>
                     <img
                         className="max-w-[30px]"
-                        src={`https://ddnet.org/countryflags/${favoriteServer || "UNK"}.png`}
+                        src={`https://ddnet.org/countryflags/${
+                            favoriteServer || 'UNK'
+                        }.png`}
                     />
                     <span className="mx-1 text-xl font-bold">∙</span>
                     <span className="flex items-center">
