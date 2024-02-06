@@ -1,7 +1,7 @@
 'use client';
 
 import { useLazySearchQuery } from '@/features/api/search.api';
-import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
+import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
@@ -11,6 +11,7 @@ import { mergeHappenings } from '@/store/slices/happenings';
 import { Happening as HappeningType } from '@app/shared/types/Happening.type';
 import { User } from './User';
 import { User as UserType } from '@app/shared/types/SearchResult.type';
+import { useRouter } from 'next/navigation';
 
 const selectOptions = {
     all: 'All',
@@ -22,8 +23,11 @@ const selectOptions = {
 export default function Search() {
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams();
+    const router = useRouter();
     const [page, setPage] = useState(1);
-    const [filters, setFilters] = useState<Record<string, string>>({});
+    const [filters, setFilters] = useState<Record<string, string>>({
+        sort: searchParams.get("sort") || ''
+    });
     const [moreResultsAvailable, setMoreResultsAvailable] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [searchQuery] = useLazySearchQuery();
@@ -44,7 +48,6 @@ export default function Search() {
     }, [filters]);
 
     useEffect(() => {
-        console.log('ME BHERE');
         setMoreResultsAvailable(false);
         if (query !== '') {
             searchQuery({ query, page, filters })
@@ -100,6 +103,9 @@ export default function Search() {
     const setFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const filter = e.target.value as keyof typeof selectOptions;
 
+        const params = new URLSearchParams(Array.from(searchParams.entries()));
+        params.set("sort", filter)
+        router.push(`?${params.toString()}`)
         setFilters({
             ...filters,
             sort: filter,
@@ -112,6 +118,7 @@ export default function Search() {
                 <select
                     onChange={setFilter}
                     className="border-primary-3 border-[1px] px-3 py-2 bg-primary-2 rounded-[10px] text-high-emphasis"
+                    defaultValue={filters['sort']}
                 >
                     <option value="" disabled>
                         Type
@@ -130,7 +137,7 @@ export default function Search() {
                     ))}
                 </div>
             )}
-            {filters?.sort === 'users' && results[0].type === 'User' && (
+            {filters?.sort === 'users' && results.length && results[0].type === 'User' && (
                 <div className="max-w-[725px] w-full mx-auto [&>*]:mt-7">
                     {results.map((user) => {
                         return (
