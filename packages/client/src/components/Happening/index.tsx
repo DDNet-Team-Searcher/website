@@ -192,7 +192,7 @@ export function Happening({ id }: OwnProps) {
                     <div className="flex mt-2.5">
                         <TeeIcon color="var(--high-emphasis)" />
                         <span className="text-high-emphasis ml-3.5">
-                            69/420
+                            {happening._count.inTeam}/{happening.teamSize}
                         </span>
                     </div>
                 )}

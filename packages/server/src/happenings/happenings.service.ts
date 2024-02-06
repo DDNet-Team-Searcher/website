@@ -20,7 +20,7 @@ import { RunDTO } from './dto/run.dto';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
-import { NotificationType as NotifType } from "@app/shared/types/Notification.type";
+import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
 
 export class AllServersInUseError extends Error {
     constructor(message?: string) {
@@ -35,7 +35,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) { }
+    ) {}
 
     async createRun(data: RunDTO & { authorId: number }): Promise<Happening> {
         return await this.prismaService.happening.create({
@@ -374,6 +374,20 @@ export class HappeningsService {
         } = run;
         const isInterested = !!run.interestedPlayers.length || false;
         const inTeam = run.interestedPlayers[0]?.inTeam || false;
+        const playersCountInTeam =
+            (await this.prismaService.happening.findFirst({
+                select: {
+                    _count: {
+                        select: {
+                            interestedPlayers: {
+                                where: {
+                                    inTeam: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            }))!; //NOTE: this is fine;
 
         return {
             id,
@@ -389,7 +403,10 @@ export class HappeningsService {
             startAt: startAt.toString(),
             type: HappeningType.Run as Happenings.Run,
             description,
-            _count,
+            _count: {
+                interestedPlayers: _count.interestedPlayers,
+                inTeam: playersCountInTeam._count.interestedPlayers,
+            },
             place,
             mapName,
             inTeam,

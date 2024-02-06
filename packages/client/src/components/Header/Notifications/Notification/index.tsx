@@ -29,7 +29,8 @@ export function Notification({ notification }: OwnProps) {
 
     switch (notification.type) {
         case NotificationType.InterestedInHappening:
-            let interestedUsername = notification.author.username || 'deleted user';
+            let interestedUsername =
+                notification.author.username || 'deleted user';
 
             if (notification.happening.type == Happenings.Run) {
                 text = i18n._('notification.interested_run', {

@@ -20,7 +20,7 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) { }
+    ) {}
 
     async sendNotification(
         userId: number,
@@ -89,7 +89,9 @@ export class NotificationsService {
                         avatar: getAvatarUrl(author.username),
                     },
                     id: notification.id,
-                    type: notification.type as NotifType.AddedInTeam | NotifType.RemovedFromTeam,
+                    type: notification.type as
+                        | NotifType.AddedInTeam
+                        | NotifType.RemovedFromTeam,
                     seen: notification.seen,
                     happening: {
                         ...happeningInfo,
@@ -104,9 +106,8 @@ export class NotificationsService {
             case NotificationType.Followage: {
                 const author = (await this.prismaService.user.findFirst({
                     where: {
-                        id: (
-                            notification.notification as FollowNotification
-                        ).userId,
+                        id: (notification.notification as FollowNotification)
+                            .userId,
                     },
                     select: {
                         username: true,
@@ -128,8 +129,8 @@ export class NotificationsService {
                 };
             }
             case NotificationType.InterestedInHappening: {
-                const happeningInfo = (await this.prismaService.happening.findFirst(
-                    {
+                const happeningInfo =
+                    (await this.prismaService.happening.findFirst({
                         where: {
                             id: (
                                 notification.notification as InterestedInHappeningNotification
@@ -140,8 +141,7 @@ export class NotificationsService {
                             title: true,
                             type: true,
                         },
-                    },
-                ))!; //NOTE: this is fine
+                    }))!; //NOTE: this is fine
 
                 const author = (await this.prismaService.user.findFirst({
                     where: {
