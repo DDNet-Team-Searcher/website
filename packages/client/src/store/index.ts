@@ -3,7 +3,6 @@ import appReducer from './slices/app';
 import hintsReducer from './slices/hints';
 import happeningsReducer from './slices/happenings';
 import userReducer from './slices/user';
-import profileReducer from './slices/profile';
 import { baseApi } from '@/features/api/base.api';
 
 export const store = configureStore({
@@ -12,7 +11,6 @@ export const store = configureStore({
         hints: hintsReducer,
         app: appReducer,
         happenings: happeningsReducer,
-        profile: profileReducer,
         [baseApi.reducerPath]: baseApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>

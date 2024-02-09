@@ -5,9 +5,16 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { ReviewsModule } from 'src/reviews/reviews.module';
 
 @Module({
-    imports: [AuthModule, PrismaModule, HappeningsModule, NotificationsModule],
+    imports: [
+        AuthModule,
+        PrismaModule,
+        HappeningsModule,
+        ReviewsModule,
+        NotificationsModule,
+    ],
     controllers: [UsersController],
     providers: [Logger, UsersService],
     exports: [UsersService],

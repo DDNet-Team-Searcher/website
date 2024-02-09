@@ -3,7 +3,9 @@ import {
     BanUserRequest,
     BanUserResponse,
     FollowUserResponse,
+    GetProfileHappenings,
     GetProfileResponse,
+    GetProfileReviews,
     GetUserCredentialsResponse,
     LoginUserRequest,
     LoginUserResponse,
@@ -99,6 +101,12 @@ export const usersAPI = baseApi.injectEndpoints({
         getProfile: build.query<GetProfileResponse, number>({
             query: (userId) => `/profile/${userId}`,
         }),
+        getProfileReviews: build.query<GetProfileReviews, number>({
+            query: (userId) => `/profile/${userId}/reviews`,
+        }),
+        getProfileHappenings: build.query<GetProfileHappenings, number>({
+            query: (userId) => `/profile/${userId}/happenings`,
+        }),
         followUser: build.mutation<FollowUserResponse, number>({
             query: (userId) => ({
                 url: `user/${userId}/follow`,
@@ -138,7 +146,9 @@ export const {
     useUpdateUsernameMutation,
     useUpdateEmailMutation,
     useUpdatePasswordMutation,
-    useLazyGetProfileQuery,
+    useGetProfileQuery,
+    useGetProfileReviewsQuery,
+    useGetProfileHappeningsQuery,
     useFollowUserMutation,
     useReportUserMutation,
     useBanUserMutation,

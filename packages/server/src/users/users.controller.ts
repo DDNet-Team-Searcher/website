@@ -37,7 +37,9 @@ import { AuthedRequest } from 'src/types/AuthedRequest.type';
 import {
     BanUserResponse,
     FollowUserResponse,
+    GetProfileHappenings,
     GetProfileResponse,
+    GetProfileReviews,
     GetUserCredentialsResponse,
     LoginUserResponse,
     LogoutUserResponse,
@@ -50,6 +52,7 @@ import {
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
 import { log } from 'src/decorators/log.decorator';
+import { HappeningType } from '@prisma/client';
 
 @Controller()
 export class UsersController {
@@ -351,10 +354,13 @@ export class UsersController {
         @Param('id') id: string,
         @Req() req: AuthedRequest,
     ): Promise<GetProfileResponse> {
-        const profile = await this.usersService.getUserProfile(
-            req.user.id,
-            parseInt(id),
-        );
+        const ID = parseInt(id);
+
+        if (!ID) {
+            throw new BadRequestException();
+        }
+
+        const profile = await this.usersService.getUserProfile(req.user.id, ID);
 
         if (profile) {
             return {
@@ -366,6 +372,41 @@ export class UsersController {
         }
 
         throw new NotFoundException();
+    }
+
+    @Protected()
+    @Get('/profile/:id/happenings')
+    async userHappenings(
+        @Param('id') id: string,
+        @Req() req: AuthedRequest,
+    ): Promise<GetProfileHappenings> {
+        const happenings = await this.usersService.happenings(
+            req.user.id,
+            parseInt(id),
+            {
+                type: HappeningType.Run,
+            },
+        );
+
+        return {
+            status: 'success',
+            data: {
+                happenings,
+            },
+        };
+    }
+
+    @Protected()
+    @Get('/profile/:id/reviews')
+    async userReviews(@Param('id') id: string): Promise<GetProfileReviews> {
+        const reviews = await this.usersService.reviews(parseInt(id));
+
+        return {
+            status: 'success',
+            data: {
+                reviews: reviews,
+            },
+        };
     }
 
     @Innocent()

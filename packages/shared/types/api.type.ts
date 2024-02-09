@@ -1,7 +1,7 @@
-import type { Event, Run } from './Happening.type';
+import type { Event, Happening, Run } from './Happening.type';
 import type { Profile } from './Profile.type';
 import type { Response as ApiResponse } from './Response.type';
-import type { Review } from './Review.type';
+import type { ProfileReview, Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
 import { User } from './User.type';
 
@@ -113,6 +113,10 @@ export type UnbanUserRequest = {
 export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
 
 export type GetProfileResponse = ApiResponse<{ profile: Profile }, null>;
+
+export type GetProfileHappenings = ApiResponse<{ happenings: Happening[] }, null>;
+
+export type GetProfileReviews = ApiResponse<{ reviews: ProfileReview[] }, null>;
 
 export type UpdateAvatarResponse = ApiResponse<
     { avatar: string | null },

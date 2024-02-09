@@ -21,6 +21,7 @@ import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
+import { Happening as HappeningT } from '@app/shared/types/Happening.type';
 
 export class AllServersInUseError extends Error {
     constructor(message?: string) {
@@ -534,57 +535,6 @@ export class HappeningsService {
         });
     }
 
-    async getRecentRunsIds(
-        id: number,
-        runsCount = 5,
-    ): Promise<{ id: number }[]> {
-        return await this.prismaService.happening.findMany({
-            where: {
-                type: 'Run',
-                authorId: id,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-            take: runsCount,
-            select: {
-                id: true,
-            },
-        });
-    }
-
-    async getRecentEventsIds(
-        id: number,
-        eventsCount = 5,
-    ): Promise<{ id: number }[]> {
-        return await this.prismaService.happening.findMany({
-            where: {
-                type: 'Event',
-                authorId: id,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-            take: eventsCount,
-            select: {
-                id: true,
-            },
-        });
-    }
-
-    async countLastFinishedHappenings(
-        authorId: number,
-        type: HappeningType,
-    ): Promise<number> {
-        return this.prismaService.happening.count({
-            where: {
-                authorId,
-                type,
-                status: Status.Finished,
-            },
-        });
-    }
-
     async getHappeningInterestedPlayers(id: number) {
         const interestedPlayers = await this.prismaService.happening.findMany({
             where: {
@@ -697,5 +647,39 @@ export class HappeningsService {
                 type: true,
             },
         }))!.type!;
+    }
+
+    async findUserHappenings(
+        authedUserId: number,
+        userId: number,
+        opts: {
+            type: HappeningType;
+        },
+    ) {
+        const data = await this.prismaService.happening.findMany({
+            select: {
+                id: true,
+                type: true,
+            },
+            where: {
+                type: opts.type,
+                authorId: userId,
+            },
+            take: 10,
+        });
+
+        let happenings: HappeningT[] = [];
+
+        for (const el of data) {
+            if (el.type == HappeningType.Run) {
+                happenings.push((await this.getRunById(el.id, authedUserId))!);
+            } else if (el.type == HappeningType.Event) {
+                happenings.push(
+                    (await this.getEventById(el.id, authedUserId))!,
+                );
+            }
+        }
+
+        return happenings;
     }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { getAvatarUrl } from 'src/utils/user.util';
-import { Review } from '@app/shared/types/Review.type';
+import { ProfileReview, Review } from '@app/shared/types/Review.type';
 
 @Injectable()
 export class ReviewsService {
@@ -78,5 +78,29 @@ export class ReviewsService {
                 review: text,
             },
         });
+    }
+
+    async reviewsAboutUser(userId: number): Promise<ProfileReview[]> {
+        const reviews = await this.prismaService.review.findMany({
+            select: {
+                id: true,
+                review: true,
+                createdAt: true,
+                rate: true,
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        avatar: true,
+                    },
+                },
+            },
+            where: {
+                reviewedUserId: userId,
+            },
+        });
+
+        //FIXME: here createdAt is of type Date so time to use forbidden jutsu called "as unknown as"
+        return reviews as unknown as ProfileReview[];
     }
 }

@@ -5,7 +5,8 @@ import { ReviewsService } from './reviews.service';
 
 @Module({
     imports: [PrismaModule],
-    controllers: [Logger, ReviewsController],
-    providers: [ReviewsService],
+    controllers: [ReviewsController],
+    providers: [Logger, ReviewsService],
+    exports: [ReviewsService],
 })
 export class ReviewsModule {}

@@ -14,3 +14,15 @@ export type Review = {
         username: string;
     };
 };
+
+export type ProfileReview = {
+    id: number;
+    review: string | null;
+    createdAt: string;
+    rate: number;
+    author: {
+        id: number;
+        username: string;
+        avatar: string | null;
+    };
+};

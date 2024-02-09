@@ -8,16 +8,19 @@ import { User } from '@app/shared/types/User.type';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
-import { Run, Event } from '@app/shared/types/Happening.type';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '@app/shared/types/Role.type';
+import { ReviewsService } from 'src/reviews/reviews.service';
+import { ProfileReview } from '@app/shared/types/Review.type';
+import { Happening } from '@app/shared/types/Happening.type';
 
 @Injectable()
 export class UsersService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly happeningService: HappeningsService,
+        private readonly reviewsService: ReviewsService,
         private readonly notificationsService: NotificationsService,
     ) {}
 
@@ -199,78 +202,21 @@ export class UsersService {
             _count: { followers, following },
         } = profile;
 
-        const runIds = await this.happeningService.getRecentRunsIds(id);
-        const eventIds = await this.happeningService.getRecentEventsIds(id);
-
-        const events: Event[] = [];
-        const runs: Run[] = [];
-
-        for (const runId of runIds) {
-            const run = await this.happeningService.getRunById(
-                userId,
-                runId.id,
-            );
-
-            if (run) {
-                runs.push(run);
-            }
-        }
-
-        for (const eventId of eventIds) {
-            const event = await this.happeningService.getEventById(
-                userId,
-                eventId.id,
-            );
-
-            if (event) {
-                events.push(event);
-            }
-        }
-
-        const playedRuns =
-            await this.happeningService.countLastFinishedHappenings(
-                id,
-                HappeningType.Run,
-            );
-        const playedEvents =
-            await this.happeningService.countLastFinishedHappenings(
-                id,
-                HappeningType.Event,
-            );
-
         const isFollowing = await this.isFollowing(userId, id);
-
-        const reviews: Profile['reviews'] = [];
-
-        for (const review of profile.reviews) {
-            reviews.push({
-                ...review,
-                createdAt: createdAt.toString(),
-            });
-        }
-
         const isReported = await this.isReported(id, userId);
 
         //TODO: return boolean only to users who can ban
         //return null for others
-
         return {
             id: profileUserId,
-            reviews,
             username,
             tier,
             role,
             createdAt: createdAt.toString(),
             avatar: getAvatarUrl(avatar),
-            happenings: {
-                runs,
-                events,
-            },
             _count: {
                 followers,
                 following,
-                playedRuns,
-                playedEvents,
             },
             isFollowing,
             isReported,
@@ -523,5 +469,23 @@ export class UsersService {
             },
         }))!.role;
         // ^ is this gud?
+    }
+
+    async happenings(
+        authedUserId: number,
+        userId: number,
+        opts: {
+            type: HappeningType;
+        },
+    ): Promise<Happening[]> {
+        return await this.happeningService.findUserHappenings(
+            authedUserId,
+            userId,
+            opts,
+        );
+    }
+
+    async reviews(id: number): Promise<ProfileReview[]> {
+        return await this.reviewsService.reviewsAboutUser(id);
     }
 }

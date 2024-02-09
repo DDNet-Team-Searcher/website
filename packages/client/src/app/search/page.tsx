@@ -26,7 +26,7 @@ export default function Search() {
     const router = useRouter();
     const [page, setPage] = useState(1);
     const [filters, setFilters] = useState<Record<string, string>>({
-        sort: searchParams.get("sort") || ''
+        sort: searchParams.get('sort') || '',
     });
     const [moreResultsAvailable, setMoreResultsAvailable] = useState(false);
     const [isReady, setIsReady] = useState(false);
@@ -104,8 +104,8 @@ export default function Search() {
         const filter = e.target.value as keyof typeof selectOptions;
 
         const params = new URLSearchParams(Array.from(searchParams.entries()));
-        params.set("sort", filter)
-        router.push(`?${params.toString()}`)
+        params.set('sort', filter);
+        router.push(`?${params.toString()}`);
         setFilters({
             ...filters,
             sort: filter,
@@ -137,18 +137,20 @@ export default function Search() {
                     ))}
                 </div>
             )}
-            {filters?.sort === 'users' && results.length && results[0].type === 'User' && (
-                <div className="max-w-[725px] w-full mx-auto [&>*]:mt-7">
-                    {results.map((user) => {
-                        return (
-                            <User
-                                user={user as unknown as UserType}
-                                key={user.id}
-                            />
-                        );
-                    })}
-                </div>
-            )}
+            {filters?.sort === 'users' &&
+                results.length &&
+                results[0].type === 'User' && (
+                    <div className="max-w-[725px] w-full mx-auto [&>*]:mt-7">
+                        {results.map((user) => {
+                            return (
+                                <User
+                                    user={user as unknown as UserType}
+                                    key={user.id}
+                                />
+                            );
+                        })}
+                    </div>
+                )}
             <div ref={ref} />
         </div>
     );

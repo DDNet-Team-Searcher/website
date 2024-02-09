@@ -20,7 +20,6 @@ import {
 } from '@app/shared/types/api.type';
 import { intoFormData } from '@/utils/intoFormData';
 import { baseApi } from './base.api';
-import { mergeHappenings } from '@/store/slices/happenings';
 
 const PREFIX = '/happenings';
 
