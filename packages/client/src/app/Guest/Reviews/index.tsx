@@ -29,7 +29,7 @@ const reviews = [
 
 export function Reviews() {
     return (
-        <div className="mt-[150px] text-high-emphasis">
+        <div className="my-[150px] text-high-emphasis">
             <p className="text-3xl font-medium text-center">
                 What homies are saying &apos;bout us:
             </p>

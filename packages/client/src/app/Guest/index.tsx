@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { AboutUs } from './AboutUs';
 import { Reviews } from './Reviews';
-import { LatestNews } from './LastestNews';
 
 export default function Guest() {
     return (
@@ -46,7 +45,6 @@ export default function Guest() {
             </div>
             <AboutUs />
             <Reviews />
-            <LatestNews />
         </>
     );
 }
