@@ -31,15 +31,15 @@ import { Stats } from './Stats';
 
 const roles = {
     Admin: {
-        icon: 'https://cdn.7tv.app/emote/60ae958e229664e8667aea38/4x.webp',
+        icon: '/roles/admin.webp',
         color: '#f6a740',
     },
     Mod: {
-        icon: 'https://cdn.7tv.app/emote/6134bc74f67d73ea27e44b0f/4x.webp',
+        icon: '/roles/moderator.webp',
         color: '#3498db',
     },
     Verified: {
-        icon: 'https://cdn.7tv.app/emote/6268904f4f54759b7184fa72/4x.webp',
+        icon: '/roles/verified.webp',
         color: '#ffffff',
     },
 };
@@ -237,7 +237,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                 Favorite server
                                 <img
                                     className="max-w-[30px] object-contain ml-1"
-                                    src={`https://ddnet.org/countryflags/${
+                                    src={`/countryflags/${
                                         favServer || 'UNK'
                                     }.png`}
                                 />
