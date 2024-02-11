@@ -6,6 +6,8 @@ import { RouteGuard } from '@/components/RouteGuard';
 import { HappeningInfoModal } from '@/components/HappeningInfoModal';
 import { BanModal } from './BanModal';
 import { Footer } from '@/components/Footer/page';
+import { getLocale } from '@/i18/server';
+import { LocaleProvider } from '@/utils/hooks/localeProvider';
 
 export const metadata = {
     title: 'DDnet Team Searcher',
@@ -18,18 +20,22 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const locale = getLocale();
+
     return (
         <Provider>
-            <html lang="ua">
-                <body className="bg-gradient-to-b from-[#181510] to-[#201506] flex flex-col min-h-[100vh]">
-                    <BanModal />
-                    <HappeningInfoModal />
-                    <Header />
-                    <Hints />
-                    <RouteGuard>{children}</RouteGuard>
-                    <Footer />
-                </body>
-            </html>
+            <LocaleProvider value={locale}>
+                <html lang={locale}>
+                    <body className="bg-gradient-to-b from-[#181510] to-[#201506] flex flex-col min-h-[100vh]">
+                        <BanModal />
+                        <HappeningInfoModal />
+                        <Header />
+                        <Hints />
+                        <RouteGuard>{children}</RouteGuard>
+                        <Footer />
+                    </body>
+                </html>
+            </LocaleProvider>
         </Provider>
     );
 }

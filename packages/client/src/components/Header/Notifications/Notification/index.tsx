@@ -8,14 +8,14 @@ import {
 import { timeAgo } from '@/utils/timeago';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
-import { useLingui } from '@lingui/react';
+import { useTranslation } from '@/i18/client';
 
 type OwnProps = {
     notification: NotificationT;
 };
 
 export function Notification({ notification }: OwnProps) {
-    const { i18n } = useLingui();
+    const { t } = useTranslation("notification");
     const [setNotificationSeen] = useLazySetNotificationSeenQuery();
     const { ref } = useInView({
         onChange: (inView) => {
@@ -33,12 +33,12 @@ export function Notification({ notification }: OwnProps) {
                 notification.author.username || 'deleted user';
 
             if (notification.happening.type == Happenings.Run) {
-                text = i18n._('notification.interested_run', {
+                text = t('interested_run', {
                     interestedUsername,
                     mapName: notification.happening.mapName,
                 });
             } else if (notification.happening.type == Happenings.Event) {
-                text = i18n._('notification.interested_event', {
+                text = t('interested_event', {
                     interestedUsername,
                     title: notification.happening.title,
                 });
@@ -46,7 +46,7 @@ export function Notification({ notification }: OwnProps) {
 
             break;
         case NotificationType.NoEmptyServers:
-            text = i18n._('notification.no_empty_servers');
+            text = t('notification.no_empty_servers');
 
             break;
     }
@@ -54,7 +54,6 @@ export function Notification({ notification }: OwnProps) {
     return (
         <li className="mt-[15px] flex" ref={ref}>
             {notification.type === NotificationType.InterestedInHappening && (
-                //@ts-ignore
                 <Link href={`/profile/${notification.notification.userId}`}>
                     <Avatar
                         src={notification.author.avatar}

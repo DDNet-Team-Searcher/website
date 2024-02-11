@@ -1,6 +1,4 @@
-'use client';
-
-import { useLingui } from '@lingui/react';
+import { createTranslation } from '@/i18/server';
 import Link from 'next/link';
 
 const links = {
@@ -8,8 +6,8 @@ const links = {
     source_code: 'https://github.com/DDNet-Team-Searcher',
 };
 
-export function Footer() {
-    const { i18n } = useLingui();
+export async function Footer() {
+    const { t } = await createTranslation("footer");
 
     return (
         <footer className="flex text-medium-emphasis py-2 px-40 mt-auto">
@@ -18,7 +16,7 @@ export function Footer() {
                 {Object.keys(links).map((key, id) => (
                     <li key={id} className="ml-5">
                         <Link href={links[key as keyof typeof links]}>
-                            {i18n._(key)}
+                            {t(key)}
                         </Link>
                     </li>
                 ))}
