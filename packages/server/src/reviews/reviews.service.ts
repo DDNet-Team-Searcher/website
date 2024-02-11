@@ -81,6 +81,8 @@ export class ReviewsService {
     }
 
     async reviewsAboutUser(userId: number): Promise<ProfileReview[]> {
+        const res: ProfileReview[] = [];
+
         const reviews = await this.prismaService.review.findMany({
             select: {
                 id: true,
@@ -100,7 +102,18 @@ export class ReviewsService {
             },
         });
 
-        //FIXME: here createdAt is of type Date so time to use forbidden jutsu called "as unknown as"
-        return reviews as unknown as ProfileReview[];
+        //TODO: lotta unnecessary copying
+        for (const review of reviews) {
+            res.push({
+                ...review,
+                createdAt: review.createdAt.toString(),
+                author: {
+                    ...review.author,
+                    avatar: getAvatarUrl(review.author.avatar),
+                },
+            });
+        }
+
+        return res;
     }
 }
