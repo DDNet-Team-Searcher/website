@@ -1,4 +1,5 @@
 {
+    "title": "Notifications",
     "interested_run": "{{ interestedUsername }} is interested in your {{ mapName }} run",
     "interested_event": "{{ interestedUsername }} is interested in your {title} event",
     "no_empty_servers": "Sadly you cant play on our servers rn coz there're no empty servers"

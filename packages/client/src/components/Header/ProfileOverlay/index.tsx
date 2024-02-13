@@ -9,11 +9,12 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MutableRefObject, Ref, forwardRef } from 'react';
+import { useTranslation } from '@/i18/client';
 
 const links = {
-    '/profile': 'Your profile',
-    '/happenings': 'Your happenings',
-    '/settings/account': 'Settings',
+    '/profile': 'your_profile',
+    '/happenings': 'your_happenings',
+    '/settings/account': 'settings',
 };
 
 type OwnProps = {
@@ -29,6 +30,7 @@ export const ProfileOverlay = forwardRef(
         const dispatch = useAppDispatch();
         const handleFormError = useHandleFormError();
         const router = useRouter();
+        const { t } = useTranslation('header');
 
         const logout = async () => {
             try {
@@ -60,7 +62,7 @@ export const ProfileOverlay = forwardRef(
                         className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis"
                     >
                         <Link href={link}>
-                            {links[link as keyof typeof links]}
+                            {t(links[link as keyof typeof links])}
                         </Link>
                     </li>
                 ))}
@@ -72,7 +74,7 @@ export const ProfileOverlay = forwardRef(
                     className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer"
                     onClick={logout}
                 >
-                    Sing out
+                    {t('sign_out')}
                 </li>
             </ul>
         );

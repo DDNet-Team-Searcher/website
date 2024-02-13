@@ -15,7 +15,7 @@ type OwnProps = {
 };
 
 export function Notification({ notification }: OwnProps) {
-    const { t } = useTranslation("notification");
+    const { t } = useTranslation('notification');
     const [setNotificationSeen] = useLazySetNotificationSeenQuery();
     const { ref } = useInView({
         onChange: (inView) => {

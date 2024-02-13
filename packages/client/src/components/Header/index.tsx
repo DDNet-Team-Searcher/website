@@ -19,6 +19,7 @@ import { ProfileOverlay } from './ProfileOverlay';
 import { AddIcon } from '../ui/Icons/Add';
 import { NotificationIcon } from '../ui/Icons/Notification';
 import { Happenings } from '@app/shared/types/Happening.type';
+import { useTranslation } from '@/i18/client';
 
 export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
@@ -41,6 +42,7 @@ export function Header() {
         (state) => state.user.user._count.unreadNotifications,
     );
     const router = useRouter();
+    const { t } = useTranslation('header');
 
     const onOutsideClick = () => {
         setIsSelectionMenuHidden(true);
@@ -123,7 +125,7 @@ export function Header() {
                                 className="inline-block"
                                 alt="sign up icon"
                             />{' '}
-                            Sign up
+                            {t('register')}
                         </Link>
                     </Button>
                     <Button styleType="filled">
@@ -133,7 +135,7 @@ export function Header() {
                                 className="inline-block"
                                 alt="login icon"
                             />{' '}
-                            Log in
+                            {t('login')}
                         </Link>
                     </Button>
                 </div>
@@ -187,13 +189,13 @@ export function Header() {
                                 className="text-[white] px-4 py-2.5 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-3"
                                 onClick={createEvent}
                             >
-                                Create event
+                                {t('create_event')}
                             </div>
                             <div
                                 className="text-[white] px-4 py-2.5 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-3"
                                 onClick={createRun}
                             >
-                                Create run
+                                {t('create_run')}
                             </div>
                         </div>
                     </div>

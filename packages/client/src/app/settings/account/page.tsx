@@ -10,6 +10,7 @@ import { useUpdateAvatarMutation } from '@/features/api/users.api';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
 import { updateAvatar as updateAvatarInStore } from '@/store/slices/user';
+import { useTranslation } from '@/i18/client';
 
 export default function Account() {
     const dispatch = useAppDispatch();
@@ -24,6 +25,7 @@ export default function Account() {
     const [isDeleteAccountModalVisible, setIsDeleteAccountModalVisible] =
         useState(false);
     const user = useAppSelector((state) => state.user.user);
+    const { t } = useTranslation('settings');
 
     const changeAvatar = () => {
         ref.current?.click();
@@ -138,28 +140,29 @@ export default function Account() {
             </div>
             <div className="mt-[50px]">
                 <p className="text-xl text-high-emphasis">
-                    Password and Authentication
+                    {t('password_and_authentication')}
                 </p>
                 <Button
                     styleType="filled"
                     onClick={changePassword}
                     className="text-sm mt-5"
                 >
-                    Change Password
+                    {t('change_password')}
                 </Button>
             </div>
             <div className="mt-[50px]">
-                <p className="text-xl text-high-emphasis">Account removal</p>
+                <p className="text-xl text-high-emphasis">
+                    {t('account_removal')}
+                </p>
                 <p className="text-sm text-medium-emphasis">
-                    If you remove your account it’s gg. You wont be able to
-                    restore it!
+                    {t('account_removal_desc')}
                 </p>
                 <Button
                     styleType="filled"
                     onClick={deleteAccount}
                     className="text-sm mt-5 !bg-error"
                 >
-                    Delete Account
+                    {t('delete_account')}
                 </Button>
             </div>
         </>

@@ -1,0 +1,14 @@
+{
+    "account": {
+        "title": "User settings",
+        "account": "Account",
+        "notifications": "Notifications"
+    },
+    "privileged": {
+        "title": "Admin stuff",
+        "users": "Users",
+        "banned_users": "Banned users",
+        "reports": "Reports",
+        "servers": "Servers"
+    }
+}

@@ -7,25 +7,25 @@ type OwnProps = {
 const urls = [
     {
         path: 'users',
-        name: 'Users',
+        name: 'privileged.users',
     },
     {
         path: 'banned-users',
-        name: 'Banned Users',
+        name: 'privileged.banned_users',
     },
     {
         path: 'reports',
-        name: 'Reports',
+        name: 'privileged.reports',
     },
     {
         path: 'servers',
-        name: 'Servers',
+        name: 'privileged.servers',
     },
 ];
 
 export default function AdminLayout({ children }: OwnProps) {
     return (
-        <NoNameLayout title="Admin stuff" urls={urls}>
+        <NoNameLayout title="privileged.title" urls={urls}>
             {children}
         </NoNameLayout>
     );

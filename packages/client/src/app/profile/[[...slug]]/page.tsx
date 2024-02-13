@@ -28,6 +28,7 @@ import { Profile } from '@app/shared/types/Profile.type';
 import { Reviews } from './Reviews';
 import { Happenings } from './Happenings';
 import { Stats } from './Stats';
+import { useTranslation } from '@/i18/client';
 
 const roles = {
     Admin: {
@@ -70,6 +71,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
     const ref = useRef<CarouselRef | null>(null);
     const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState<number>(0);
+    const { t } = useTranslation('profile');
 
     useEffect(() => {
         let tab = searchParams.get('tab');

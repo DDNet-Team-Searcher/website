@@ -1,0 +1,10 @@
+{
+    "login": "Login",
+    "register": "Sign up",
+    "create_run": "Create run",
+    "create_event": "Create event",
+    "your_profile": "Your profile",
+    "your_happenings": "Your happenings",
+    "settings": "Settings",
+    "sign_out": "Sign out"
+}

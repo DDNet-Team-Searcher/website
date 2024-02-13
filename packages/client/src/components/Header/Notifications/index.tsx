@@ -4,6 +4,7 @@ import { useAppSelector } from '@/utils/hooks/hooks';
 import classNames from 'classnames';
 import { forwardRef, Ref } from 'react';
 import { Notification } from './Notification';
+import { useTranslation } from '@/i18/client';
 
 type OwnProps = {
     isVisible: boolean;
@@ -16,6 +17,7 @@ export const Notifications = forwardRef(
         const notifications = useAppSelector(
             (state) => state.user.user.notifications,
         );
+        const { t } = useTranslation('notification');
 
         return (
             <div className="relative" data-id="notifications" ref={ref}>
@@ -28,7 +30,7 @@ export const Notifications = forwardRef(
                     )}
                 >
                     <div className="flex justify-between px-[20px] pt-[10px] pb-[15px] border-b-high-emphasis border-b-[1px]">
-                        <p>Notifications</p>
+                        <p>{t('title')}</p>
                         <SettingsIcon size={25} />
                     </div>
                     <ul className="max-h-[350px] overflow-scroll pl-[20px] pr-[30px] mb-[20px]">

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslation } from '@/i18/client';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,11 +15,12 @@ type OwnProps = {
 
 export function Navbar({ title, urls }: OwnProps) {
     const pathname = usePathname();
+    const { t } = useTranslation('navbar');
 
     return (
         <aside className="basis-[170px]">
             <p className="uppercase text-[12px] ml-2.5 text-high-emphasis font-medium">
-                {title}
+                {t(title)}
             </p>
             <div className="mt-5">
                 {urls.map((url, id) => (
@@ -33,7 +35,7 @@ export function Navbar({ title, urls }: OwnProps) {
                             },
                         )}
                     >
-                        {url.name}
+                        {t(url.name)}
                     </Link>
                 ))}
             </div>

@@ -7,7 +7,7 @@ const links = {
 };
 
 export async function Footer() {
-    const { t } = await createTranslation("footer");
+    const { t } = await createTranslation('footer');
 
     return (
         <footer className="flex text-medium-emphasis py-2 px-40 mt-auto">

@@ -2,7 +2,10 @@
 
 import { useEffect } from 'react';
 import i18next, { i18n } from 'i18next';
-import { initReactI18next, useTranslation as useTransAlias } from 'react-i18next';
+import {
+    initReactI18next,
+    useTranslation as useTransAlias,
+} from 'react-i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import {
@@ -20,7 +23,8 @@ i18next
     .use(LanguageDetector)
     .use(
         resourcesToBackend(
-            (lang: string, ns: string) => import(`../locales/${lang}/${ns}.json`),
+            (lang: string, ns: string) =>
+                import(`../locales/${lang}/${ns}.json`),
         ),
     )
     .init({

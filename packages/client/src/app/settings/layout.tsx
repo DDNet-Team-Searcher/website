@@ -7,17 +7,17 @@ type OwnProps = {
 const urls = [
     {
         path: 'account',
-        name: 'Account',
+        name: 'account.account',
     },
     {
         path: 'notifications',
-        name: 'Notifications',
+        name: 'account.notifications',
     },
 ];
 
 export default function SettingsLayout({ children }: OwnProps) {
     return (
-        <NoNameLayout title="User Settings" urls={urls}>
+        <NoNameLayout title="account.title" urls={urls}>
             {children}
         </NoNameLayout>
     );

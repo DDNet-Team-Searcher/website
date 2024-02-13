@@ -1,6 +1,6 @@
 import { Status } from '@app/shared/types/Happening.type';
 import classNames from 'classnames';
-import { CalendarIcon } from '@/components/ui/Icons/Calendar';
+import { useTranslation } from '@/i18/client';
 
 type OwnProps = {
     startAt: string;
@@ -8,16 +8,13 @@ type OwnProps = {
 };
 
 export function StartTime({ startAt, status }: OwnProps) {
-    const startDateWithWeekday = new Date(startAt).toLocaleDateString([], {
-        month: 'short',
-        weekday: 'short',
-        day: 'numeric',
-    });
+    const { i18n } = useTranslation('happening');
 
-    const startTime = new Date(startAt).toLocaleTimeString([], {
-        timeStyle: 'short',
-        hour12: false,
-    });
+    const datetime = i18n.format(
+        new Date(startAt),
+        'intlDateTime',
+        i18n.language,
+    );
 
     return (
         <span
@@ -26,8 +23,7 @@ export function StartTime({ startAt, status }: OwnProps) {
                 { 'text-success': status === Status.Happening },
             )}
         >
-            {status === Status.NotStarted &&
-                `${startDateWithWeekday}th ${startTime}`}
+            {status === Status.NotStarted && datetime}
             {status === Status.Happening && `Happening Now`}
             {status === Status.Finished && `Finished`}
             {status === Status.InQueue && `In Queue To Be Started`}
