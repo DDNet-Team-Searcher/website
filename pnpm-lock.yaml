@@ -107,7 +107,7 @@ importers:
         version: link:../shared
       '@nestjs-modules/mailer':
         specifier: ^1.10.3
-        version: 1.10.3(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(nodemailer@6.9.7)
+        version: 1.10.3(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(nodemailer@6.9.9)
       '@nestjs/common':
         specifier: ^10.1.0
         version: 10.1.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -164,7 +164,7 @@ importers:
         version: 10.4.0(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(class-validator@0.14.0)(rxjs@7.8.1)
       nodemailer:
         specifier: ^6.9.7
-        version: 6.9.7
+        version: 6.9.9
       prisma:
         specifier: ^5.0.0
         version: 5.0.0
@@ -702,13 +702,13 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: false
 
   /@babel/runtime@7.23.9:
     resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
-    dev: false
 
   /@babel/template@7.22.15:
     resolution: {integrity: sha512-QPErUVm4uyJa60rkI73qneDacvdvzxshT3kksGqlGWYdOTIUOwJ7RDUL8sGqslY1uXWSL6xMFKEXDS3ox2uF0w==}
@@ -1179,7 +1179,7 @@ packages:
       - supports-color
     dev: false
 
-  /@nestjs-modules/mailer@1.10.3(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(nodemailer@6.9.7):
+  /@nestjs-modules/mailer@1.10.3(@nestjs/common@10.1.0)(@nestjs/core@10.1.0)(nodemailer@6.9.9):
     resolution: {integrity: sha512-k2gs2NH8Ygq4JnETX+EDBXixLAS8DDZEI/Wbr9LGL3HwO3Qz8zVh8dBJ4ESpySuWniW+a8rARzGXtTUHC4KFlw==}
     peerDependencies:
       '@nestjs/common': '>=7.0.9'
@@ -1191,7 +1191,7 @@ packages:
       css-inline: 0.11.2
       glob: 10.3.10
       mjml: 4.14.1
-      nodemailer: 6.9.7
+      nodemailer: 6.9.9
       preview-email: 3.0.19
     optionalDependencies:
       '@types/ejs': 3.1.5
@@ -3373,7 +3373,7 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
-      '@babel/runtime': 7.23.2
+      '@babel/runtime': 7.23.9
     dev: true
 
   /debug@2.6.9:
@@ -3851,8 +3851,8 @@ packages:
       is-symbol: 1.0.4
     dev: false
 
-  /escalade@3.1.1:
-    resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
+  /escalade@3.1.2:
+    resolution: {integrity: sha512-ErCHMCae19vR8vQGe50xIsVomy19rg6gFu3+r3jkEO46suLMWBksvVyoGgQV+jOfl84ZSOSlmv6Gxa89PmTGmA==}
     engines: {node: '>=6'}
 
   /escape-goat@3.0.0:
@@ -6917,8 +6917,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: false
 
-  /nodemailer@6.9.7:
-    resolution: {integrity: sha512-rUtR77ksqex/eZRLmQ21LKVH5nAAsVicAtAYudK7JgwenEDZ0UIQ1adUGqErz7sMkWYxWTTU1aeP2Jga6WQyJw==}
+  /nodemailer@6.9.9:
+    resolution: {integrity: sha512-dexTll8zqQoVJEZPwQAKzxxtFn0qTnjdQTchoU6Re9BUUGBJiOy3YMn/0ShTW6J5M0dfQ1NeDeRTTl4oIWgQMA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
@@ -7436,7 +7436,7 @@ packages:
       fixpack: 4.0.0
       get-port: 5.1.1
       mailparser: 3.6.5
-      nodemailer: 6.9.7
+      nodemailer: 6.9.9
       open: 7.4.2
       p-event: 4.2.0
       p-wait-for: 3.2.0
@@ -8925,7 +8925,7 @@ packages:
       browserslist: '>= 4.21.0'
     dependencies:
       browserslist: 4.21.9
-      escalade: 3.1.1
+      escalade: 3.1.2
       picocolors: 1.0.0
     dev: true
 
@@ -8936,7 +8936,7 @@ packages:
       browserslist: '>= 4.21.0'
     dependencies:
       browserslist: 4.22.2
-      escalade: 3.1.1
+      escalade: 3.1.2
       picocolors: 1.0.0
     dev: true
 
@@ -9282,7 +9282,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       cliui: 7.0.4
-      escalade: 3.1.1
+      escalade: 3.1.2
       get-caller-file: 2.0.5
       require-directory: 2.1.1
       string-width: 4.2.3
@@ -9295,7 +9295,7 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       cliui: 8.0.1
-      escalade: 3.1.1
+      escalade: 3.1.2
       get-caller-file: 2.0.5
       require-directory: 2.1.1
       string-width: 4.2.3
