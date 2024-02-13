@@ -3,7 +3,7 @@
 import { Modal } from '@/components/ui/Modal';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { Avatar } from '@/components/Avatar';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { Event, Happenings, Status } from '@app/shared/types/Happening.type';
 import { StartTime } from '@/components/Happening/StartTime';
@@ -19,13 +19,13 @@ import { setHappeningInfoModalData } from '@/store/slices/app';
 import { getMapUrl } from '@/utils/getMapUrl';
 import { MapIcon } from '../ui/Icons/Map';
 import { TeeIcon } from '../ui/Icons/Tee';
+import { Carousel, CarouselRef } from '../ui/Carousel';
 
 export function HappeningInfoModal() {
     const dispatch = useAppDispatch();
     const { type, visible, happening } = useAppSelector(
         (state) => state.app.happeningInfoModal,
     );
-
     const {
         data: interestedPlayers,
         isSuccess: interestedPlayersSuccess,
@@ -33,10 +33,14 @@ export function HappeningInfoModal() {
     } = useGetHappeningInterestedPlayersQuery(happening?.id || 0);
     const [updateIsPlayerInTeam] = useUpdateIsPlayerInTeamMutation();
     const authedUserId = useAppSelector((state) => state.user.user.id);
-    const { data: reviews, isSuccess: reviewsSuccess } = useGetReviewsQuery(
-        happening?.id || 0,
-    );
+    const { data: reviews } = useGetReviewsQuery(happening?.id || 0);
     let isUserInTeam: number | null = null;
+    const ref = useRef<CarouselRef | null>(null);
+    const [activeTab, setActiveTab] = useState(0);
+
+    useEffect(() => {
+        ref.current?.goTo(activeTab);
+    }, [activeTab]);
 
     if (happening?.id && interestedPlayers?.status === 'success') {
         isUserInTeam =
@@ -44,8 +48,6 @@ export function HappeningInfoModal() {
                 (user) => user.user.id === authedUserId,
             )?.user.id || null;
     }
-
-    const [slideNum, setSlideNum] = useState(0);
 
     const onClose = () => {
         dispatch(
@@ -81,13 +83,10 @@ export function HappeningInfoModal() {
         }
     };
 
-    let thumbnailUrl;
+    let thumbnailUrl = getMapUrl(happening.mapName);
 
     if ((happening as Event).thumbnail) {
         thumbnailUrl = (happening as Event).thumbnail!;
-    }
-    if (!(happening as Event).thumbnail || type == Happenings.Run) {
-        thumbnailUrl = getMapUrl(happening.mapName);
     }
 
     return (
@@ -101,18 +100,18 @@ export function HappeningInfoModal() {
                 <li
                     className={classNames(
                         'ml-4 relative pb-2.5 cursor-pointer after:transition-all after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-[-1px] after:rounded-full',
-                        { 'after:bg-[#f6a740]': slideNum == 0 },
+                        { 'after:bg-[#f6a740]': activeTab == 0 },
                     )}
-                    onClick={() => setSlideNum(0)}
+                    onClick={() => setActiveTab(0)}
                 >
                     {type === Happenings.Event ? 'Event' : 'Run'} Info
                 </li>
                 <li
                     className={classNames(
                         'ml-4 relative pb-2.5 cursor-pointer after:transition-all after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-[-1px] after:rounded-full',
-                        { 'after:bg-[#f6a740]': slideNum == 1 },
+                        { 'after:bg-[#f6a740]': activeTab == 1 },
                     )}
-                    onClick={() => setSlideNum(1)}
+                    onClick={() => setActiveTab(1)}
                 >
                     {happening._count.interestedPlayers} interested
                 </li>
@@ -121,19 +120,16 @@ export function HappeningInfoModal() {
                         <li
                             className={classNames(
                                 'ml-4 relative pb-2.5 cursor-pointer after:transition-all after:absolute after:w-full after:h-[2px] after:left-0 after:bottom-[-1px] after:rounded-full',
-                                { 'after:bg-[#f6a740]': slideNum == 2 },
+                                { 'after:bg-[#f6a740]': activeTab == 2 },
                             )}
-                            onClick={() => setSlideNum(2)}
+                            onClick={() => setActiveTab(2)}
                         >
                             Reviews
                         </li>
                     )}
             </ul>
-            <div className="flex max-w-[calc(100%-40px)] my-5 mx-auto overflow-hidden">
-                <div
-                    className="transition-all duration-500 max-w-full w-full shrink-0 relative"
-                    style={{ right: `${slideNum * 100}%` }}
-                >
+            <Carousel ref={ref} className="m-5">
+                <div>
                     <StartTime
                         startAt={happening.startAt}
                         status={happening.status}
@@ -171,10 +167,7 @@ export function HappeningInfoModal() {
                         </span>
                     </div>
                 </div>
-                <div
-                    className="transition-all duration-500 max-w-full w-full shrink-0 relative"
-                    style={{ right: `${slideNum * 100}%` }}
-                >
+                <div>
                     <ul>
                         {interestedPlayersSuccess &&
                             interestedPlayers?.status === 'success' &&
@@ -200,18 +193,13 @@ export function HappeningInfoModal() {
                             )}
                     </ul>
                 </div>
-                {
-                    <div
-                        className="transition-all pr-3 duration-500 max-w-full w-full max-h-[450px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#3F362B] [&::-webkit-scrollbar-thumb]:bg-[#89745A] [&::-webkit-scrollbar-thumb]:rounded-[10px] overflow-y-scroll shrink-0 relative"
-                        style={{ right: `${slideNum * 100}%` }}
-                    >
-                        {reviews?.status === 'success' &&
-                            reviews.data.reviews.map((review, id) => (
-                                <Review key={id} review={review} />
-                            ))}
-                    </div>
-                }
-            </div>
+                <div>
+                    {reviews?.status === 'success' &&
+                        reviews.data.reviews.map((review, id) => (
+                            <Review key={id} review={review} />
+                        ))}
+                </div>
+            </Carousel>
             <div
                 className={
                     'flex justify-end rounded-b-[10px] py-4 px-5 bg-[#1A1714] text-primary-1'
