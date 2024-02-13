@@ -170,7 +170,7 @@ export function Happening({ id }: OwnProps) {
     };
 
     return (
-        <div className="max-w-[255px] w-full rounded-[10px] bg-primary-2 flex flex-col">
+        <div className="basis-[255px] max-w-[260px] grow rounded-[10px] bg-primary-2 flex flex-col">
             <img
                 alt="event thumbnail"
                 src={thumbnailUrl}

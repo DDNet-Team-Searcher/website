@@ -23,8 +23,8 @@ export function Happenings({ userId }: OwnProps) {
     }, [isLoading]);
 
     return (
-        <section className="flex flex-wrap gap-7 w-full mx-auto">
-            <div className="w-full">
+        <section>
+            <div className="flex flex-wrap gap-7">
                 {happeningsIds.map((happeningId) => (
                     <Happening key={happeningId} id={happeningId} />
                 ))}
