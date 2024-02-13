@@ -92,7 +92,7 @@ export const happeningsApi = baseApi.injectEndpoints({
             }),
         }),
         getReviews: build.query<GetReviewsResponse, number>({
-            query: (happeningId) => `/${happeningId}/reviews`,
+            query: (happeningId) => `${PREFIX}/${happeningId}/reviews`,
         }),
         createReview: build.mutation<CreateReviewResponse, CreateReviewRequest>(
             {
