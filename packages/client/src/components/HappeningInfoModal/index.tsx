@@ -128,7 +128,7 @@ export function HappeningInfoModal() {
                         </li>
                     )}
             </ul>
-            <Carousel ref={ref} className="m-5">
+            <Carousel ref={ref} className="m-5" controls={false}>
                 <div>
                     <StartTime
                         startAt={happening.startAt}

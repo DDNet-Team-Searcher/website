@@ -1,16 +1,5 @@
-import { CSSProperties } from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from '@/components/ui/Carousel';
 import { Review } from './Review';
-
-const arrowStyles: CSSProperties = {
-    position: 'absolute',
-    zIndex: 999,
-    top: 'calc(50% - 15px)',
-    width: 30,
-    height: 30,
-    cursor: 'pointer',
-};
 
 const reviews = [
     {
@@ -33,36 +22,7 @@ export function Reviews() {
             <p className="text-3xl font-medium text-center">
                 What homies are saying &apos;bout us:
             </p>
-            <Carousel
-                className="max-w-[800px] mt-16 mx-auto"
-                infiniteLoop
-                showStatus={false}
-                showThumbs={false}
-                showIndicators={false}
-                autoPlay
-                renderArrowNext={(clickHandler, hasNext, label) =>
-                    hasNext && (
-                        <p
-                            style={{ ...arrowStyles, right: '15px' }}
-                            title={label}
-                            onClick={clickHandler}
-                        >
-                            <img src="/right-slider-button.png" />
-                        </p>
-                    )
-                }
-                renderArrowPrev={(clickHandler, hasPrev, label) =>
-                    hasPrev && (
-                        <p
-                            style={{ ...arrowStyles, left: '15px' }}
-                            title={label}
-                            onClick={clickHandler}
-                        >
-                            <img src="/left-slider-button.png" />
-                        </p>
-                    )
-                }
-            >
+            <Carousel className="max-w-[800px] mt-16 mx-auto">
                 {reviews.map((review, index) => (
                     <Review review={review} key={index} />
                 ))}

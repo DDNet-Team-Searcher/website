@@ -283,7 +283,7 @@ export function CreateAndUpdateHappeningModal({
             </p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-6 pb-6 !max-h-[75vh] overflow-y-auto">
-                    <Carousel ref={carouselRef}>
+                    <Carousel ref={carouselRef} controls={false}>
                         <div>
                             <p
                                 className="text-xl mt-5"

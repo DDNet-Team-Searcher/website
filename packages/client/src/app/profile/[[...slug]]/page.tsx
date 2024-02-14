@@ -193,16 +193,14 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         <div
                                             className="mr-3 mt-2 p-1.5 rounded-[5px] flex items-center"
                                             style={{
-                                                backgroundColor: `${
-                                                    roles[
-                                                        role as keyof typeof roles
-                                                    ].color
-                                                }1A`,
-                                                border: `1px solid ${
-                                                    roles[
-                                                        role as keyof typeof roles
-                                                    ].color
-                                                }`,
+                                                backgroundColor: `${roles[
+                                                    role as keyof typeof roles
+                                                ].color
+                                                    }1A`,
+                                                border: `1px solid ${roles[
+                                                    role as keyof typeof roles
+                                                ].color
+                                                    }`,
                                             }}
                                         >
                                             <img
@@ -239,9 +237,8 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                 Favorite server
                                 <img
                                     className="max-w-[30px] object-contain ml-1"
-                                    src={`/countryflags/${
-                                        favServer || 'UNK'
-                                    }.png`}
+                                    src={`/countryflags/${favServer || 'UNK'
+                                        }.png`}
                                 />
                             </p>
                             <p className="mt-1">
@@ -265,7 +262,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                         : 'Follow'}
                                 </Button>
                                 {userRole == Role.Admin ||
-                                userRole == Role.Mod ? (
+                                    userRole == Role.Mod ? (
                                     profile.isBanned ? (
                                         <Button
                                             className="max-w-[120px] ml-3 w-full !block text-center !border-error"
@@ -317,7 +314,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
                             </li>
                         ))}
                     </ul>
-                    <Carousel ref={ref} className="my-10">
+                    <Carousel ref={ref} className="my-10" controls={false}>
                         <Happenings userId={id} />
                         <Stats username={profile.username} />
                         <Reviews userId={id} />

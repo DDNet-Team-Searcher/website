@@ -1,9 +1,11 @@
 import classNames from 'classnames';
 import React, { Ref, useState } from 'react';
+import { Arrow } from './Arrow';
 
 type OwnProps = {
     children: React.ReactNode;
     className?: string;
+    controls?: boolean;
 };
 
 export type CarouselRef = {
@@ -15,7 +17,7 @@ export type CarouselRef = {
 };
 
 export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
-    ({ children, className }: OwnProps, ref: Ref<any>) => {
+    ({ children, controls = true, className }: OwnProps, ref: Ref<any>) => {
         const [cur, setCur] = useState(0);
         let max = React.Children.count(children) - 1;
 
@@ -66,7 +68,7 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
         return (
             <div
                 ref={ref}
-                className={classNames('overflow-hidden', {
+                className={classNames('relative overflow-hidden', {
                     [className || '']: !!className,
                 })}
             >
@@ -76,6 +78,19 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
                 >
                     {children}
                 </div>
+                {controls && (
+                    <>
+                        <Arrow
+                            className="absolute left-5 top-1/2 -translate-y-1/2 cursor-pointer"
+                            onClick={prev}
+                        />
+                        <Arrow
+                            className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer"
+                            direction={"right"}
+                            onClick={next}
+                        />
+                    </>
+                )}
             </div>
         );
     },
