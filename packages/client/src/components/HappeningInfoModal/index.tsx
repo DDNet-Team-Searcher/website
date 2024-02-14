@@ -149,11 +149,11 @@ export function HappeningInfoModal() {
                             {happening.mapName}
                         </span>
                     </div>
-                    {type === Happenings.Run && (
+                    {happening.type === Happenings.Run && (
                         <div className="flex mt-1">
                             <TeeIcon color="var(--medium-emphasis)" />
                             <span className="text-medium-emphasis ml-2.5 font-medium text-sm">
-                                69/420
+                                {happening._count.inTeam}/{happening.teamSize}
                             </span>
                         </div>
                     )}
