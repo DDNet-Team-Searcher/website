@@ -86,7 +86,7 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
                         />
                         <Arrow
                             className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer"
-                            direction={"right"}
+                            direction={'right'}
                             onClick={next}
                         />
                     </>

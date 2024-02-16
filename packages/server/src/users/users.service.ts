@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HappeningType } from '@prisma/client';
+import { HappeningType, Status } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -475,7 +475,9 @@ export class UsersService {
         authedUserId: number,
         userId: number,
         opts: {
-            type: HappeningType;
+            type?: HappeningType;
+            status?: Status;
+            query?: string;
         },
     ): Promise<Happening[]> {
         return await this.happeningService.findUserHappenings(

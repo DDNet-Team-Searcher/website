@@ -104,8 +104,14 @@ export const usersAPI = baseApi.injectEndpoints({
         getProfileReviews: build.query<GetProfileReviews, number>({
             query: (userId) => `/profile/${userId}/reviews`,
         }),
-        getProfileHappenings: build.query<GetProfileHappenings, number>({
-            query: (userId) => `/profile/${userId}/happenings`,
+        getProfileHappenings: build.query<
+            GetProfileHappenings,
+            { userId: number; params: Record<string, string> }
+        >({
+            query: ({ userId, params }) =>
+                `/profile/${userId}/happenings?${new URLSearchParams(
+                    params,
+                ).toString()}`,
         }),
         followUser: build.mutation<FollowUserResponse, number>({
             query: (userId) => ({
@@ -148,7 +154,7 @@ export const {
     useUpdatePasswordMutation,
     useGetProfileQuery,
     useGetProfileReviewsQuery,
-    useGetProfileHappeningsQuery,
+    useLazyGetProfileHappeningsQuery,
     useFollowUserMutation,
     useReportUserMutation,
     useBanUserMutation,

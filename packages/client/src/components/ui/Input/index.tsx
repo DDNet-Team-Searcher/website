@@ -6,6 +6,7 @@ type OwnProps = {
     register: UseFormRegisterReturn;
     errors: FieldErrors;
     type?: string;
+    showPlaceholder?: boolean;
     [key: string]: any;
     classes?: {
         input?: string;
@@ -19,6 +20,7 @@ export function Input({
     errors,
     type,
     classes,
+    showPlaceholder = true,
     ...props
 }: OwnProps) {
     const errorIcon = '/error.png';
@@ -28,10 +30,14 @@ export function Input({
     return (
         <div
             className={classNames(
-                'relative [&>input:not(:placeholder-shown)+span::before]:opacity-100 [&>input:not(:placeholder-shown)]:pt-[15px] [&>input:not(:placeholder-shown)]:pb-[5px]',
+                'relative',
                 {
                     [(classes && classes.container) || '']:
                         classes && !!classes.container,
+                },
+                {
+                    '[&>input:not(:placeholder-shown)+span::before]:opacity-100 [&>input:not(:placeholder-shown)]:pt-[15px] [&>input:not(:placeholder-shown)]:pb-[5px]':
+                        showPlaceholder,
                 },
             )}
         >

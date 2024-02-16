@@ -13,6 +13,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Req,
     Res,
     UploadedFile,
@@ -23,7 +24,7 @@ import { LoginUserDTO } from './dto/login-user.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { UsersService } from './users.service';
 import * as argon2 from 'argon2';
-import { Request, Response } from 'express';
+import { Request, Response, query } from 'express';
 import { Protected } from 'src/decorators/protected.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeUsernameDTO } from './dto/change-username.dto';
@@ -52,7 +53,7 @@ import {
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
 import { log } from 'src/decorators/log.decorator';
-import { HappeningType } from '@prisma/client';
+import { HappeningType, Status } from '@prisma/client';
 
 @Controller()
 export class UsersController {
@@ -379,13 +380,42 @@ export class UsersController {
     async userHappenings(
         @Param('id') id: string,
         @Req() req: AuthedRequest,
+        @Query('query') query: string | undefined,
+        @Query('status') status: string | undefined,
+        @Query('type') type: string | undefined,
     ): Promise<GetProfileHappenings> {
+        const opts: {
+            type?: HappeningType;
+            status?: Status;
+            query?: string;
+        } = {};
+
+        if (query !== undefined) {
+            opts.query = query;
+        }
+
+        if (
+            status !== undefined &&
+            Object.values(Status as Record<string, string>).includes(status)
+        ) {
+            opts.status = status as Status;
+        }
+
+        if (
+            type !== undefined &&
+            Object.values(HappeningType as Record<string, string>).includes(
+                type,
+            )
+        ) {
+            opts.type = type as HappeningType;
+        }
+
+        console.log(opts);
+
         const happenings = await this.usersService.happenings(
             req.user.id,
             parseInt(id),
-            {
-                type: HappeningType.Run,
-            },
+            opts,
         );
 
         return {

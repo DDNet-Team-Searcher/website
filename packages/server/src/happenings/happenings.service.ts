@@ -653,16 +653,42 @@ export class HappeningsService {
         authedUserId: number,
         userId: number,
         opts: {
-            type: HappeningType;
+            type?: HappeningType;
+            status?: Status;
+            query?: string;
         },
     ) {
+        const { query, ...options } = opts;
+
         const data = await this.prismaService.happening.findMany({
             select: {
                 id: true,
                 type: true,
             },
             where: {
-                type: opts.type,
+                OR: query
+                    ? [
+                          {
+                              title: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                          {
+                              description: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                          {
+                              mapName: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                      ]
+                    : undefined,
+                ...options,
                 authorId: userId,
             },
             take: 10,
