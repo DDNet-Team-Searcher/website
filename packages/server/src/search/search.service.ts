@@ -22,31 +22,77 @@ export class SearchService {
         userId: number,
     ): Promise<{ results: SearchResult[]; next: boolean }> {
         const searchResults: SearchResult[] = [];
+        const totalCount = await this.prismaService.happening.count({
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+            },
+        });
 
-        const totalCountBigInt = (
-            await this.prismaService.$queryRaw<[{ count: bigint }]>`
-            SELECT COUNT(*) FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("User".username) LIKE ${query} OR
-            LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query}
-        `
-        )[0].count;
-
-        const totalCount = Number(totalCountBigInt);
-
-        const happenings = await this.prismaService.$queryRaw<
-            { id: number; type: HappeningType }[]
-        >`
-            SELECT "Happening".id, "Happening".type FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("User".username) LIKE ${query} OR
-            LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query}
-            LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}
-        `;
+        const happenings = await this.prismaService.happening.findMany({
+            select: {
+                id: true,
+                type: true,
+            },
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+            },
+            take: PER_PAGE,
+            skip: page * PER_PAGE,
+        });
 
         for (let i = 0; i < happenings.length; i++) {
             const happening = happenings[i];
@@ -81,31 +127,79 @@ export class SearchService {
     ): Promise<{ results: SearchResult[]; next: boolean }> {
         const searchResults: SearchResult[] = [];
 
-        const totalCount = Number(
-            (
-                await this.prismaService.$queryRaw<[{ count: bigint }]>`
-            SELECT COUNT(*) FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query} AND
-            "Happening".type = 'Run'
-        `
-            )[0].count,
-        );
+        const totalCount = await this.prismaService.happening.count({
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+                type: HappeningType.Run,
+            },
+        });
 
-        const runIds = await this.prismaService.$queryRaw<
-            { id: number; type: HappeningType }[]
-        >`
-            SELECT "Happening".id, "Happening".type FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("User".username) LIKE ${query} OR
-            LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query} AND
-            "Happening".type = 'Run'
-            LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}
-        `;
+        const runIds = await this.prismaService.happening.findMany({
+            select: {
+                id: true,
+                type: true,
+            },
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+                type: HappeningType.Run,
+            },
+            take: PER_PAGE,
+            skip: page * PER_PAGE,
+        });
 
         for (const { id } of runIds) {
             const run = await this.happeningsService.getRunById(id, userId);
@@ -126,31 +220,79 @@ export class SearchService {
     ): Promise<{ results: SearchResult[]; next: boolean }> {
         const searchResults: SearchResult[] = [];
 
-        const totalCount = Number(
-            (
-                await this.prismaService.$queryRaw<[{ count: bigint }]>`
-            SELECT COUNT(*) FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query} AND
-            "Happening".type = 'Event'
-        `
-            )[0].count,
-        );
+        const totalCount = await this.prismaService.happening.count({
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+                type: HappeningType.Event,
+            },
+        });
 
-        const eventIds = await this.prismaService.$queryRaw<
-            { id: number; type: HappeningType }[]
-        >`
-            SELECT "Happening".id, "Happening".type FROM "Happening"
-            INNER JOIN "User" ON "User".id = "Happening"."authorId"
-            WHERE LOWER("User".username) LIKE ${query} OR
-            LOWER("Happening".title) LIKE ${query} OR
-            LOWER("Happening".description) LIKE ${query} OR
-            LOWER("Happening"."mapName") LIKE ${query} AND
-            "Happening".type = 'Event'
-            LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}
-        `;
+        const eventIds = await this.prismaService.happening.findMany({
+            select: {
+                id: true,
+                type: true,
+            },
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        mapName: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        author: {
+                            username: {
+                                contains: query,
+                                mode: 'insensitive',
+                            },
+                        },
+                    },
+                ],
+                type: HappeningType.Event,
+            },
+            take: PER_PAGE,
+            skip: page * PER_PAGE,
+        });
 
         for (const { id } of eventIds) {
             const event = await this.happeningsService.getEventById(id, userId);
@@ -171,22 +313,28 @@ export class SearchService {
     ): Promise<{ results: SearchResult[]; next: boolean }> {
         const searchResults: SearchResult[] = [];
 
-        const totalCount = Number(
-            (
-                await this.prismaService.$queryRaw<[{ count: bigint }]>`
-            SELECT COUNT(*) FROM "User"
-            WHERE LOWER(username) LIKE ${query}
-        `
-            )[0].count,
-        );
+        const totalCount = await this.prismaService.user.count({
+            where: {
+                username: {
+                    contains: query,
+                    mode: 'insensitive',
+                },
+            },
+        });
 
-        const userIds = await this.prismaService.$queryRaw<
-            { id: number; type: HappeningType }[]
-        >`
-            SELECT id FROM "User"
-            WHERE LOWER(username) LIKE ${query}
-            LIMIT ${PER_PAGE} OFFSET ${page * PER_PAGE}
-        `;
+        const userIds = await this.prismaService.user.findMany({
+            select: {
+                id: true,
+            },
+            where: {
+                username: {
+                    contains: query,
+                    mode: 'insensitive',
+                },
+            },
+            take: PER_PAGE,
+            skip: page * PER_PAGE,
+        });
 
         for (const { id } of userIds) {
             const profile = await this.usersService.searchUserById(id);
@@ -221,19 +369,16 @@ export class SearchService {
             sort: 'all' | 'events' | 'runs' | 'users';
         },
     ): Promise<{ results: SearchResult[]; next: boolean }> {
-        //NOTE: ngl, ive no fucking clue how to do it correctly :(
-        const searchQuery = `%${query.toLowerCase()}%`;
-
         switch (opts.sort) {
             case 'runs':
-                return this.searchRuns(searchQuery, opts.page, userId);
+                return this.searchRuns(query, opts.page, userId);
             case 'events':
-                return this.searchEvents(searchQuery, opts.page, userId);
+                return this.searchEvents(query, opts.page, userId);
             case 'users':
-                return this.searchUsers(searchQuery, opts.page, userId);
+                return this.searchUsers(query, opts.page, userId);
             case 'all':
             default:
-                return this.searchAll(searchQuery, opts.page, userId);
+                return this.searchAll(query, opts.page, userId);
         }
     }
 }
