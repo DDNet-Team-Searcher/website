@@ -78,7 +78,10 @@ export class ServersService {
                 socket.on('data', async (bytes) => {
                     const response = Response.decode(bytes);
 
-                    if (response.origin == Origin.DDNET && response.data?.$case === "shutdown") {
+                    if (
+                        response.origin == Origin.DDNET &&
+                        response.data?.$case === 'shutdown'
+                    ) {
                         await this.prismaService.happening.update({
                             where: {
                                 id: response.data.shutdown.id,
@@ -150,7 +153,10 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (response.code == Response_ResponseCode.OK && response.data?.$case === 'info') {
+                if (
+                    response.code == Response_ResponseCode.OK &&
+                    response.data?.$case === 'info'
+                ) {
                     res({
                         used: response.data.info.used!,
                         max: response.data.info.max!,
@@ -190,7 +196,10 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (response.code == Response_ResponseCode.OK && response.data?.$case === 'start') {
+                if (
+                    response.code == Response_ResponseCode.OK &&
+                    response.data?.$case === 'start'
+                ) {
                     res({
                         port: response.data.start.port!,
                         password: response.data.start.password!,

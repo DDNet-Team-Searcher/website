@@ -1,3 +1,4 @@
+import { BannedUser } from './BannedUser.type';
 import type { Event, Happening, Run } from './Happening.type';
 import type { Profile } from './Profile.type';
 import type { Response as ApiResponse } from './Response.type';
@@ -196,3 +197,5 @@ export type BanUserRequest = {
 };
 
 export type BanUserResponse = ApiResponse<null, { reason: string }>;
+
+export type BannedUsersResponse = ApiResponse<BannedUser[], null>;

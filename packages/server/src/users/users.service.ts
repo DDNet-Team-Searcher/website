@@ -14,6 +14,7 @@ import { Role } from '@app/shared/types/Role.type';
 import { ReviewsService } from 'src/reviews/reviews.service';
 import { ProfileReview } from '@app/shared/types/Review.type';
 import { Happening } from '@app/shared/types/Happening.type';
+import { BannedUser } from '@app/shared/types/BannedUser.type';
 
 @Injectable()
 export class UsersService {
@@ -489,5 +490,47 @@ export class UsersService {
 
     async reviews(id: number): Promise<ProfileReview[]> {
         return await this.reviewsService.reviewsAboutUser(id);
+    }
+
+    async bannedUsers(query?: string): Promise<BannedUser[]> {
+        const bannedUsers = await this.prismaService.user.findMany({
+            select: {
+                id: true,
+                username: true,
+                avatar: true,
+                bans: {
+                    select: {
+                        reason: true,
+                    },
+                    orderBy: [
+                        {
+                            createdAt: 'desc',
+                        },
+                    ],
+                    take: 1,
+                },
+            },
+            where: {
+                username: query
+                    ? {
+                          contains: query,
+                          mode: 'insensitive',
+                      }
+                    : undefined,
+                bans: {
+                    some: {
+                        banned: true,
+                    },
+                },
+            },
+        });
+        console.log(JSON.stringify(bannedUsers));
+
+        return bannedUsers.map((user) => ({
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+            reason: user.bans[0].reason,
+        }));
     }
 }

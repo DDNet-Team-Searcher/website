@@ -24,7 +24,7 @@ import { LoginUserDTO } from './dto/login-user.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { UsersService } from './users.service';
 import * as argon2 from 'argon2';
-import { Request, Response, query } from 'express';
+import { Request, Response } from 'express';
 import { Protected } from 'src/decorators/protected.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeUsernameDTO } from './dto/change-username.dto';
@@ -37,6 +37,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { AuthedRequest } from 'src/types/AuthedRequest.type';
 import {
     BanUserResponse,
+    BannedUsersResponse,
     FollowUserResponse,
     GetProfileHappenings,
     GetProfileResponse,
@@ -535,6 +536,19 @@ export class UsersController {
             status: 'success',
             data: null,
             message: i18n.t('user.unbanned_successfully'),
+        };
+    }
+
+    @Protected()
+    @Get('/users/banned')
+    async bannedUsers(
+        @Query('query') query?: string,
+    ): Promise<BannedUsersResponse> {
+        const data = await this.usersService.bannedUsers(query);
+
+        return {
+            status: 'success',
+            data,
         };
     }
 }

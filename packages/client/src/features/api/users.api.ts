@@ -2,6 +2,7 @@ import { setCredentails, setIsAuthed } from '@/store/slices/user';
 import {
     BanUserRequest,
     BanUserResponse,
+    BannedUsersResponse,
     FollowUserResponse,
     GetProfileHappenings,
     GetProfileResponse,
@@ -50,7 +51,7 @@ export const usersAPI = baseApi.injectEndpoints({
         }),
         getCredentials: build.query<GetUserCredentialsResponse, void>({
             query: () => `/credentials`,
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+            async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
 
@@ -121,22 +122,27 @@ export const usersAPI = baseApi.injectEndpoints({
         }),
         reportUser: build.mutation<ReportUserResponse, ReportUserRequest>({
             query: ({ userId, reason }) => ({
-                url: `user/${userId}/report`,
+                url: `/user/${userId}/report`,
                 method: 'POST',
                 body: { reason },
             }),
         }),
         banUser: build.mutation<BanUserResponse, BanUserRequest>({
             query: ({ userId, reason }) => ({
-                url: `user/${userId}/ban`,
+                url: `/user/${userId}/ban`,
                 method: 'POST',
                 body: { reason },
             }),
         }),
         unbanUser: build.mutation<UnbanUserResponse, UnbanUserRequest>({
             query: ({ userId }) => ({
-                url: `user/${userId}/unban`,
+                url: `/user/${userId}/unban`,
                 method: 'POST',
+            }),
+        }),
+        getBannedUsers: build.query<BannedUsersResponse, void>({
+            query: () => ({
+                url: `/users/banned`,
             }),
         }),
     }),
@@ -159,4 +165,5 @@ export const {
     useReportUserMutation,
     useBanUserMutation,
     useUnbanUserMutation,
+    useGetBannedUsersQuery,
 } = usersAPI;
