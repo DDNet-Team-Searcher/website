@@ -78,10 +78,10 @@ export class ServersService {
                 socket.on('data', async (bytes) => {
                     const response = Response.decode(bytes);
 
-                    if (response.origin == Origin.DDNET) {
+                    if (response.origin == Origin.DDNET && response.data?.$case === "shutdown") {
                         await this.prismaService.happening.update({
                             where: {
-                                id: response.id,
+                                id: response.data.shutdown.id,
                             },
                             data: {
                                 status: Status.Finished,
@@ -150,17 +150,10 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (
-                    typeof response.max !== 'number' ||
-                    typeof response.used !== 'number'
-                ) {
-                    console.log('This bs doesnt work D:', response);
-                }
-
-                if (response.responseCode == Response_ResponseCode.OK) {
+                if (response.code == Response_ResponseCode.OK && response.data?.$case === 'info') {
                     res({
-                        used: response.used!,
-                        max: response.max!,
+                        used: response.data.info.used!,
+                        max: response.data.info.max!,
                     });
                 }
 
@@ -197,14 +190,10 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (!response.port || !response.password) {
-                    console.log('Thats.. not good #69');
-                }
-
-                if (response.responseCode == Response_ResponseCode.OK) {
+                if (response.code == Response_ResponseCode.OK && response.data?.$case === 'start') {
                     res({
-                        port: response.port!,
-                        password: response.password!,
+                        port: response.data.start.port!,
+                        password: response.data.start.password!,
                     });
                 } else {
                     console.log('Couldnt start the game server');
@@ -239,7 +228,7 @@ export class ServersService {
                 //FIXME: error handling left the code
                 const response = Response.decode(bytes);
 
-                if (response.responseCode == Response_ResponseCode.OK) {
+                if (response.code == Response_ResponseCode.OK) {
                     res();
                 } else {
                     console.log('Couldnt shutdown the server owo');
