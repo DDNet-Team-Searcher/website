@@ -12,7 +12,7 @@ type OwnProps = {
     }[];
 };
 
-export function NoNameLayout({ children, className, urls, title }: OwnProps) {
+export function NavbarLayout({ children, className, urls, title }: OwnProps) {
     return (
         <main className="max-w-[1110px] w-full mx-auto flex mt-24">
             <Navbar urls={urls} title={title} />

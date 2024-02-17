@@ -1,32 +1,34 @@
-import { NoNameLayout } from '@/components/NoNameLayout';
+import { NavbarLayout } from '@/components/NavbarLayout';
+import { createTranslation } from '@/i18/server';
 
 type OwnProps = {
     children: React.ReactNode;
 };
 
-const urls = [
-    {
-        path: 'users',
-        name: 'privileged.users',
-    },
-    {
-        path: 'banned-users',
-        name: 'privileged.banned_users',
-    },
-    {
-        path: 'reports',
-        name: 'privileged.reports',
-    },
-    {
-        path: 'servers',
-        name: 'privileged.servers',
-    },
-];
+export default async function AdminLayout({ children }: OwnProps) {
+    const { t } = await createTranslation('navbar');
 
-export default function AdminLayout({ children }: OwnProps) {
+    const urls = [
+        {
+            path: '/admin/users',
+            name: t('privileged.users'),
+        },
+        {
+            path: '/admin/banned-users',
+            name: t('privileged.banned_users'),
+        },
+        {
+            path: '/admin/reports',
+            name: t('privileged.reports'),
+        },
+        {
+            path: '/admin/servers',
+            name: t('privileged.servers'),
+        },
+    ];
     return (
-        <NoNameLayout title="privileged.title" urls={urls}>
+        <NavbarLayout title={t('privileged.title')} urls={urls}>
             {children}
-        </NoNameLayout>
+        </NavbarLayout>
     );
 }

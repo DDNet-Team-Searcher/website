@@ -1,24 +1,26 @@
-import { NoNameLayout } from '@/components/NoNameLayout';
+import { NavbarLayout } from '@/components/NavbarLayout';
+import { createTranslation } from '@/i18/server';
 
 type OwnProps = {
     children: React.ReactNode;
 };
 
-const urls = [
-    {
-        path: 'account',
-        name: 'account.account',
-    },
-    {
-        path: 'notifications',
-        name: 'account.notifications',
-    },
-];
+export default async function SettingsLayout({ children }: OwnProps) {
+    const { t } = await createTranslation('navbar');
 
-export default function SettingsLayout({ children }: OwnProps) {
+    const urls = [
+        {
+            path: '/settings/account',
+            name: t('account.account'),
+        },
+        {
+            path: '/settings/notifications',
+            name: t('account.notifications'),
+        },
+    ];
     return (
-        <NoNameLayout title="account.title" urls={urls}>
+        <NavbarLayout title={t('account.title')} urls={urls}>
             {children}
-        </NoNameLayout>
+        </NavbarLayout>
     );
 }
