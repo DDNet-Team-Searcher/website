@@ -245,12 +245,6 @@ export default function Profile({ params: { slug } }: OwnProps) {
                                     }.png`}
                                 />
                             </p>
-                            <p className="mt-1">
-                                Clan{' '}
-                                <span className="text-sm opacity-30 ml-[20px]">
-                                    namelessclan
-                                </span>
-                            </p>
                             <div
                                 className={classNames('flex mt-5', {
                                     hidden: sameUser,
