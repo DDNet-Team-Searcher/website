@@ -15,6 +15,7 @@ import { ReviewsService } from 'src/reviews/reviews.service';
 import { ProfileReview } from '@app/shared/types/Review.type';
 import { Happening } from '@app/shared/types/Happening.type';
 import { BannedUser } from '@app/shared/types/BannedUser.type';
+import { Report } from '@app/shared/types/Report.type';
 
 @Injectable()
 export class UsersService {
@@ -62,6 +63,9 @@ export class UsersService {
                 role: true,
                 avatar: true,
                 bans: {
+                    where: {
+                        banned: true,
+                    },
                     take: 1,
                     select: {
                         reason: true,
@@ -390,6 +394,55 @@ export class UsersService {
         return res === null ? false : true;
     }
 
+    async reports(query?: string): Promise<Report[]> {
+        const reports = await this.prismaService.report.findMany({
+            where: {
+                OR: query
+                    ? [
+                          {
+                              report: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                      ]
+                    : undefined,
+                reportedUser: {
+                    bans: {
+                        every: {
+                            banned: false,
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+                report: true,
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                    },
+                },
+                reportedUser: {
+                    select: {
+                        id: true,
+                        username: true,
+                    },
+                },
+            },
+        });
+
+        return reports.map((report) => ({
+            id: report.id,
+            reportedUserId: report.reportedUser.id,
+            reportedUsername: report.reportedUser.username,
+            reportedByUserId: report.author.id,
+            reportedByUsername: report.author.username,
+            report: report.report,
+        }));
+    }
+
     async isBanned(bannedUserId: number): Promise<boolean> {
         const res = await this.prismaService.ban.findFirst({
             where: {
@@ -524,7 +577,6 @@ export class UsersService {
                 },
             },
         });
-        console.log(JSON.stringify(bannedUsers));
 
         return bannedUsers.map((user) => ({
             id: user.id,

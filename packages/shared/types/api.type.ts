@@ -5,6 +5,7 @@ import type { Response as ApiResponse } from './Response.type';
 import type { ProfileReview, Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
 import { User } from './User.type';
+import { Report } from './Report.type';
 
 export type RegisterUserRequest = {
     username: string;
@@ -199,3 +200,5 @@ export type BanUserRequest = {
 export type BanUserResponse = ApiResponse<null, { reason: string }>;
 
 export type BannedUsersResponse = ApiResponse<BannedUser[], null>;
+
+export type ReportsRespone = ApiResponse<Report[], null>;

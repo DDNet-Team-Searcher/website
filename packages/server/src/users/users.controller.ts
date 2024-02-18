@@ -47,6 +47,7 @@ import {
     LogoutUserResponse,
     RegisterUserResponse,
     ReportUserResponse,
+    ReportsRespone,
     UnbanUserResponse,
     UpdateAvatarResponse,
     UpdateEmailRespone as UpdateEmailResponse,
@@ -545,6 +546,17 @@ export class UsersController {
         @Query('query') query?: string,
     ): Promise<BannedUsersResponse> {
         const data = await this.usersService.bannedUsers(query);
+
+        return {
+            status: 'success',
+            data,
+        };
+    }
+
+    @Protected()
+    @Get('/reports')
+    async reports(@Query('query') query?: string): Promise<ReportsRespone> {
+        const data = await this.usersService.reports(query);
 
         return {
             status: 'success',

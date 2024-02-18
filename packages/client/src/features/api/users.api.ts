@@ -15,6 +15,7 @@ import {
     RegisterUserResponse,
     ReportUserRequest,
     ReportUserResponse,
+    ReportsRespone,
     UnbanUserRequest,
     UnbanUserResponse,
     UpdateAvatarResponse,
@@ -145,6 +146,11 @@ export const usersAPI = baseApi.injectEndpoints({
                 url: `/users/banned`,
             }),
         }),
+        getReports: build.query<ReportsRespone, void>({
+            query: () => ({
+                url: `/reports`,
+            }),
+        }),
     }),
 });
 
@@ -166,4 +172,5 @@ export const {
     useBanUserMutation,
     useUnbanUserMutation,
     useGetBannedUsersQuery,
+    useGetReportsQuery,
 } = usersAPI;

@@ -14,7 +14,7 @@ import { ClockIcon } from '@/components/ui/Icons/Clock';
 import { getUserFavoriteServer } from '@/store/slices/user';
 import { Button } from '@/components/ui/Button';
 import { ReportModal } from './ReportModal';
-import { BanModal } from './BanModal';
+import { BanModal } from '@/components/BanModal';
 import { hint } from '@/store/slices/hints';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { ExcludeSuccess } from '@/types/Response.type';
