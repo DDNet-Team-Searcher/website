@@ -24,7 +24,7 @@ export default function BannedUsersPage() {
     };
 
     return (
-        <div>
+        <div className="[&>:not(:first-child)]:mt-5">
             {data &&
                 data.status === 'success' &&
                 data.data.map((user) => (
