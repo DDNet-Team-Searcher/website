@@ -585,4 +585,17 @@ export class UsersService {
             reason: user.bans[0].reason,
         }));
     }
+
+    async isIpBanned(ip: string): Promise<boolean> {
+        return await this.prismaService.exists(this.prismaService.user, {
+            where: {
+                ip,
+                bans: {
+                    some: {
+                        banned: true,
+                    },
+                },
+            },
+        });
+    }
 }

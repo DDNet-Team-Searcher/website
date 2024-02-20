@@ -88,6 +88,14 @@ export class UsersController {
             });
         }
 
+        if (await this.usersService.isIpBanned(ip)) {
+            throw new ForbiddenException({
+                status: 'fail',
+                data: null,
+                message: 'You cannot create an account. Your IP is banned',
+            });
+        }
+
         try {
             const encryptedPassword = await argon2.hash(data.password);
 
