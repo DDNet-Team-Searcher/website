@@ -76,7 +76,7 @@ import { LoggerModule } from './logger/logger.module';
             defaults: {
                 from: 'Your mom',
             },
-            preview: true,
+            preview: false,
             template: {
                 dir: 'templates',
                 adapter: new EjsAdapter(),
