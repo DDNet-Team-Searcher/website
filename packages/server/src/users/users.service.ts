@@ -110,7 +110,7 @@ export class UsersService {
         };
     }
 
-    async register(data: RegisterUserDTO): Promise<string> {
+    async register(data: RegisterUserDTO & { ip: string }): Promise<string> {
         const activationCode = uuidv4();
 
         await this.prismaService.user.create({

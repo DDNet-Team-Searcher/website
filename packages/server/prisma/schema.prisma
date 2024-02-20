@@ -28,6 +28,7 @@ model User {
     role Role?
     activated Boolean @default(false)
     activationCode String @db.VarChar(255)
+    ip String @db.Inet
     happenings Happening[]
     interestedHappenings InterestedHappening[]
     reviews Review[] @relation(name: "reviews")

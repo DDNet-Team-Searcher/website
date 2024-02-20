@@ -8,6 +8,7 @@ import {
     Get,
     HttpException,
     InternalServerErrorException,
+    Ip,
     Logger,
     NotFoundException,
     Param,
@@ -70,6 +71,7 @@ export class UsersController {
     @log('register a user')
     async register(
         @Body() data: RegisterUserDTO,
+        @Ip() ip: string,
         @I18n() i18n: I18nContext,
     ): Promise<RegisterUserResponse> {
         const doesUserAlreadyExist = await this.usersService.isUserExists({
@@ -92,6 +94,7 @@ export class UsersController {
             const activationCode = await this.usersService.register({
                 ...data,
                 password: encryptedPassword,
+                ip,
             });
 
             await this.mailerService.sendMail({
