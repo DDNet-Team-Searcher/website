@@ -57,6 +57,7 @@ import {
 } from '@app/shared/types/api.type';
 import { log } from 'src/decorators/log.decorator';
 import { HappeningType, Status } from '@prisma/client';
+import { ReportsService } from 'src/reports/reports.service';
 
 @Controller()
 export class UsersController {
@@ -64,6 +65,7 @@ export class UsersController {
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
         private readonly mailerService: MailerService,
+        private readonly reportsService: ReportsService,
         private readonly logger: Logger,
     ) {}
 
@@ -477,7 +479,7 @@ export class UsersController {
         @Body() body,
         @I18n() i18n: I18nContext,
     ): Promise<ReportUserResponse> {
-        const isAlreadyReported = await this.usersService.isReported(
+        const isAlreadyReported = await this.reportsService.isReported(
             parseInt(id),
             req.user.id,
         );
@@ -490,7 +492,11 @@ export class UsersController {
             });
         }
 
-        await this.usersService.report(parseInt(id), req.user.id, body.reason);
+        await this.reportsService.report(
+            parseInt(id),
+            req.user.id,
+            body.reason,
+        );
 
         return {
             status: 'success',
@@ -567,7 +573,7 @@ export class UsersController {
     @Protected()
     @Get('/reports')
     async reports(@Query('query') query?: string): Promise<ReportsRespone> {
-        const data = await this.usersService.reports(query);
+        const data = await this.reportsService.reports(query);
 
         return {
             status: 'success',

@@ -6,6 +6,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { ReviewsModule } from 'src/reviews/reviews.module';
+import { ReportsModule } from 'src/reports/reports.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { ReviewsModule } from 'src/reviews/reviews.module';
         HappeningsModule,
         ReviewsModule,
         NotificationsModule,
+        ReportsModule,
     ],
     controllers: [UsersController],
     providers: [Logger, UsersService],

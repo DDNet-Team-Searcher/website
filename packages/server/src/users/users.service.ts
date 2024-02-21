@@ -15,7 +15,7 @@ import { ReviewsService } from 'src/reviews/reviews.service';
 import { ProfileReview } from '@app/shared/types/Review.type';
 import { Happening } from '@app/shared/types/Happening.type';
 import { BannedUser } from '@app/shared/types/BannedUser.type';
-import { Report } from '@app/shared/types/Report.type';
+import { ReportsService } from 'src/reports/reports.service';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +24,7 @@ export class UsersService {
         private readonly happeningService: HappeningsService,
         private readonly reviewsService: ReviewsService,
         private readonly notificationsService: NotificationsService,
+        private readonly reportsService: ReportsService,
     ) {}
 
     async isUserExists(
@@ -208,7 +209,7 @@ export class UsersService {
         } = profile;
 
         const isFollowing = await this.isFollowing(userId, id);
-        const isReported = await this.isReported(id, userId);
+        const isReported = await this.reportsService.isReported(id, userId);
 
         //TODO: return boolean only to users who can ban
         //return null for others
@@ -364,83 +365,6 @@ export class UsersService {
         } else {
             return false;
         }
-    }
-
-    async report(
-        reportedUserId: number,
-        authorId: number,
-        reason: string,
-    ): Promise<void> {
-        await this.prismaService.report.create({
-            data: {
-                reportedUserId,
-                authorId,
-                report: reason,
-            },
-        });
-    }
-
-    async isReported(
-        reportedUserId: number,
-        authorId: number,
-    ): Promise<boolean> {
-        const res = await this.prismaService.report.findFirst({
-            where: {
-                authorId,
-                reportedUserId,
-            },
-        });
-
-        return res === null ? false : true;
-    }
-
-    async reports(query?: string): Promise<Report[]> {
-        const reports = await this.prismaService.report.findMany({
-            where: {
-                OR: query
-                    ? [
-                          {
-                              report: {
-                                  contains: query,
-                                  mode: 'insensitive',
-                              },
-                          },
-                      ]
-                    : undefined,
-                reportedUser: {
-                    bans: {
-                        every: {
-                            banned: false,
-                        },
-                    },
-                },
-            },
-            select: {
-                id: true,
-                report: true,
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                    },
-                },
-                reportedUser: {
-                    select: {
-                        id: true,
-                        username: true,
-                    },
-                },
-            },
-        });
-
-        return reports.map((report) => ({
-            id: report.id,
-            reportedUserId: report.reportedUser.id,
-            reportedUsername: report.reportedUser.username,
-            reportedByUserId: report.author.id,
-            reportedByUsername: report.author.username,
-            report: report.report,
-        }));
     }
 
     async isBanned(bannedUserId: number): Promise<boolean> {
