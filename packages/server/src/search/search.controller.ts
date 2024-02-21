@@ -11,8 +11,8 @@ import { SearchQueryResponse } from '@app/shared/types/api.type';
 export class SearchController {
     constructor(private readonly searchService: SearchService) {}
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Get('/search')
     async search(
         @Query('query') query: string | undefined,

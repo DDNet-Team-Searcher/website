@@ -12,6 +12,7 @@ import {
     Logger,
     NotFoundException,
     Param,
+    ParseIntPipe,
     Post,
     Put,
     Query,
@@ -56,8 +57,10 @@ import {
     UpdateUsernameResponse,
 } from '@app/shared/types/api.type';
 import { log } from 'src/decorators/log.decorator';
-import { HappeningType, Status } from '@prisma/client';
+import { HappeningType, Role, Status } from '@prisma/client';
 import { ReportsService } from 'src/reports/reports.service';
+import { Permission } from 'src/decorators/permission.decorator';
+import { Role as RoleT } from '@app/shared/types/Role.type';
 
 @Controller()
 export class UsersController {
@@ -208,8 +211,8 @@ export class UsersController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/profile/avatar')
     @UseInterceptors(FileInterceptor('avatar'))
     @log("update user's avatar")
@@ -235,8 +238,8 @@ export class UsersController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/profile/username')
     @log("update user's username")
     async updateUsername(
@@ -273,8 +276,8 @@ export class UsersController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/profile/email')
     @log("update user's email")
     async updateEmail(
@@ -309,8 +312,8 @@ export class UsersController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/profile/password')
     @log("update user's password")
     async updatePassword(
@@ -367,16 +370,10 @@ export class UsersController {
     @Protected()
     @Get('/profile/:id')
     async getUserProfile(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
     ): Promise<GetProfileResponse> {
-        const ID = parseInt(id);
-
-        if (!ID) {
-            throw new BadRequestException();
-        }
-
-        const profile = await this.usersService.getUserProfile(req.user.id, ID);
+        const profile = await this.usersService.getUserProfile(req.user.id, id);
 
         if (profile) {
             return {
@@ -393,7 +390,7 @@ export class UsersController {
     @Protected()
     @Get('/profile/:id/happenings')
     async userHappenings(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
         @Query('query') query: string | undefined,
         @Query('status') status: string | undefined,
@@ -425,11 +422,9 @@ export class UsersController {
             opts.type = type as HappeningType;
         }
 
-        console.log(opts);
-
         const happenings = await this.usersService.happenings(
             req.user.id,
-            parseInt(id),
+            id,
             opts,
         );
 
@@ -443,8 +438,10 @@ export class UsersController {
 
     @Protected()
     @Get('/profile/:id/reviews')
-    async userReviews(@Param('id') id: string): Promise<GetProfileReviews> {
-        const reviews = await this.usersService.reviews(parseInt(id));
+    async userReviews(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<GetProfileReviews> {
+        const reviews = await this.usersService.reviews(id);
 
         return {
             status: 'success',
@@ -454,14 +451,14 @@ export class UsersController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Put('/user/:id/follow')
     async follow(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
     ): Promise<FollowUserResponse> {
-        await this.usersService.follow(req.user.id, parseInt(id));
+        await this.usersService.follow(req.user.id, id);
 
         return {
             status: 'success',
@@ -470,17 +467,17 @@ export class UsersController {
     }
 
     //TODO: do something with types :clueless:
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/user/:id/report')
     async report(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
     ): Promise<ReportUserResponse> {
         const isAlreadyReported = await this.reportsService.isReported(
-            parseInt(id),
+            id,
             req.user.id,
         );
 
@@ -492,11 +489,7 @@ export class UsersController {
             });
         }
 
-        await this.reportsService.report(
-            parseInt(id),
-            req.user.id,
-            body.reason,
-        );
+        await this.reportsService.report(id, req.user.id, body.reason);
 
         return {
             status: 'success',
@@ -506,14 +499,15 @@ export class UsersController {
     }
 
     @Protected()
+    @Permission(Role.Mod as RoleT.Mod)
     @Post('/user/:id/ban')
     async ban(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
         @Body() body,
         @I18n() i18n: I18nContext,
     ): Promise<BanUserResponse> {
-        const isBanned = await this.usersService.isBanned(parseInt(id));
+        const isBanned = await this.usersService.isBanned(id);
 
         if (isBanned) {
             throw new ConflictException({
@@ -523,7 +517,7 @@ export class UsersController {
             });
         }
 
-        await this.usersService.ban(parseInt(id), req.user.id, body.reason);
+        await this.usersService.ban(id, req.user.id, body.reason);
 
         return {
             status: 'success',
@@ -533,12 +527,13 @@ export class UsersController {
     }
 
     @Protected()
+    @Permission(Role.Mod as RoleT.Mod)
     @Post('/user/:id/unban')
     async unban(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
         @I18n() i18n: I18nContext,
     ): Promise<UnbanUserResponse> {
-        const isBanned = await this.usersService.isBanned(parseInt(id));
+        const isBanned = await this.usersService.isBanned(id);
 
         if (!isBanned) {
             throw new ConflictException({
@@ -548,7 +543,7 @@ export class UsersController {
             });
         }
 
-        await this.usersService.unban(parseInt(id));
+        await this.usersService.unban(id);
 
         return {
             status: 'success',
@@ -558,6 +553,7 @@ export class UsersController {
     }
 
     @Protected()
+    @Permission(Role.Mod as RoleT.Mod)
     @Get('/users/banned')
     async bannedUsers(
         @Query('query') query?: string,
@@ -571,6 +567,7 @@ export class UsersController {
     }
 
     @Protected()
+    @Permission(Role.Mod as RoleT.Mod)
     @Get('/reports')
     async reports(@Query('query') query?: string): Promise<ReportsRespone> {
         const data = await this.reportsService.reports(query);

@@ -8,6 +8,7 @@ import {
     InternalServerErrorException,
     Logger,
     Param,
+    ParseIntPipe,
     Post,
     Put,
     Req,
@@ -54,8 +55,8 @@ export class HappeningsController {
         private readonly logger: Logger,
     ) {}
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/create/run')
     @log('create a new run')
     async createRun(
@@ -86,8 +87,8 @@ export class HappeningsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/create/event')
     @UseInterceptors(FileInterceptor('thumbnail'))
     @log('create a new event')
@@ -121,21 +122,17 @@ export class HappeningsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Author('happening')
     @Put('/:id/update')
     @UseInterceptors(FileInterceptor('thumbnail'))
     async updateHappening(
         @UploadedFile() file: Express.Multer.File,
         @Body() body,
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<UpdateHappeningResponse> {
-        const happeningId = parseInt(id);
-
-        const happeningType = await this.happeningsService.getHappeningType(
-            happeningId,
-        );
+        const happeningType = await this.happeningsService.getHappeningType(id);
 
         if (happeningType == HappeningType.Run) {
             const run = new RunDTO();
@@ -162,7 +159,7 @@ export class HappeningsController {
                 });
             }
 
-            await this.happeningsService.updateRun(happeningId, run);
+            await this.happeningsService.updateRun(id, run);
         } else if (happeningType == HappeningType.Event) {
             const event = new EventDTO();
 
@@ -190,7 +187,7 @@ export class HappeningsController {
                 });
             }
 
-            await this.happeningsService.updateEvent(happeningId, {
+            await this.happeningsService.updateEvent(id, {
                 ...event,
                 thumbnail: file,
             });
@@ -202,18 +199,18 @@ export class HappeningsController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Author('happening')
     @Get('/:id/start')
     @log('start a happening')
     async startHappening(
         @I18n() i18n: I18nContext,
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<StartHappeningResponse> {
         try {
             const connectString = await this.happeningsService.startHappening(
-                parseInt(id),
+                id,
             );
 
             return {
@@ -240,14 +237,16 @@ export class HappeningsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Author('happening')
     @Get('/:id/end')
     @log('end happening')
-    async endHappening(@Param('id') id: string): Promise<EndHappeningResponse> {
+    async endHappening(
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<EndHappeningResponse> {
         try {
-            await this.happeningsService.endHappening(parseInt(id));
+            await this.happeningsService.endHappening(id);
 
             return {
                 status: 'success',
@@ -259,16 +258,16 @@ export class HappeningsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Author('happening')
     @Delete('/:id/delete')
     @log('delete happening')
     async deleteHappening(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<DeleteHappeningResponse> {
         try {
-            await this.happeningsService.deleteHappening(parseInt(id));
+            await this.happeningsService.deleteHappening(id);
 
             return {
                 status: 'success',
@@ -280,23 +279,21 @@ export class HappeningsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/:id/interested')
     async setIsInterested(
         @Req() req: AuthedRequest,
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<SetIsInterestedInHappeningResponse> {
-        const happeningId = parseInt(id);
-
         const isInterested =
             await this.happeningsService.isUserInterestedHappening({
                 userId: req.user.id,
-                happeningId,
+                happeningId: id,
             });
 
         await this.happeningsService.setIsUserInterestedInHappening(
-            happeningId,
+            id,
             req.user.id,
             isInterested === null ? true : false,
         );
@@ -307,8 +304,8 @@ export class HappeningsController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Get('/runs')
     async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
         const ids = await this.happeningsService.getAllRunsIds();
@@ -334,8 +331,8 @@ export class HappeningsController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Get('/events')
     async getEvents(@Req() req: AuthedRequest): Promise<GetAllEventsResponse> {
         const ids = await this.happeningsService.getAllEventsIds();
@@ -362,14 +359,13 @@ export class HappeningsController {
     }
 
     @Protected()
+    @Innocent()
     @Get('/:id/interested')
     async getHappeningInterestedPlayers(
-        @Param('id') id: string,
+        @Param('id', ParseIntPipe) id: number,
     ): Promise<GetInterestedUsersResponse> {
         const players =
-            await this.happeningsService.getHappeningInterestedPlayers(
-                parseInt(id),
-            );
+            await this.happeningsService.getHappeningInterestedPlayers(id);
 
         return {
             status: 'success',
@@ -377,18 +373,18 @@ export class HappeningsController {
         };
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Put('/:happeningId/in-team/:userId')
     @log('update whether a player in team or not')
     async updateIsPlayerInTeam(
-        @Param('happeningId') happeningId: string,
-        @Param('userId') userId: string,
+        @Param('happeningId', ParseIntPipe) happeningId: number,
+        @Param('userId', ParseIntPipe) userId: number,
     ): Promise<UpdateIsPlayerInTeamResponse> {
         try {
             await this.happeningsService.updateIsPlayerInTeam(
-                parseInt(happeningId),
-                parseInt(userId),
+                happeningId,
+                userId,
             );
 
             return {

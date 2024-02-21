@@ -5,6 +5,7 @@ import {
     InternalServerErrorException,
     Logger,
     Param,
+    ParseIntPipe,
     Post,
     Req,
     UseGuards,
@@ -29,6 +30,8 @@ export class ReviewsController {
         private readonly logger: Logger,
     ) {}
 
+    @Protected()
+    @Innocent()
     @Get()
     @log("get happening's reviews")
     async getReviews(
@@ -51,21 +54,21 @@ export class ReviewsController {
         }
     }
 
-    @Innocent()
     @Protected()
+    @Innocent()
     @Post('/:userId')
     @log('create a new review')
     async createReview(
         @Req() req: AuthedRequest,
-        @Param('happeningId') happeningId: string,
-        @Param('userId') userId: string,
+        @Param('happeningId', ParseIntPipe) happeningId: number,
+        @Param('userId', ParseIntPipe) userId: number,
         @Body() body: CreateReviewDTO,
     ): Promise<CreateReviewResponse> {
         try {
             await this.reviewsService.createReview({
-                happeningId: parseInt(happeningId),
+                happeningId: happeningId,
                 authorId: req.user.id,
-                reviewedUserId: parseInt(userId),
+                reviewedUserId: userId,
                 text: body.text,
                 rate: body.rate,
             });
