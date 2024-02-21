@@ -26,7 +26,7 @@ export class UsersService {
         private readonly reviewsService: ReviewsService,
         private readonly notificationsService: NotificationsService,
         private readonly reportsService: ReportsService,
-    ) { }
+    ) {}
 
     async isUserExists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
@@ -256,15 +256,12 @@ export class UsersService {
                     },
                 },
             });
-            await this.notificationsService.sendNotification(
-                followingId,
-                {
-                    type: NotificationType.Unfollow as NotifType.Unfollow,
-                    data: {
-                        userId: followerId,
-                    }
+            await this.notificationsService.sendNotification(followingId, {
+                type: NotificationType.Unfollow as NotifType.Unfollow,
+                data: {
+                    userId: followerId,
                 },
-            );
+            });
         } else {
             //follow
             await this.prismaService.follower.create({
@@ -273,15 +270,12 @@ export class UsersService {
                     followingId,
                 },
             });
-            await this.notificationsService.sendNotification(
-                followingId,
-                {
-                    type: NotificationType.Follow as NotifType.Follow,
-                    data: {
-                        userId: followerId,
-                    }
+            await this.notificationsService.sendNotification(followingId, {
+                type: NotificationType.Follow as NotifType.Follow,
+                data: {
+                    userId: followerId,
                 },
-            );
+            });
         }
     }
 
@@ -509,9 +503,9 @@ export class UsersService {
             where: {
                 username: query
                     ? {
-                        contains: query,
-                        mode: 'insensitive',
-                    }
+                          contains: query,
+                          mode: 'insensitive',
+                      }
                     : undefined,
                 bans: {
                     some: {

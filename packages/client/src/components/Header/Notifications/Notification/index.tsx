@@ -47,13 +47,13 @@ export function Notification({ notification }: OwnProps) {
             break;
         case NotificationType.Follow:
             text = t('follow', {
-                username: notification.author.username
+                username: notification.author.username,
             });
 
             break;
         case NotificationType.Unfollow:
             text = t('unfollow', {
-                username: notification.author.username
+                username: notification.author.username,
             });
 
             break;

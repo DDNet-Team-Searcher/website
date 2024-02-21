@@ -36,7 +36,7 @@ export class HappeningsService {
         private readonly prismaService: PrismaService,
         private readonly notificationsService: NotificationsService,
         private readonly serversService: ServersService,
-    ) { }
+    ) {}
 
     async createRun(data: RunDTO & { authorId: number }): Promise<Happening> {
         return await this.prismaService.happening.create({
@@ -297,16 +297,13 @@ export class HappeningsService {
                 },
             });
 
-            await this.notificationsService.sendNotification(
-                author.authorId,
-                {
-                    type: NotificationType.InterestedInHappening as NotifType.InterestedInHappening,
-                    data: {
-                        happeningId,
-                        userId,
-                    }
+            await this.notificationsService.sendNotification(author.authorId, {
+                type: NotificationType.InterestedInHappening as NotifType.InterestedInHappening,
+                data: {
+                    happeningId,
+                    userId,
                 },
-            );
+            });
         } else {
             const data = (await this.isUserInterestedHappening({
                 userId,
@@ -598,10 +595,13 @@ export class HappeningsService {
         });
     }
 
-    async upcomingHappenings(n: number) {
+    async upcomingHappenings() {
         return await this.prismaService.happening.findMany({
             where: {
-                status: 'NotStarted',
+                OR: [{ status: 'NotStarted' }, { status: 'InQueue' }],
+                startAt: {
+                    lte: new Date(),
+                },
             },
             orderBy: {
                 startAt: 'asc',
@@ -611,24 +611,6 @@ export class HappeningsService {
                 startAt: true,
                 status: true,
             },
-            take: n,
-        });
-    }
-
-    async nthUpcomingHappenings(n: number) {
-        return await this.prismaService.happening.findFirst({
-            where: {
-                status: 'NotStarted',
-            },
-            orderBy: {
-                startAt: 'asc',
-            },
-            select: {
-                id: true,
-                startAt: true,
-                status: true,
-            },
-            skip: n,
         });
     }
 
@@ -673,25 +655,25 @@ export class HappeningsService {
             where: {
                 OR: query
                     ? [
-                        {
-                            title: {
-                                contains: query,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            description: {
-                                contains: query,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            mapName: {
-                                contains: query,
-                                mode: 'insensitive',
-                            },
-                        },
-                    ]
+                          {
+                              title: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                          {
+                              description: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                          {
+                              mapName: {
+                                  contains: query,
+                                  mode: 'insensitive',
+                              },
+                          },
+                      ]
                     : undefined,
                 ...options,
                 authorId: userId,

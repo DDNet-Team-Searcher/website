@@ -20,7 +20,7 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) { }
+    ) {}
 
     async sendNotification(
         userId: number,
