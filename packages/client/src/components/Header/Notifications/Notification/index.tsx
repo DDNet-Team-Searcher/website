@@ -45,8 +45,20 @@ export function Notification({ notification }: OwnProps) {
             }
 
             break;
+        case NotificationType.Follow:
+            text = t('follow', {
+                username: notification.author.username
+            });
+
+            break;
+        case NotificationType.Unfollow:
+            text = t('unfollow', {
+                username: notification.author.username
+            });
+
+            break;
         case NotificationType.NoEmptyServers:
-            text = t('notification.no_empty_servers');
+            text = t('no_empty_servers');
 
             break;
     }

@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { NotificationType, Status } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
+import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
 
 @Injectable()
 export class CronService implements OnModuleInit {
@@ -10,7 +11,7 @@ export class CronService implements OnModuleInit {
     constructor(
         private readonly happeningsService: HappeningsService,
         private readonly notificationsService: NotificationsService,
-    ) {}
+    ) { }
 
     async onModuleInit() {
         const upcomingHappenings =
@@ -56,8 +57,10 @@ export class CronService implements OnModuleInit {
                                 if (user.inTeam) {
                                     await this.notificationsService.sendNotification(
                                         user.user.id,
-                                        NotificationType.NoEmptyServers,
-                                        {},
+                                        {
+                                            type: NotificationType.NoEmptyServers as NotifType.NoEmptyServers,
+                                            data: {}
+                                        },
                                     );
                                 }
                             }

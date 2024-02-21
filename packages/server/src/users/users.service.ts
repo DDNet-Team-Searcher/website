@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HappeningType, Status } from '@prisma/client';
+import { HappeningType, NotificationType, Status } from '@prisma/client';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -16,6 +16,7 @@ import { ProfileReview } from '@app/shared/types/Review.type';
 import { Happening } from '@app/shared/types/Happening.type';
 import { BannedUser } from '@app/shared/types/BannedUser.type';
 import { ReportsService } from 'src/reports/reports.service';
+import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,7 @@ export class UsersService {
         private readonly reviewsService: ReviewsService,
         private readonly notificationsService: NotificationsService,
         private readonly reportsService: ReportsService,
-    ) {}
+    ) { }
 
     async isUserExists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
@@ -255,6 +256,15 @@ export class UsersService {
                     },
                 },
             });
+            await this.notificationsService.sendNotification(
+                followingId,
+                {
+                    type: NotificationType.Unfollow as NotifType.Unfollow,
+                    data: {
+                        userId: followerId,
+                    }
+                },
+            );
         } else {
             //follow
             await this.prismaService.follower.create({
@@ -263,6 +273,15 @@ export class UsersService {
                     followingId,
                 },
             });
+            await this.notificationsService.sendNotification(
+                followingId,
+                {
+                    type: NotificationType.Follow as NotifType.Follow,
+                    data: {
+                        userId: followerId,
+                    }
+                },
+            );
         }
     }
 
@@ -490,9 +509,9 @@ export class UsersService {
             where: {
                 username: query
                     ? {
-                          contains: query,
-                          mode: 'insensitive',
-                      }
+                        contains: query,
+                        mode: 'insensitive',
+                    }
                     : undefined,
                 bans: {
                     some: {

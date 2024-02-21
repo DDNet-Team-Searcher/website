@@ -1,11 +1,11 @@
 import { Happenings } from './Happening.type';
 
 export enum NotificationType {
-    Followage = 'Followage',
+    Follow = 'Follow',
+    Unfollow = 'Unfollow',
     InterestedInHappening = 'InterestedInHappening',
     AddedInTeam = 'AddedInTeam',
     RemovedFromTeam = 'RemovedFromTeam',
-    MadeAnAccountPOG = 'MadeAnAccountPOG',
     NoEmptyServers = 'NoEmptyServers',
 }
 
@@ -13,30 +13,41 @@ export type FollowNotification = {
     userId: number;
 }
 
+export type UnfollowNotification = FollowNotification;
+
 export type AddedInTeamNotification = {
     happeningId: number;
 }
 
-export type RemovedFromTeamNotification = {
-    happeningId: number;
-}
+export type RemovedFromTeamNotification = AddedInTeamNotification;
 
 export type InterestedInHappeningNotification = {
     userId: number;
     happeningId: number;
 }
 
-export type NewAccountNotification = {}
-
 export type NoEmptyServersNotification = {}
 
 export type NotificationJson =
-    FollowNotification |
-    AddedInTeamNotification |
-    RemovedFromTeamNotification |
-    InterestedInHappeningNotification |
-    NewAccountNotification |
-    NoEmptyServersNotification;
+    {
+        type: NotificationType.Follow,
+        data: FollowNotification
+    } | {
+        type: NotificationType.Unfollow,
+        data: UnfollowNotification
+    } | {
+        type: NotificationType.AddedInTeam,
+        data: AddedInTeamNotification
+    } | {
+        type: NotificationType.RemovedFromTeam,
+        data: RemovedFromTeamNotification
+    } | {
+        type: NotificationType.InterestedInHappening,
+        data: InterestedInHappeningNotification
+    } | {
+        type: NotificationType.NoEmptyServers,
+        data: NoEmptyServersNotification;
+    }
 
 type Author = {
     author: {
@@ -53,7 +64,7 @@ type Happening = {
     };
 };
 
-type Common<N extends Record<string, any>, T extends NotificationType> = {
+type Common<N extends Record<string, string | number>, T extends NotificationType> = {
     id: number;
     notification: N;
     createdAt: string;
@@ -62,9 +73,9 @@ type Common<N extends Record<string, any>, T extends NotificationType> = {
 };
 
 export type Notification =
-    (Common<FollowNotification, NotificationType.Followage> & Author)
+    (Common<FollowNotification, NotificationType.Follow> & Author)
+    | (Common<UnfollowNotification, NotificationType.Unfollow> & Author)
     | (Common<InterestedInHappeningNotification, NotificationType.InterestedInHappening> & Author & Happening)
     | (Common<AddedInTeamNotification, NotificationType.AddedInTeam> & Author & Happening)
     | (Common<RemovedFromTeamNotification, NotificationType.RemovedFromTeam> & Author & Happening)
-    | Common<NewAccountNotification, NotificationType.MadeAnAccountPOG>
     | Common<NoEmptyServersNotification, NotificationType.NoEmptyServers>;

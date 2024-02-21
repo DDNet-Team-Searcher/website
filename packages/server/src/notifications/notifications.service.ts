@@ -20,18 +20,17 @@ export class NotificationsService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly websocketGateway: WebsocketsGateway,
-    ) {}
+    ) { }
 
     async sendNotification(
         userId: number,
-        type: NotificationType,
-        notificationJson: NotificationJson,
+        data: NotificationJson,
     ): Promise<void> {
         const res = await this.prismaService.notification.create({
             data: {
                 userId,
-                type,
-                notification: notificationJson,
+                type: data.type,
+                notification: data.data,
             },
         });
 
@@ -103,7 +102,8 @@ export class NotificationsService {
                     createdAt: notification.createdAt.toString(),
                 };
             }
-            case NotificationType.Followage: {
+            case NotificationType.Unfollow:
+            case NotificationType.Follow: {
                 const author = (await this.prismaService.user.findFirst({
                     where: {
                         id: (notification.notification as FollowNotification)
@@ -121,7 +121,7 @@ export class NotificationsService {
                         avatar: getAvatarUrl(author.avatar),
                     },
                     id: notification.id,
-                    type: notification.type as NotifType.Followage,
+                    type: notification.type as NotifType.Follow,
                     seen: notification.seen,
                     notification:
                         notification.notification as FollowNotification,

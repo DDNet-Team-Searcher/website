@@ -67,11 +67,11 @@ enum HappeningType {
 }
 
 enum NotificationType {
-    Followage
     InterestedInHappening
+    Follow
+    Unfollow
     AddedInTeam
     RemovedFromTeam
-    MadeAnAccountPOG
     NoEmptyServers // you get this when you try to start a happening when all servers are in use
 }
 
