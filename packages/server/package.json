@@ -7,7 +7,7 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "pnpm run proto:generate && nest build",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "format": "prettier \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "npx prisma generate && npx prisma db push --schema ./prisma/schema.prisma && nest start --watch",
         "start:debug": "nest start --debug --watch",

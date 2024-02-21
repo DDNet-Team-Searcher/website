@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "format": "prettier --write \"src/**/*.{js,ts,tsx}\""
+        "format": "prettier \"src/**/*.{js,ts,tsx}\""
     },
     "dependencies": {
         "@app/shared": "^1.0.0",
