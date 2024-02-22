@@ -12,26 +12,23 @@ export class DDTSLoggerService extends ConsoleLogger implements LoggerService {
         return this.clsService.getId();
     }
 
-    log(message: any, ...optionalParams: any[]): void {
+    log(message: any): void {
         logger.info(message, { requestId: this.requestId() });
     }
 
-    error(message: any, ...optionalParams: any[]): void {
+    error(message: any): void {
         logger.error(message, { requestId: this.requestId() });
     }
 
-    warn(message: any, ...optionalParams: any[]): any {
+    warn(message: any): void {
         logger.warn(message, { requestId: this.requestId() });
     }
 
-    debug(message: any, ...optionalParams: any[]): any {
+    debug(message: any): void {
         logger.debug(message, { requestId: this.requestId() });
     }
 
-    verbose(message: any, ...optionalParams: any[]): any {
+    verbose(message: any): void {
         logger.verbose(message, { requestId: this.requestId() });
     }
-
-    //do i even need this?
-    //setLogLevels?(levels: LogLevel[]): any { }
 }

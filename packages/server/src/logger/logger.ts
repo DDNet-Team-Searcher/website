@@ -31,7 +31,7 @@ if (process.env.NODE_ENV == 'development') {
     );
 }
 
-const addPid = winston.format((info, _) => {
+const addPid = winston.format((info) => {
     info.pid = process.pid;
 
     return info;

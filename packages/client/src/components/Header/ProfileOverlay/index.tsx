@@ -22,8 +22,6 @@ type OwnProps = {
     ref: MutableRefObject<HTMLUListElement | null>;
 };
 
-//NOTE: do smth with it? XD
-/* eslint-disable react/display-name */
 export const ProfileOverlay = forwardRef(
     ({ isHidden }: OwnProps, ref: Ref<HTMLUListElement>) => {
         const [logoutUser] = useLogoutMutation();
@@ -80,3 +78,4 @@ export const ProfileOverlay = forwardRef(
         );
     },
 );
+ProfileOverlay.displayName = 'ProfileOverlay';

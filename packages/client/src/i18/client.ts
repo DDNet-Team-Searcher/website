@@ -47,6 +47,7 @@ export function useTranslation(ns: string | string[]) {
     if (runsOnServerSide && lang && i18n.resolvedLanguage !== lang) {
         i18n.changeLanguage(lang);
     } else {
+        //eslint-disable-next-line react-hooks/rules-of-hooks
         useCustomTranslationImpl(i18n, lang);
     }
 

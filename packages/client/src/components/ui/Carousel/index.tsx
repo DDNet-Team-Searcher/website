@@ -95,3 +95,4 @@ export const Carousel = React.forwardRef<CarouselRef, OwnProps>(
         );
     },
 );
+Carousel.displayName = 'Carousel';

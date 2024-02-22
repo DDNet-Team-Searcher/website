@@ -72,7 +72,7 @@ export default function BannedUsersPage() {
                 ))}
             {data && data.status === 'success' && !data.data.length && (
                 <p className="text-high-emphasis text-center">
-                    Seems like there's no banned users. Pog
+                    Seems like there&apos;s no banned users. Pog
                 </p>
             )}
         </div>

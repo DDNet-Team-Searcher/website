@@ -8,7 +8,8 @@
     "dev": "concurrently 'pnpm:dev:*'",
     "test": "pnpm run server test --passWithNoTests",
     "format": "pnpm run client format -w && pnpm run server format -w",
-    "check_style": "pnpm run client format -c && pnpm run server format -c"
+    "check_style": "pnpm run client format -c && pnpm run server format -c",
+    "lint": "pnpm run client lint && pnpm run server lint"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

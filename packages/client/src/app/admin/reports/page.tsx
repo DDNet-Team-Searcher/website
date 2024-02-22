@@ -78,7 +78,7 @@ export default function ReportsPage() {
                 ))}
             {data && data.status === 'success' && !data.data.length && (
                 <p className="text-high-emphasis text-center">
-                    Seems like there's no reports. Pog
+                    Seems like there&apos;s no reports. Pog
                 </p>
             )}
         </div>

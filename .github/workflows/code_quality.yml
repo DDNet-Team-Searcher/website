@@ -1,9 +1,9 @@
-name: Check style
+name: Code quality
 
 on: [push, pull_request, merge_group]
 
 jobs:
-  check-style:
+  check_style:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,3 +13,13 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm run check_style
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - run: |
+          npm install -g pnpm
+          pnpm install
+          pnpm run lint
