@@ -121,14 +121,20 @@ export const usersAPI = baseApi.injectEndpoints({
                 method: 'PUT',
             }),
         }),
-        reportUser: build.mutation<ReportUserResponse, ReportUserRequest>({
+        reportUser: build.mutation<
+            ReportUserResponse,
+            ReportUserRequest & { userId: number }
+        >({
             query: ({ userId, reason }) => ({
                 url: `/user/${userId}/report`,
                 method: 'POST',
                 body: { reason },
             }),
         }),
-        banUser: build.mutation<BanUserResponse, BanUserRequest>({
+        banUser: build.mutation<
+            BanUserResponse,
+            BanUserRequest & { userId: number }
+        >({
             query: ({ userId, reason }) => ({
                 url: `/user/${userId}/ban`,
                 method: 'POST',

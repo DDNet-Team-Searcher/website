@@ -187,14 +187,12 @@ export type CreateReviewResponse = ApiResponse<null, CreateReviewRequest>;
 
 export type ReportUserRequest = {
     reason: string;
-    userId: number;
 };
 
 export type ReportUserResponse = ApiResponse<null, { reason: string }>;
 
 export type BanUserRequest = {
     reason: string;
-    userId: number;
 };
 
 export type BanUserResponse = ApiResponse<null, { reason: string }>;

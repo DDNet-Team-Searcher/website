@@ -63,6 +63,8 @@ import { Permission } from 'src/decorators/permission.decorator';
 import { Role as RoleT } from '@app/shared/types/Role.type';
 import { ReviewsService } from 'src/reviews/reviews.service';
 import { HappeningsService } from 'src/happenings/happenings.service';
+import { CreateReportDTO } from './dto/create-report.dto';
+import { BanDTO } from './dto/ban.dto';
 
 @Controller()
 export class UsersController {
@@ -470,14 +472,13 @@ export class UsersController {
         };
     }
 
-    //TODO: do something with types :clueless:
     @Protected()
     @Innocent()
     @Post('/user/:id/report')
     async report(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
-        @Body() body,
+        @Body() body: CreateReportDTO,
         @I18n() i18n: I18nContext,
     ): Promise<ReportUserResponse> {
         const isAlreadyReported = await this.reportsService.isReported(
@@ -508,7 +509,7 @@ export class UsersController {
     async ban(
         @Param('id', ParseIntPipe) id: number,
         @Req() req: AuthedRequest,
-        @Body() body,
+        @Body() body: BanDTO,
         @I18n() i18n: I18nContext,
     ): Promise<BanUserResponse> {
         const isBanned = await this.usersService.isBanned(id);
