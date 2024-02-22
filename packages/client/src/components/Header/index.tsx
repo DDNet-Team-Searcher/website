@@ -227,6 +227,7 @@ export function Header() {
                     <Notifications
                         ref={notificationRef}
                         isVisible={isNotificationOverlayVisible}
+                        setIsVisible={setIsNotificationOverlayVisible}
                     />
                     <p className="text-[white] mx-5">{username}</p>
                     <div className="relative">
