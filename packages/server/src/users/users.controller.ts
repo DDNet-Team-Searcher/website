@@ -61,6 +61,8 @@ import { HappeningType, Role, Status } from '@prisma/client';
 import { ReportsService } from 'src/reports/reports.service';
 import { Permission } from 'src/decorators/permission.decorator';
 import { Role as RoleT } from '@app/shared/types/Role.type';
+import { ReviewsService } from 'src/reviews/reviews.service';
+import { HappeningsService } from 'src/happenings/happenings.service';
 
 @Controller()
 export class UsersController {
@@ -69,6 +71,8 @@ export class UsersController {
         private readonly jwtService: JwtService,
         private readonly mailerService: MailerService,
         private readonly reportsService: ReportsService,
+        private readonly reviewsService: ReviewsService,
+        private readonly happeningsService: HappeningsService,
         private readonly logger: Logger,
     ) {}
 
@@ -422,7 +426,7 @@ export class UsersController {
             opts.type = type as HappeningType;
         }
 
-        const happenings = await this.usersService.happenings(
+        const happenings = await this.happeningsService.findUserHappenings(
             req.user.id,
             id,
             opts,
@@ -441,7 +445,7 @@ export class UsersController {
     async userReviews(
         @Param('id', ParseIntPipe) id: number,
     ): Promise<GetProfileReviews> {
-        const reviews = await this.usersService.reviews(id);
+        const reviews = await this.reviewsService.reviewsAboutUser(id);
 
         return {
             status: 'success',

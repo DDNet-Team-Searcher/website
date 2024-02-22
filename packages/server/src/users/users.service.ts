@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HappeningType, NotificationType, Status } from '@prisma/client';
-import { HappeningsService } from 'src/happenings/happenings.service';
+import { NotificationType } from '@prisma/client';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Profile } from '@app/shared/types/Profile.type';
@@ -11,9 +10,6 @@ import * as argon2 from 'argon2';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '@app/shared/types/Role.type';
-import { ReviewsService } from 'src/reviews/reviews.service';
-import { ProfileReview } from '@app/shared/types/Review.type';
-import { Happening } from '@app/shared/types/Happening.type';
 import { BannedUser } from '@app/shared/types/BannedUser.type';
 import { ReportsService } from 'src/reports/reports.service';
 import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
@@ -22,8 +18,6 @@ import { NotificationType as NotifType } from '@app/shared/types/Notification.ty
 export class UsersService {
     constructor(
         private readonly prismaService: PrismaService,
-        private readonly happeningService: HappeningsService,
-        private readonly reviewsService: ReviewsService,
         private readonly notificationsService: NotificationsService,
         private readonly reportsService: ReportsService,
     ) {}
@@ -293,8 +287,9 @@ export class UsersService {
             },
         }))!;
 
-        if (oldAvatar.avatar)
+        if (oldAvatar.avatar) {
             await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
+        }
 
         await this.prismaService.user.update({
             where: {
@@ -460,26 +455,6 @@ export class UsersService {
             },
         }))!.role;
         // ^ is this gud?
-    }
-
-    async happenings(
-        authedUserId: number,
-        userId: number,
-        opts: {
-            type?: HappeningType;
-            status?: Status;
-            query?: string;
-        },
-    ): Promise<Happening[]> {
-        return await this.happeningService.findUserHappenings(
-            authedUserId,
-            userId,
-            opts,
-        );
-    }
-
-    async reviews(id: number): Promise<ProfileReview[]> {
-        return await this.reviewsService.reviewsAboutUser(id);
     }
 
     async bannedUsers(query?: string): Promise<BannedUser[]> {

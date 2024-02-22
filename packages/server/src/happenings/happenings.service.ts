@@ -681,7 +681,7 @@ export class HappeningsService {
             take: 10,
         });
 
-        let happenings: HappeningT[] = [];
+        const happenings: HappeningT[] = [];
 
         for (const el of data) {
             if (el.type == HappeningType.Run) {

@@ -8,8 +8,6 @@ export class ReviewsService {
     constructor(private readonly prismaService: PrismaService) {}
 
     async getReviewsByHappeningId(happeningId: number): Promise<Review[]> {
-        const res: Review[] = [];
-
         const reviews = await this.prismaService.review.findMany({
             where: {
                 happeningId,
@@ -36,24 +34,18 @@ export class ReviewsService {
             },
         });
 
-        for (const review of reviews) {
-            //TODO: refactor this bs, coz all these clones just to satisty ts
-            //to have createdAt as `string` instead of `Date`
-            res.push({
-                ...review,
-                createdAt: review.createdAt.toString(),
-                reviewedUser: {
-                    ...review.reviewedUser,
-                    avatar: getAvatarUrl(review.reviewedUser.avatar),
-                },
-                author: {
-                    ...review.reviewedUser,
-                    avatar: getAvatarUrl(review.author.avatar),
-                },
-            });
-        }
-
-        return res;
+        return reviews.map((review) => ({
+            ...review,
+            createdAt: review.createdAt.toJSON(),
+            reviewedUser: {
+                ...review.reviewedUser,
+                avatar: getAvatarUrl(review.reviewedUser.avatar),
+            },
+            author: {
+                ...review.author,
+                avatar: getAvatarUrl(review.author.avatar),
+            },
+        }));
     }
 
     async createReview({
@@ -81,8 +73,6 @@ export class ReviewsService {
     }
 
     async reviewsAboutUser(userId: number): Promise<ProfileReview[]> {
-        const res: ProfileReview[] = [];
-
         const reviews = await this.prismaService.review.findMany({
             select: {
                 id: true,
@@ -102,18 +92,13 @@ export class ReviewsService {
             },
         });
 
-        //TODO: lotta unnecessary copying
-        for (const review of reviews) {
-            res.push({
-                ...review,
-                createdAt: review.createdAt.toString(),
-                author: {
-                    ...review.author,
-                    avatar: getAvatarUrl(review.author.avatar),
-                },
-            });
-        }
-
-        return res;
+        return reviews.map((review) => ({
+            ...review,
+            createdAt: review.createdAt.toString(),
+            author: {
+                ...review.author,
+                avatar: getAvatarUrl(review.author.avatar),
+            },
+        }));
     }
 }
