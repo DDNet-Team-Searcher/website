@@ -11,7 +11,7 @@ export function Runs() {
 
     useEffect(() => {
         if (!isLoading && data && data.status === 'success' && isSuccess) {
-            dispatch(mergeHappenings(data.data.runs));
+            dispatch(mergeHappenings(data.data));
             setIsReady(true);
         }
     }, [data, isLoading, isSuccess]);
@@ -20,9 +20,7 @@ export function Runs() {
         <>
             {isReady &&
                 data?.status === 'success' &&
-                data.data.runs.map((run) => (
-                    <Happening key={run.id} id={run.id} />
-                ))}
+                data.data.map((run) => <Happening key={run.id} id={run.id} />)}
         </>
     );
 }

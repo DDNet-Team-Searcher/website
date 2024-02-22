@@ -76,10 +76,7 @@ export class HappeningsController {
 
             return {
                 status: 'success',
-                data: {
-                    //is it ok?
-                    run: run!,
-                },
+                data: run!,
             };
         } catch (e) {
             this.logger.error(new Error('failed to create a new run'));
@@ -111,10 +108,7 @@ export class HappeningsController {
 
             return {
                 status: 'success',
-                data: {
-                    //is it gud?
-                    event: event!,
-                },
+                data: event!,
             };
         } catch (e) {
             this.logger.error(new Error('failed to create a new event'));
@@ -325,9 +319,7 @@ export class HappeningsController {
 
         return {
             status: 'success',
-            data: {
-                runs,
-            },
+            data: runs,
         };
     }
 
@@ -352,9 +344,7 @@ export class HappeningsController {
 
         return {
             status: 'success',
-            data: {
-                events,
-            },
+            data: events,
         };
     }
 

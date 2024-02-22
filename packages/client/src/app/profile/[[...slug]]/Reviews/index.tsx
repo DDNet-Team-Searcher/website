@@ -14,7 +14,7 @@ export function Reviews({ userId }: OwnProps) {
 
     useEffect(() => {
         if (data?.status === 'success') {
-            setReviews(data.data.reviews);
+            setReviews(data.data);
         }
     }, [isLoading]);
 

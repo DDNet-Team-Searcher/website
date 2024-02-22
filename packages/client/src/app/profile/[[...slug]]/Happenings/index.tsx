@@ -54,7 +54,7 @@ export function Happenings({ userId }: OwnProps) {
             .unwrap()
             .then((data) => {
                 if (data?.status === 'success') {
-                    const happenings = data.data.happenings;
+                    const happenings = data.data;
 
                     dispatch(mergeHappenings(happenings));
                     setHappeningsIds(
@@ -73,7 +73,7 @@ export function Happenings({ userId }: OwnProps) {
             const data = await getHappenings({ userId, params }).unwrap();
 
             if (data?.status === 'success') {
-                const happenings = data.data.happenings;
+                const happenings = data.data;
 
                 dispatch(mergeHappenings(happenings));
                 setHappeningsIds(happenings.map((happening) => happening.id));

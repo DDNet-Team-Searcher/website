@@ -86,7 +86,7 @@ export default function Profile({ params: { slug } }: OwnProps) {
 
     useEffect(() => {
         if (data?.status === 'success') {
-            setProfile(data.data.profile);
+            setProfile(data.data);
         }
     }, [data, isSuccess]);
 

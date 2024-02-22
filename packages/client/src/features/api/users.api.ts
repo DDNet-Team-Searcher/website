@@ -57,7 +57,7 @@ export const usersAPI = baseApi.injectEndpoints({
                     const { data } = await queryFulfilled;
 
                     if (data.status === 'success' && data.data) {
-                        dispatch(setCredentails(data.data.user));
+                        dispatch(setCredentails(data.data));
                         dispatch(setIsAuthed(true));
                     }
                 } catch (e) {

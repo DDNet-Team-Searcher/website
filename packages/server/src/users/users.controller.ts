@@ -367,9 +367,7 @@ export class UsersController {
 
         return {
             status: 'success',
-            data: {
-                user: credentials,
-            },
+            data: credentials,
         };
     }
 
@@ -384,9 +382,7 @@ export class UsersController {
         if (profile) {
             return {
                 status: 'success',
-                data: {
-                    profile,
-                },
+                data: profile,
             };
         }
 
@@ -436,9 +432,7 @@ export class UsersController {
 
         return {
             status: 'success',
-            data: {
-                happenings,
-            },
+            data: happenings,
         };
     }
 
@@ -451,9 +445,7 @@ export class UsersController {
 
         return {
             status: 'success',
-            data: {
-                reviews: reviews,
-            },
+            data: reviews,
         };
     }
 

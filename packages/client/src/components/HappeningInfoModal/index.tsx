@@ -182,7 +182,7 @@ export function HappeningInfoModal() {
                                         user={user}
                                         alreadyReviewed={
                                             reviews?.status === 'success' &&
-                                            !!reviews?.data?.reviews.find(
+                                            !!reviews?.data.find(
                                                 (review) =>
                                                     review.reviewedUser.id ===
                                                     user.user.id,
@@ -195,7 +195,7 @@ export function HappeningInfoModal() {
                 </div>
                 <div>
                     {reviews?.status === 'success' &&
-                        reviews.data.reviews.map((review, id) => (
+                        reviews.data.map((review, id) => (
                             <Review key={id} review={review} />
                         ))}
                 </div>

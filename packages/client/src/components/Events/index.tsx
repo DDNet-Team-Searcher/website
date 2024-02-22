@@ -11,7 +11,7 @@ export function Events() {
 
     useEffect(() => {
         if (!isLoading && data && data.status === 'success' && isSuccess) {
-            dispatch(mergeHappenings(data.data.events));
+            dispatch(mergeHappenings(data.data));
             setIsReady(true);
         }
     }, [data, isLoading, isSuccess]);
@@ -20,7 +20,7 @@ export function Events() {
         <>
             {isReady &&
                 data?.status === 'success' &&
-                data.data.events.map((event) => (
+                data.data.map((event) => (
                     <Happening key={event.id} id={event.id} />
                 ))}
         </>

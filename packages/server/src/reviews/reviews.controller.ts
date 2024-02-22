@@ -44,9 +44,7 @@ export class ReviewsController {
 
             return {
                 status: 'success',
-                data: {
-                    reviews: reviews,
-                },
+                data: reviews,
             };
         } catch (e) {
             this.logger.error(new Error("failed to load happening's reviews"));

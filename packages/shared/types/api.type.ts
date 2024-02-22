@@ -25,7 +25,7 @@ export type LoginUserResponse = ApiResponse<null, LoginUserRequest>;
 
 export type LogoutUserResponse = ApiResponse<null, null>;
 
-export type GetUserCredentialsResponse = ApiResponse<{ user: User }, null>;
+export type GetUserCredentialsResponse = ApiResponse<User, null>;
 
 export type CreateRunRequest = {
     mapName: string;
@@ -36,7 +36,7 @@ export type CreateRunRequest = {
 };
 
 export type CreateRunResponse = ApiResponse<
-    { run: Run },
+    Run,
     Omit<CreateRunRequest, 'startAt'>
 >;
 
@@ -50,7 +50,7 @@ export type CreateEventRequest = {
 };
 
 export type CreateEventResponse = ApiResponse<
-    { event: Event },
+    Event,
     Omit<CreateEventRequest, 'startAt' | 'endAt'>
 >;
 
@@ -70,7 +70,7 @@ export type UpdateHappeningRequest = {
     }>;
 };
 
-export type UpdateHappeningResponse = ApiResponse<null, { [key: string]: string }>;
+export type UpdateHappeningResponse = ApiResponse<null, Record<string, string>>;
 
 export type StartHappeningResponse = ApiResponse<
     { connectString: string | null },
@@ -81,9 +81,9 @@ export type EndHappeningResponse = ApiResponse<null, null>;
 
 export type DeleteHappeningResponse = ApiResponse<null, null>;
 
-export type GetAllRunsResponse = ApiResponse<{ runs: Run[] }, null>;
+export type GetAllRunsResponse = ApiResponse<Run[], null>;
 
-export type GetAllEventsResponse = ApiResponse<{ events: Event[] }, null>;
+export type GetAllEventsResponse = ApiResponse<Event[], null>;
 
 export type InterestedPlayer = {
     inTeam: boolean;
@@ -112,13 +112,13 @@ export type UnbanUserRequest = {
     userId: number;
 };
 
-export type GetReviewsResponse = ApiResponse<{ reviews: Review[] }, null>;
+export type GetReviewsResponse = ApiResponse<Review[], null>;
 
-export type GetProfileResponse = ApiResponse<{ profile: Profile }, null>;
+export type GetProfileResponse = ApiResponse<Profile, null>;
 
-export type GetProfileHappenings = ApiResponse<{ happenings: Happening[] }, null>;
+export type GetProfileHappenings = ApiResponse<Happening[], null>;
 
-export type GetProfileReviews = ApiResponse<{ reviews: ProfileReview[] }, null>;
+export type GetProfileReviews = ApiResponse<ProfileReview[], null>;
 
 export type UpdateAvatarResponse = ApiResponse<
     { avatar: string | null },
