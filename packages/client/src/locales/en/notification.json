@@ -1,7 +1,8 @@
 {
     "title": "Notifications",
-    "interested_run": "{{ interestedUsername }} is interested in your {{ mapName }} run",
-    "interested_event": "{{ interestedUsername }} is interested in your {title} event",
+    "interested": "{{ username}} is interested in your link->happening",
+    "added": "{{ username }} added you in link->team",
+    "removed": "{{ username }} removed you from link->team",
     "no_empty_servers": "Sadly you cant play on our servers rn coz there're no empty servers",
     "follow": "{{ username }} followed you",
     "unfollow": "{{ username }} unfollowed you"

@@ -83,9 +83,10 @@ export class NotificationsService {
                 }))!; //NOTE: this is fine
 
                 return {
-                    author: {
+                    user: {
+                        id: authorId,
                         username: author.username,
-                        avatar: getAvatarUrl(author.username),
+                        avatar: getAvatarUrl(author.avatar),
                     },
                     id: notification.id,
                     type: notification.type as
@@ -116,7 +117,9 @@ export class NotificationsService {
                 }))!; //NOTE: this is fine
 
                 return {
-                    author: {
+                    user: {
+                        id: (notification.notification as FollowNotification)
+                            .userId,
                         username: author.username,
                         avatar: getAvatarUrl(author.avatar),
                     },
@@ -156,7 +159,10 @@ export class NotificationsService {
                 }))!; //NOTE: this is fine
 
                 return {
-                    author: {
+                    user: {
+                        id: (
+                            notification.notification as InterestedInHappeningNotification
+                        ).userId,
                         username: author.username,
                         avatar: getAvatarUrl(author.avatar),
                     },

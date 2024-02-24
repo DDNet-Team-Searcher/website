@@ -49,8 +49,9 @@ export type NotificationJson =
         data: NoEmptyServersNotification;
     }
 
-type Author = {
-    author: {
+type User = {
+    user: {
+        id: number;
         username: string;
         avatar: string | null;
     };
@@ -73,9 +74,9 @@ type Common<N extends Record<string, string | number>, T extends NotificationTyp
 };
 
 export type Notification =
-    (Common<FollowNotification, NotificationType.Follow> & Author)
-    | (Common<UnfollowNotification, NotificationType.Unfollow> & Author)
-    | (Common<InterestedInHappeningNotification, NotificationType.InterestedInHappening> & Author & Happening)
-    | (Common<AddedInTeamNotification, NotificationType.AddedInTeam> & Author & Happening)
-    | (Common<RemovedFromTeamNotification, NotificationType.RemovedFromTeam> & Author & Happening)
+    (Common<FollowNotification, NotificationType.Follow> & User)
+    | (Common<UnfollowNotification, NotificationType.Unfollow> & User)
+    | (Common<InterestedInHappeningNotification, NotificationType.InterestedInHappening> & User & Happening)
+    | (Common<AddedInTeamNotification, NotificationType.AddedInTeam> & User & Happening)
+    | (Common<RemovedFromTeamNotification, NotificationType.RemovedFromTeam> & User & Happening)
     | Common<NoEmptyServersNotification, NotificationType.NoEmptyServers>;

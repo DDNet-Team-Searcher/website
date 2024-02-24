@@ -25,51 +25,46 @@ export function Notification({ notification }: OwnProps) {
         },
     });
 
-    let text = '';
+    let text: string;
 
     switch (notification.type) {
         case NotificationType.InterestedInHappening:
-            let interestedUsername =
-                notification.author.username || 'deleted user';
-
-            if (notification.happening.type == Happenings.Run) {
-                text = t('interested_run', {
-                    interestedUsername,
-                    mapName: notification.happening.mapName,
-                });
-            } else if (notification.happening.type == Happenings.Event) {
-                text = t('interested_event', {
-                    interestedUsername,
-                    title: notification.happening.title,
-                });
-            }
-
+            text = t('interested', {
+                username: notification.user.username,
+            });
             break;
         case NotificationType.Follow:
             text = t('follow', {
-                username: notification.author.username,
+                username: notification.user.username,
             });
-
             break;
         case NotificationType.Unfollow:
             text = t('unfollow', {
-                username: notification.author.username,
+                username: notification.user.username,
             });
-
+            break;
+        case NotificationType.AddedInTeam:
+            text = t('added', {
+                username: notification.user.username,
+            });
+            break;
+        case NotificationType.RemovedFromTeam:
+            text = t('removed', {
+                username: notification.user.username,
+            });
             break;
         case NotificationType.NoEmptyServers:
             text = t('no_empty_servers');
-
             break;
     }
 
     return (
         <li className="mt-[15px] flex" ref={ref}>
-            {notification.type === NotificationType.InterestedInHappening && (
-                <Link href={`/profile/${notification.notification.userId}`}>
+            {notification.type !== NotificationType.NoEmptyServers && (
+                <Link href={`/profile/${notification.user.id}`}>
                     <Avatar
-                        src={notification.author.avatar}
-                        username={notification.author.username}
+                        src={notification.user.avatar}
+                        username={notification.user.username}
                         size={30}
                         className="mt-[5px]"
                     />

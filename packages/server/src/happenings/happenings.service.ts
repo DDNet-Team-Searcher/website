@@ -593,6 +593,22 @@ export class HappeningsService {
                 inTeam: !inTeam,
             },
         });
+
+        if (inTeam) {
+            await this.notificationsService.sendNotification(userId, {
+                type: NotificationType.RemovedFromTeam as NotifType.RemovedFromTeam,
+                data: {
+                    happeningId,
+                },
+            });
+        } else {
+            await this.notificationsService.sendNotification(userId, {
+                type: NotificationType.AddedInTeam as NotifType.AddedInTeam,
+                data: {
+                    happeningId,
+                },
+            });
+        }
     }
 
     async upcomingHappenings() {
