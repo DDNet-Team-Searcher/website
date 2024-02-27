@@ -81,6 +81,8 @@ export type EndHappeningResponse = ApiResponse<null, null>;
 
 export type DeleteHappeningResponse = ApiResponse<null, null>;
 
+export type GetHappeningResponse = ApiResponse<Happening, null>;
+
 export type GetAllRunsResponse = ApiResponse<Run[], null>;
 
 export type GetAllEventsResponse = ApiResponse<Event[], null>;

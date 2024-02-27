@@ -11,6 +11,7 @@ import { Place } from '@/components/Happening/Place';
 import {
     useGetHappeningInterestedPlayersQuery,
     useGetReviewsQuery,
+    useLazyGetHappeningQuery,
     useUpdateIsPlayerInTeamMutation,
 } from '@/features/api/happenings.api';
 import { InterestedPlayer } from './InterestedPlayer';
@@ -20,9 +21,13 @@ import { getMapUrl } from '@/utils/getMapUrl';
 import { MapIcon } from '../ui/Icons/Map';
 import { TeeIcon } from '../ui/Icons/Tee';
 import { Carousel, CarouselRef } from '../ui/Carousel';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { mergeHappenings } from '@/store/slices/happenings';
 
 export function HappeningInfoModal() {
     const dispatch = useAppDispatch();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const { happeningId, visible } = useAppSelector(
         (state) => state.app.happeningInfoModal,
     );
@@ -34,12 +39,38 @@ export function HappeningInfoModal() {
         isSuccess: interestedPlayersSuccess,
         refetch: refetchInterestedPlayers,
     } = useGetHappeningInterestedPlayersQuery(happening?.id || 0);
+    const [getHappening] = useLazyGetHappeningQuery();
     const [updateIsPlayerInTeam] = useUpdateIsPlayerInTeamMutation();
     const authedUserId = useAppSelector((state) => state.user.user.id);
     const { data: reviews } = useGetReviewsQuery(happening?.id || 0);
     let isUserInTeam: number | null = null;
     const ref = useRef<CarouselRef | null>(null);
     const [activeTab, setActiveTab] = useState(0);
+
+    useEffect(() => {
+        const happeningId =
+            parseInt(searchParams.get('happeningId') || '0') || null;
+
+        if (happeningId) {
+            //TODO: check it only when all stuff is already loaded
+            if (!happening) {
+                getHappening(happeningId)
+                    .unwrap()
+                    .then((res) => {
+                        if (res.status === 'success') {
+                            dispatch(mergeHappenings([res.data]));
+                        }
+
+                        dispatch(
+                            setHappeningInfoModalData({
+                                happeningId: happeningId,
+                                visible: true,
+                            }),
+                        );
+                    });
+            }
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         ref.current?.goTo(activeTab);
@@ -53,6 +84,10 @@ export function HappeningInfoModal() {
     }
 
     const onClose = () => {
+        const params = new URLSearchParams(Array.from(searchParams.entries()));
+        params.delete('happeningId');
+        router.push(`?${params.toString()}`);
+
         dispatch(
             setHappeningInfoModalData({
                 happeningId: null,

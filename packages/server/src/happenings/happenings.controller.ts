@@ -7,6 +7,7 @@ import {
     HttpException,
     InternalServerErrorException,
     Logger,
+    NotFoundException,
     Param,
     ParseIntPipe,
     Post,
@@ -23,7 +24,7 @@ import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
-import { Event, Run } from '@app/shared/types/Happening.type';
+import { Event, Happening, Run } from '@app/shared/types/Happening.type';
 import { HappeningType } from '@prisma/client';
 import { Validator } from 'class-validator';
 import { InnocentGuard } from 'src/guards/innocent.guard';
@@ -38,6 +39,7 @@ import {
     EndHappeningResponse,
     GetAllEventsResponse,
     GetAllRunsResponse,
+    GetHappeningResponse,
     GetInterestedUsersResponse,
     SetIsInterestedInHappeningResponse,
     StartHappeningResponse,
@@ -387,5 +389,39 @@ export class HappeningsController {
             );
             throw new InternalServerErrorException();
         }
+    }
+
+    @Protected()
+    @Get('/:id')
+    async getHappening(
+        @Req() req: AuthedRequest,
+        @Param('id', ParseIntPipe) id: number,
+    ): Promise<GetHappeningResponse> {
+        if (await this.happeningsService.exists(id)) {
+            const type = await this.happeningsService.getHappeningType(id);
+            let happening: Happening;
+
+            if (type == HappeningType.Run) {
+                happening = (await this.happeningsService.getRunById(
+                    id,
+                    req.user.id,
+                ))!;
+            } else if (type === HappeningType.Event) {
+                happening = (await this.happeningsService.getEventById(
+                    id,
+                    req.user.id,
+                ))!;
+            }
+
+            return {
+                status: 'success',
+                data: happening!,
+            };
+        }
+
+        throw new NotFoundException({
+            status: 'fail',
+            data: null,
+        });
     }
 }

@@ -9,6 +9,7 @@ import {
     EndHappeningResponse,
     GetAllEventsResponse,
     GetAllRunsResponse,
+    GetHappeningResponse,
     GetInterestedUsersResponse,
     GetReviewsResponse,
     SetIsInterestedInHappeningResponse,
@@ -70,6 +71,9 @@ export const happeningsApi = baseApi.injectEndpoints({
                 method: 'POST',
             }),
         }),
+        getHappening: build.query<GetHappeningResponse, number>({
+            query: (id) => `${PREFIX}/${id}`,
+        }),
         getAllRuns: build.query<GetAllRunsResponse, void>({
             query: () => `${PREFIX}/runs`,
         }),
@@ -114,6 +118,7 @@ export const {
     useLazyEndHappeningQuery,
     useDeleteHappeningMutation,
     useSetIsInterestedInHappeningMutation,
+    useLazyGetHappeningQuery,
     useGetAllRunsQuery,
     useGetAllEventsQuery,
     useGetHappeningInterestedPlayersQuery,

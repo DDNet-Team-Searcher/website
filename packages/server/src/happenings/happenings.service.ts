@@ -38,6 +38,14 @@ export class HappeningsService {
         private readonly serversService: ServersService,
     ) {}
 
+    async exists(id: number): Promise<boolean> {
+        return this.prismaService.exists(this.prismaService.happening, {
+            where: {
+                id,
+            },
+        });
+    }
+
     async createRun(data: RunDTO & { authorId: number }): Promise<Happening> {
         return await this.prismaService.happening.create({
             data: {
