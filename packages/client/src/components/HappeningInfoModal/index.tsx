@@ -23,9 +23,12 @@ import { Carousel, CarouselRef } from '../ui/Carousel';
 
 export function HappeningInfoModal() {
     const dispatch = useAppDispatch();
-    const { type, visible, happening } = useAppSelector(
+    const { happeningId, visible } = useAppSelector(
         (state) => state.app.happeningInfoModal,
     );
+    const happening = useAppSelector(
+        (state) => state.happenings.happenings,
+    ).find((happening) => happening.id === happeningId);
     const {
         data: interestedPlayers,
         isSuccess: interestedPlayersSuccess,
@@ -52,8 +55,7 @@ export function HappeningInfoModal() {
     const onClose = () => {
         dispatch(
             setHappeningInfoModalData({
-                type: null,
-                happening: null,
+                happeningId: null,
                 visible: false,
             }),
         );
@@ -104,7 +106,7 @@ export function HappeningInfoModal() {
                     )}
                     onClick={() => setActiveTab(0)}
                 >
-                    {type === Happenings.Event ? 'Event' : 'Run'} Info
+                    {happening.type === Happenings.Event ? 'Event' : 'Run'} Info
                 </li>
                 <li
                     className={classNames(
@@ -115,7 +117,7 @@ export function HappeningInfoModal() {
                 >
                     {happening._count.interestedPlayers} interested
                 </li>
-                {type == Happenings.Run &&
+                {happening.type == Happenings.Run &&
                     happening.status == Status.Finished && (
                         <li
                             className={classNames(
@@ -135,7 +137,7 @@ export function HappeningInfoModal() {
                         status={happening.status}
                     />
                     <p className="text-2xl font-semibold mt-4">
-                        {type === Happenings.Event
+                        {happening.type === Happenings.Event
                             ? (happening as Event).title
                             : happening.mapName}
                     </p>

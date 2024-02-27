@@ -162,8 +162,7 @@ export function Happening({ id }: OwnProps) {
     const openHappeningInfoModal = () => {
         dispatch(
             setHappeningInfoModalData({
-                type,
-                happening: happening,
+                happeningId: happening.id,
                 visible: true,
             }),
         );
