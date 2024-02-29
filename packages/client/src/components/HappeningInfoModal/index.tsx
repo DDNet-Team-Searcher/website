@@ -78,7 +78,7 @@ export function HappeningInfoModal() {
 
     if (happening?.id && interestedPlayers?.status === 'success') {
         isUserInTeam =
-            interestedPlayers?.data?.interestedPlayers?.find(
+            interestedPlayers?.data?.find(
                 (user) => user.user.id === authedUserId,
             )?.user.id || null;
     }
@@ -209,26 +209,24 @@ export function HappeningInfoModal() {
                     <ul>
                         {interestedPlayersSuccess &&
                             interestedPlayers?.status === 'success' &&
-                            interestedPlayers?.data?.interestedPlayers.map(
-                                (user, id) => (
-                                    <InterestedPlayer
-                                        key={id}
-                                        // reviews={reviews?.data || []}
-                                        authedUserId={authedUserId as number}
-                                        happening={happening}
-                                        onChange={inputCb}
-                                        user={user}
-                                        alreadyReviewed={
-                                            reviews?.status === 'success' &&
-                                            !!reviews?.data.find(
-                                                (review) =>
-                                                    review.reviewedUser.id ===
-                                                    user.user.id,
-                                            )
-                                        }
-                                    />
-                                ),
-                            )}
+                            interestedPlayers?.data?.map((user, id) => (
+                                <InterestedPlayer
+                                    key={id}
+                                    // reviews={reviews?.data || []}
+                                    authedUserId={authedUserId as number}
+                                    happening={happening}
+                                    onChange={inputCb}
+                                    user={user}
+                                    alreadyReviewed={
+                                        reviews?.status === 'success' &&
+                                        !!reviews?.data.find(
+                                            (review) =>
+                                                review.reviewedUser.id ===
+                                                user.user.id,
+                                        )
+                                    }
+                                />
+                            ))}
                     </ul>
                 </div>
                 <div>

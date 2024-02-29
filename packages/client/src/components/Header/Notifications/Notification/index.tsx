@@ -32,7 +32,8 @@ export function Notification({ notification }: OwnProps) {
             node = (
                 <p>
                     {t('interested', {
-                        username: notification.user.username,
+                        username:
+                            notification.user.username || 'Deleted account',
                     })}{' '}
                     <Link
                         href={`?happeningId=${notification.notification.happeningId}`}
@@ -47,7 +48,8 @@ export function Notification({ notification }: OwnProps) {
             node = (
                 <p>
                     {t('follow', {
-                        username: notification.user.username,
+                        username:
+                            notification.user.username || 'Deleted account',
                     })}
                 </p>
             );
@@ -56,7 +58,8 @@ export function Notification({ notification }: OwnProps) {
             node = (
                 <p>
                     {t('unfollow', {
-                        username: notification.user.username,
+                        username:
+                            notification.user.username || 'Deleted account',
                     })}
                 </p>
             );
@@ -65,7 +68,8 @@ export function Notification({ notification }: OwnProps) {
             node = (
                 <p>
                     {t('added', {
-                        username: notification.user.username,
+                        username:
+                            notification.user.username || 'Deleted account',
                     })}{' '}
                     <Link
                         href={`?happeningId=${notification.notification.happeningId}`}
@@ -80,7 +84,8 @@ export function Notification({ notification }: OwnProps) {
             node = (
                 <p>
                     {t('removed', {
-                        username: notification.user.username,
+                        username:
+                            notification.user.username || 'Deleted account',
                     })}{' '}
                     <Link
                         href={`?happeningId=${notification.notification.happeningId}`}
@@ -102,7 +107,9 @@ export function Notification({ notification }: OwnProps) {
                 <Link href={`/profile/${notification.user.id}`}>
                     <Avatar
                         src={notification.user.avatar}
-                        username={notification.user.username}
+                        username={
+                            notification.user?.username || 'Deleted Account'
+                        }
                         size={30}
                         className="mt-[5px]"
                     />

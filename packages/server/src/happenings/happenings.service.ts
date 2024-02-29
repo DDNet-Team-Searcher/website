@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {
     Happening,
     HappeningType,
-    InterestedHappening,
     NotificationType,
     Place,
     Status,
