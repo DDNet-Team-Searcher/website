@@ -1,7 +1,10 @@
 import { Request } from 'express';
 
-export type AuthedRequest = Request & {
+type Credentials = {
     user: {
         id: number;
     };
 };
+
+export type AuthedRequest = Request & Credentials;
+export type OptionalAuthedRequest = Request & Partial<Credentials>;

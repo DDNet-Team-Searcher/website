@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
             'protected',
             context.getHandler(),
         );
+        const forced = this.reflector.get('forced', context.getHandler());
 
         if (isProtected !== undefined) {
             const request = context.switchToHttp().getRequest();
@@ -29,6 +30,10 @@ export class AuthGuard implements CanActivate {
                 );
                 request.user = data;
             } catch (e) {
+                if (forced === false) {
+                    return true;
+                }
+
                 throw new ForbiddenException();
             }
         }
