@@ -96,15 +96,7 @@ export type InterestedPlayer = {
     };
 };
 
-export type GetInterestedUsersResponse = ApiResponse<
-    {
-        interestedPlayers: InterestedPlayer[];
-        _count: {
-            interestedPlayers: number;
-        };
-    },
-    null
->;
+export type GetInterestedUsersResponse = ApiResponse<InterestedPlayer[], null>;
 
 export type FollowUserResponse = ApiResponse<null, null>;
 

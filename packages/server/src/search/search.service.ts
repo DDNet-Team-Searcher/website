@@ -94,16 +94,14 @@ export class SearchService {
             skip: page * PER_PAGE,
         });
 
-        for (let i = 0; i < happenings.length; i++) {
-            const happening = happenings[i];
-
-            if (happening.type == 'Run') {
+        for (const happening of happenings) {
+            if (happening.type == HappeningType.Run) {
                 const run = await this.happeningsService.getRunById(
                     happening.id,
                     userId,
                 );
                 searchResults.push(run);
-            } else if ((happening.type = 'Event')) {
+            } else if ((happening.type = HappeningType.Event)) {
                 const event = await this.happeningsService.getEventById(
                     happening.id,
                     userId,
@@ -334,21 +332,17 @@ export class SearchService {
 
         for (const { id } of userIds) {
             const profile = await this.usersService.searchUserById(id);
+            profile.avatar = getAvatarUrl(profile.avatar);
+            const isFollowing = await this.usersService.isFollowing(
+                userId,
+                profile.id,
+            );
 
-            if (profile) {
-                profile.avatar = getAvatarUrl(profile.avatar);
-
-                const isFollowing = await this.usersService.isFollowing(
-                    userId,
-                    profile.id,
-                );
-
-                searchResults.push({
-                    type: 'User',
-                    ...profile,
-                    isFollowing,
-                });
-            }
+            searchResults.push({
+                type: 'User',
+                ...profile,
+                isFollowing,
+            });
         }
 
         return {

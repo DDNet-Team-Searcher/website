@@ -291,7 +291,7 @@ export class HappeningsController {
         await this.happeningsService.setIsUserInterestedInHappening(
             id,
             req.user.id,
-            isInterested === null ? true : false,
+            !isInterested,
         );
 
         return {
@@ -354,7 +354,7 @@ export class HappeningsController {
 
         return {
             status: 'success',
-            data: players[0]!,
+            data: players,
         };
     }
 

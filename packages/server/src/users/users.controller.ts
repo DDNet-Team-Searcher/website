@@ -85,7 +85,7 @@ export class UsersController {
         @Ip() ip: string,
         @I18n() i18n: I18nContext,
     ): Promise<RegisterUserResponse> {
-        const doesUserAlreadyExist = await this.usersService.isUserExists({
+        const doesUserAlreadyExist = await this.usersService.exists({
             where: {
                 email: data.email,
             },
@@ -162,7 +162,7 @@ export class UsersController {
         @Res({ passthrough: true }) res: Response,
         @I18n() i18n: I18nContext,
     ): Promise<LoginUserResponse> {
-        const isUserExists = await this.usersService.isUserExists({
+        const isUserExists = await this.usersService.exists({
             where: {
                 email: data.email,
             },
@@ -175,9 +175,8 @@ export class UsersController {
             });
         }
 
-        const { password, ...user } = (await this.usersService.getUserByEmail(
-            data.email,
-        ))!; //NOTE: this is fine
+        const { id, activated, password } =
+            await this.usersService.getUserByEmail(data.email);
 
         if (!(await argon2.verify(password, data.password))) {
             throw new BadRequestException({
@@ -186,17 +185,14 @@ export class UsersController {
             });
         }
 
-        if (!user.activated) {
+        if (!activated) {
             throw new ForbiddenException({
                 status: 'fail',
                 message: i18n.t('user.account_not_activated'),
             });
         }
 
-        res.cookie(
-            'token',
-            this.jwtService.sign({ id: user.id }, { expiresIn: '10d' }),
-        );
+        res.cookie('token', this.jwtService.sign({ id }, { expiresIn: '10d' }));
 
         return {
             status: 'success',

@@ -106,10 +106,8 @@ export class ServersService {
         });
     }
 
-    async getServerData(
-        id: number,
-    ): Promise<{ ip: string; port: number } | null> {
-        return this.prismaService.server.findFirst({
+    async getServerData(id: number): Promise<{ ip: string; port: number }> {
+        return this.prismaService.server.findFirstOrThrow({
             where: {
                 id,
             },

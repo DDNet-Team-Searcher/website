@@ -51,17 +51,17 @@ export type NotificationJson =
 
 type User = {
     user: {
-        id: number;
-        username: string;
+        id: number | null;
+        username: string | null;
         avatar: string | null;
     };
 };
 
 type Happening = {
     happening: {
-        mapName: string;
+        mapName: string | null;
         title: string | null;
-        type: Happenings;
+        type: Happenings | null;
     };
 };
 

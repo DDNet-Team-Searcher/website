@@ -29,14 +29,13 @@ export class CronService implements OnModuleInit {
                 await this.happeningsService.startHappening(happening.id);
             } catch (e) {
                 if (e instanceof AllServersInUseError) {
-                    const playersInTeam = (
+                    const playersInTeam =
                         await this.happeningsService.getHappeningInterestedPlayers(
                             happening.id,
-                        )
-                    )[0];
+                        );
 
                     if (happening.status == Status.NotStarted) {
-                        for (const user of playersInTeam.interestedPlayers) {
+                        for (const user of playersInTeam) {
                             if (user.inTeam) {
                                 await this.notificationsService.sendNotification(
                                     user.user.id,

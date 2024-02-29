@@ -22,6 +22,7 @@ import { ServersService } from 'src/servers/servers.service';
 import { getAvatarUrl } from 'src/utils/user.util';
 import { NotificationType as NotifType } from '@app/shared/types/Notification.type';
 import { Happening as HappeningT } from '@app/shared/types/Happening.type';
+import { InterestedPlayer } from '@app/shared/types/api.type';
 
 export class AllServersInUseError extends Error {
     constructor(message?: string) {
@@ -50,9 +51,9 @@ export class HappeningsService {
         return await this.prismaService.happening.create({
             data: {
                 ...data,
-                place: data.place ? 'THERE' : 'HERE',
+                place: data.place ? Place.THERE : Place.HERE,
                 startAt: new Date(data.startAt),
-                type: 'Run',
+                type: HappeningType.Run,
                 interestedPlayers: {
                     create: {
                         userId: data.authorId,
@@ -80,10 +81,10 @@ export class HappeningsService {
                 ...data,
                 thumbnail: filename,
                 //NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
-                place: parseInt(data.place) ? 'THERE' : 'HERE',
+                place: parseInt(data.place) ? Place.THERE : Place.HERE,
                 endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
-                type: 'Event',
+                type: HappeningType.Event,
                 interestedPlayers: {
                     create: {
                         userId: data.authorId,
@@ -101,7 +102,7 @@ export class HappeningsService {
             },
             data: {
                 ...data,
-                place: data.place ? 'THERE' : 'HERE',
+                place: data.place ? Place.THERE : Place.HERE,
                 startAt: new Date(data.startAt),
             },
         });
@@ -140,7 +141,7 @@ export class HappeningsService {
                 ...data,
                 thumbnail: filename,
                 //NOTE: you have to parseInt here coz when you send a multipart/form-data you lose int type :D
-                place: parseInt(data.place) ? 'THERE' : 'HERE',
+                place: parseInt(data.place) ? Place.THERE : Place.HERE,
                 endAt: data.endAt ? new Date(data.endAt) : null,
                 startAt: new Date(data.startAt),
             },
@@ -150,28 +151,27 @@ export class HappeningsService {
     async startHappening(id: number): Promise<string | null> {
         const happeningPlace = await this.getHappeningPlace(id);
 
-        if (happeningPlace === 'HERE') {
+        if (happeningPlace === Place.HERE) {
             const serverId = await this.serversService.findEmptyServer();
-            const mapName = (await this.prismaService.happening.findFirst({
-                where: {
-                    id,
-                },
-                select: {
-                    mapName: true,
-                },
-            }))!.mapName;
 
             if (serverId) {
-                const serverData = (await this.serversService.getServerData(
+                const { mapName } =
+                    await this.prismaService.happening.findFirstOrThrow({
+                        where: {
+                            id,
+                        },
+                        select: {
+                            mapName: true,
+                        },
+                    });
+                const serverData = await this.serversService.getServerData(
                     serverId,
-                ))!; //NOTE: this is fine
-
+                );
                 const { port, password } =
                     await this.serversService.startServer(serverId, {
                         mapName,
                         id,
                     });
-
                 const connectString = `connect ${serverData.ip}:${port}; password ${password}`;
 
                 await this.prismaService.happening.update({
@@ -179,7 +179,7 @@ export class HappeningsService {
                         id,
                     },
                     data: {
-                        status: 'Happening',
+                        status: Status.Happening,
                         serverId,
                         connectString,
                     },
@@ -195,7 +195,7 @@ export class HappeningsService {
                     id,
                 },
                 data: {
-                    status: 'Happening',
+                    status: Status.Happening,
                 },
             });
 
@@ -205,15 +205,17 @@ export class HappeningsService {
 
     async endHappening(id: number): Promise<Happening> {
         const happeningPlace = await this.getHappeningPlace(id);
-        if (happeningPlace == 'HERE') {
-            const serverId = (await this.prismaService.happening.findFirst({
-                where: {
-                    id,
-                },
-                select: {
-                    serverId: true,
-                },
-            }))!.serverId;
+
+        if (happeningPlace == Place.HERE) {
+            const { serverId } =
+                await this.prismaService.happening.findFirstOrThrow({
+                    where: {
+                        id,
+                    },
+                    select: {
+                        serverId: true,
+                    },
+                });
 
             await this.serversService.shutdownServer(serverId!, id);
 
@@ -222,21 +224,23 @@ export class HappeningsService {
                     id,
                 },
                 data: {
-                    status: 'Finished',
+                    status: Status.Finished,
                     serverId: null,
                     connectString: null,
                 },
             });
-        } else {
+        } else if (happeningPlace === Place.THERE) {
             return await this.prismaService.happening.update({
                 where: {
                     id,
                 },
                 data: {
-                    status: 'Finished',
+                    status: Status.Finished,
                 },
             });
         }
+
+        throw new Error('bad place type');
     }
 
     async deleteHappening(id: number): Promise<Happening> {
@@ -253,19 +257,17 @@ export class HappeningsService {
         return happening;
     }
 
-    async getHappeningPlace(id: number): Promise<Place | null> {
-        return (
-            (
-                await this.prismaService.happening.findFirst({
-                    where: {
-                        id,
-                    },
-                    select: {
-                        place: true,
-                    },
-                })
-            )?.place || null
-        );
+    async getHappeningPlace(id: number): Promise<Place> {
+        const { place } = await this.prismaService.happening.findFirstOrThrow({
+            where: {
+                id,
+            },
+            select: {
+                place: true,
+            },
+        });
+
+        return place;
     }
 
     async isUserInterestedHappening({
@@ -274,13 +276,16 @@ export class HappeningsService {
     }: {
         userId: number;
         happeningId: number;
-    }): Promise<InterestedHappening | null> {
-        return await this.prismaService.interestedHappening.findFirst({
-            where: {
-                happeningId,
-                userId,
+    }): Promise<boolean> {
+        return this.prismaService.exists(
+            this.prismaService.interestedHappening,
+            {
+                where: {
+                    userId,
+                    happeningId,
+                },
             },
-        });
+        );
     }
 
     async setIsUserInterestedInHappening(
@@ -289,14 +294,15 @@ export class HappeningsService {
         isInterested: boolean,
     ): Promise<void> {
         if (isInterested) {
-            const author = (await this.prismaService.happening.findFirst({
-                where: {
-                    id: happeningId,
-                },
-                select: {
-                    authorId: true,
-                },
-            }))!; //NOTE: ThIs Is FiNe
+            const { authorId } =
+                await this.prismaService.happening.findFirstOrThrow({
+                    where: {
+                        id: happeningId,
+                    },
+                    select: {
+                        authorId: true,
+                    },
+                });
 
             await this.prismaService.interestedHappening.create({
                 data: {
@@ -305,7 +311,7 @@ export class HappeningsService {
                 },
             });
 
-            await this.notificationsService.sendNotification(author.authorId, {
+            await this.notificationsService.sendNotification(authorId, {
                 type: NotificationType.InterestedInHappening as NotifType.InterestedInHappening,
                 data: {
                     happeningId,
@@ -313,14 +319,12 @@ export class HappeningsService {
                 },
             });
         } else {
-            const data = (await this.isUserInterestedHappening({
-                userId,
-                happeningId,
-            }))!; //NOTE: ThIs Is FiNe
-
             await this.prismaService.interestedHappening.delete({
                 where: {
-                    id: data.id,
+                    userId_happeningId: {
+                        userId,
+                        happeningId,
+                    },
                 },
             });
         }
@@ -330,7 +334,7 @@ export class HappeningsService {
      * You better check the run id you pass in, or nothing good will happen
      */
     async getRunById(runId: number, userId: number): Promise<Run> {
-        const run = (await this.prismaService.happening.findFirst({
+        const run = await this.prismaService.happening.findFirstOrThrow({
             where: {
                 type: HappeningType.Run,
                 id: runId,
@@ -367,7 +371,7 @@ export class HappeningsService {
                     },
                 },
             },
-        }))!;
+        });
 
         const {
             id,
@@ -385,19 +389,12 @@ export class HappeningsService {
         const isInterested = !!run.interestedPlayers.length || false;
         const inTeam = run.interestedPlayers[0]?.inTeam || false;
         const playersCountInTeam =
-            (await this.prismaService.happening.findFirst({
-                select: {
-                    _count: {
-                        select: {
-                            interestedPlayers: {
-                                where: {
-                                    inTeam: true,
-                                },
-                            },
-                        },
-                    },
+            await this.prismaService.interestedHappening.count({
+                where: {
+                    happeningId: runId,
+                    inTeam: true,
                 },
-            }))!; //NOTE: this is fine;
+            });
 
         return {
             id,
@@ -415,7 +412,7 @@ export class HappeningsService {
             description,
             _count: {
                 interestedPlayers: _count.interestedPlayers,
-                inTeam: playersCountInTeam._count.interestedPlayers,
+                inTeam: playersCountInTeam,
             },
             place,
             mapName,
@@ -428,7 +425,7 @@ export class HappeningsService {
      * You better check the run id you pass in, or nothing good will happen
      */
     async getEventById(eventId: number, userId: number): Promise<Event> {
-        const event = (await this.prismaService.happening.findFirst({
+        const event = await this.prismaService.happening.findFirstOrThrow({
             where: {
                 type: HappeningType.Event,
                 id: eventId,
@@ -466,7 +463,7 @@ export class HappeningsService {
                     },
                 },
             },
-        }))!;
+        });
 
         const {
             id,
@@ -517,9 +514,9 @@ export class HappeningsService {
     async getAllRunsIds(): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
-                type: 'Run',
+                type: HappeningType.Run,
                 NOT: {
-                    status: 'Finished',
+                    status: Status.Finished,
                 },
             },
             select: {
@@ -531,9 +528,9 @@ export class HappeningsService {
     async getAllEventsIds(): Promise<{ id: number }[]> {
         return await this.prismaService.happening.findMany({
             where: {
-                type: 'Event',
+                type: HappeningType.Event,
                 NOT: {
-                    status: 'Finished',
+                    status: Status.Finished,
                 },
             },
             select: {
@@ -542,34 +539,27 @@ export class HappeningsService {
         });
     }
 
-    async getHappeningInterestedPlayers(id: number) {
-        const interestedPlayers = await this.prismaService.happening.findMany({
-            where: {
-                id,
-            },
-            select: {
-                interestedPlayers: {
-                    select: {
-                        inTeam: true,
-                        user: {
-                            select: {
-                                id: true,
-                                avatar: true,
-                                username: true,
-                            },
+    async getHappeningInterestedPlayers(
+        id: number,
+    ): Promise<InterestedPlayer[]> {
+        const interestedPlayers =
+            await this.prismaService.interestedHappening.findMany({
+                where: {
+                    happeningId: id,
+                },
+                select: {
+                    inTeam: true,
+                    user: {
+                        select: {
+                            id: true,
+                            avatar: true,
+                            username: true,
                         },
                     },
                 },
-                _count: {
-                    select: {
-                        interestedPlayers: true,
-                    },
-                },
-            },
-        });
+            });
 
-        for (const interestedPlayer of interestedPlayers[0]
-            ?.interestedPlayers || []) {
+        for (const interestedPlayer of interestedPlayers) {
             interestedPlayer.user.avatar = getAvatarUrl(
                 interestedPlayer.user.avatar,
             );
@@ -582,17 +572,20 @@ export class HappeningsService {
         happeningId: number,
         userId: number,
     ): Promise<void> {
-        const { id, inTeam } =
-            (await this.prismaService.interestedHappening.findFirst({
+        const { inTeam } =
+            await this.prismaService.interestedHappening.findFirstOrThrow({
                 where: {
                     happeningId,
                     userId,
                 },
-            }))!; //NOTE: this is fine
+            });
 
         await this.prismaService.interestedHappening.update({
             where: {
-                id,
+                userId_happeningId: {
+                    userId,
+                    happeningId,
+                },
             },
             data: {
                 inTeam: !inTeam,
@@ -616,10 +609,12 @@ export class HappeningsService {
         }
     }
 
-    async upcomingHappenings() {
+    async upcomingHappenings(): Promise<
+        { id: number; startAt: Date; status: Status }[]
+    > {
         return await this.prismaService.happening.findMany({
             where: {
-                OR: [{ status: 'NotStarted' }, { status: 'InQueue' }],
+                OR: [{ status: Status.NotStarted }, { status: Status.InQueue }],
                 startAt: {
                     lte: new Date(),
                 },
@@ -647,14 +642,16 @@ export class HappeningsService {
     }
 
     async getHappeningType(id: number): Promise<HappeningType> {
-        return (await this.prismaService.happening.findFirst({
+        const { type } = await this.prismaService.happening.findFirstOrThrow({
             where: {
                 id,
             },
             select: {
                 type: true,
             },
-        }))!.type!;
+        });
+
+        return type;
     }
 
     async findUserHappenings(

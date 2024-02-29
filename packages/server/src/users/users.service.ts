@@ -4,6 +4,7 @@ import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Profile } from '@app/shared/types/Profile.type';
 import { User } from '@app/shared/types/User.type';
+import { User as SearchResultUser } from '@app/shared/types/SearchResult.type';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import * as argon2 from 'argon2';
@@ -22,16 +23,23 @@ export class UsersService {
         private readonly reportsService: ReportsService,
     ) {}
 
-    async isUserExists(
+    async exists(
         args: Parameters<UsersService['prismaService']['user']['count']>[0],
     ): Promise<boolean> {
         return this.prismaService.exists(this.prismaService.user, args);
     }
 
-    async getUserByEmail(email: string) {
-        return this.prismaService.user.findFirst({
+    async getUserByEmail(
+        email: string,
+    ): Promise<{ id: number; activated: boolean; password: string }> {
+        return await this.prismaService.user.findFirstOrThrow({
             where: {
                 email,
+            },
+            select: {
+                id: true,
+                activated: true,
+                password: true,
             },
         });
     }
@@ -45,7 +53,7 @@ export class UsersService {
             updatedAt,
             role,
             ...credentials
-        } = (await this.prismaService.user.findFirst({
+        } = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
@@ -68,7 +76,7 @@ export class UsersService {
                     },
                 },
             },
-        }))!; //NOTE: this is fine
+        });
 
         const unreadNotificationsCount =
             await this.prismaService.notification.count({
@@ -119,8 +127,10 @@ export class UsersService {
         return activationCode;
     }
 
-    async searchUserById(id: number) {
-        return (await this.prismaService.user.findFirst({
+    async searchUserById(
+        id: number,
+    ): Promise<Omit<SearchResultUser, 'type' | 'isFollowing'>> {
+        return await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
@@ -136,15 +146,15 @@ export class UsersService {
                     },
                 },
             },
-        }))!; //NOTE: this is fine
+        });
     }
 
     /*
      * userId - id of user youre trying to find
      * id - if of user who is looking for it
      */
-    async getUserProfile(userId: number, id: number): Promise<null | Profile> {
-        const profile = await this.prismaService.user.findFirst({
+    async getUserProfile(userId: number, id: number): Promise<Profile> {
+        const profile = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
@@ -189,10 +199,6 @@ export class UsersService {
             },
         });
 
-        if (!profile) {
-            return null;
-        }
-
         const {
             id: profileUserId,
             avatar,
@@ -229,14 +235,12 @@ export class UsersService {
         followerId: number,
         followingId: number,
     ): Promise<boolean> {
-        const bool = await this.prismaService.follower.count({
+        return this.prismaService.exists(this.prismaService.follower, {
             where: {
-                followerId,
                 followingId,
+                followerId,
             },
         });
-
-        return Boolean(bool);
     }
 
     async follow(followerId: number, followingId: number): Promise<void> {
@@ -278,17 +282,18 @@ export class UsersService {
         avatar: Express.Multer.File,
     ): Promise<string> {
         const filename = await createFile(avatar, FileTypeEnum.Avatar);
-        const oldAvatar = (await this.prismaService.user.findFirst({
-            where: {
-                id,
-            },
-            select: {
-                avatar: true,
-            },
-        }))!;
+        const { avatar: oldAvatar } =
+            await this.prismaService.user.findFirstOrThrow({
+                where: {
+                    id,
+                },
+                select: {
+                    avatar: true,
+                },
+            });
 
-        if (oldAvatar.avatar) {
-            await deleteFile(oldAvatar.avatar, FileTypeEnum.Avatar);
+        if (oldAvatar) {
+            await deleteFile(oldAvatar, FileTypeEnum.Avatar);
         }
 
         await this.prismaService.user.update({
@@ -307,11 +312,14 @@ export class UsersService {
         id: number,
         data: { username: string; password: string },
     ): Promise<boolean> {
-        const { password } = (await this.prismaService.user.findFirst({
+        const { password } = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
-        }))!;
+            select: {
+                password: true,
+            },
+        });
 
         if (await argon2.verify(password, data.password)) {
             await this.prismaService.user.update({
@@ -331,11 +339,14 @@ export class UsersService {
         id: number,
         data: { email: string; password: string },
     ): Promise<boolean> {
-        const { password } = (await this.prismaService.user.findFirst({
+        const { password } = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
-        }))!;
+            select: {
+                password: true,
+            },
+        });
 
         if (await argon2.verify(password, data.password)) {
             await this.prismaService.user.update({
@@ -355,11 +366,14 @@ export class UsersService {
         id: number,
         data: { old: string; new: string },
     ): Promise<boolean> {
-        const { password } = (await this.prismaService.user.findFirst({
+        const { password } = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id,
             },
-        }))!;
+            select: {
+                password: true,
+            },
+        });
 
         if (await argon2.verify(password, data.old)) {
             await this.prismaService.user.update({
@@ -402,7 +416,7 @@ export class UsersService {
     }
 
     async unban(bannedUserId: number): Promise<void> {
-        const ban = await this.prismaService.ban.findFirst({
+        const { id } = await this.prismaService.ban.findFirstOrThrow({
             where: {
                 userId: bannedUserId,
                 banned: true,
@@ -414,7 +428,7 @@ export class UsersService {
 
         await this.prismaService.ban.update({
             where: {
-                id: ban!.id,
+                id,
             },
             data: {
                 banned: false,
@@ -446,15 +460,16 @@ export class UsersService {
     }
 
     async role(userId: number): Promise<keyof typeof Role | null> {
-        return (await this.prismaService.user.findFirst({
+        const { role } = await this.prismaService.user.findFirstOrThrow({
             where: {
                 id: userId,
             },
             select: {
                 role: true,
             },
-        }))!.role;
-        // ^ is this gud?
+        });
+
+        return role;
     }
 
     async bannedUsers(query?: string): Promise<BannedUser[]> {

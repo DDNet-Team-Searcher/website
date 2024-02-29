@@ -99,12 +99,12 @@ model Happening {
 }
 
 model InterestedHappening {
-    id Int @id @default(autoincrement())
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
     happening Happening @relation(fields: [happeningId], references: [id], onDelete: Cascade)
     happeningId Int
     inTeam Boolean @default(false)
+    @@id([userId, happeningId])
 }
 
 model Review {
