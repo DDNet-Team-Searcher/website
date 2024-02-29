@@ -1,8 +1,11 @@
 {
     "title": "Notifications",
-    "interested": "{{ username}} is interested in your link->happening",
-    "added": "{{ username }} added you in link->team",
-    "removed": "{{ username }} removed you from link->team",
+    "interested": "{{ username}} is interested in your",
+    "interested_link": "happening",
+    "added": "{{ username }} added you in",
+    "added_link": "team",
+    "removed": "{{ username }} removed you from",
+    "removed_link": "team",
     "no_empty_servers": "Sadly you cant play on our servers rn coz there're no empty servers",
     "follow": "{{ username }} followed you",
     "unfollow": "{{ username }} unfollowed you"

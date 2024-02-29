@@ -1,6 +1,5 @@
 import { Avatar } from '@/components/Avatar';
 import { useLazySetNotificationSeenQuery } from '@/features/api/notifications.api';
-import { Happenings } from '@app/shared/types/Happening.type';
 import {
     Notification as NotificationT,
     NotificationType,
@@ -9,6 +8,7 @@ import { timeAgo } from '@/utils/timeago';
 import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import { useTranslation } from '@/i18/client';
+import { ReactNode } from 'react';
 
 type OwnProps = {
     notification: NotificationT;
@@ -25,36 +25,74 @@ export function Notification({ notification }: OwnProps) {
         },
     });
 
-    let text: string;
+    let node: ReactNode;
 
     switch (notification.type) {
         case NotificationType.InterestedInHappening:
-            text = t('interested', {
-                username: notification.user.username,
-            });
+            node = (
+                <p>
+                    {t('interested', {
+                        username: notification.user.username,
+                    })}{' '}
+                    <Link
+                        href={`?happeningId=${notification.notification.happeningId}`}
+                        className="underline"
+                    >
+                        {t('interested_link')}
+                    </Link>
+                </p>
+            );
             break;
         case NotificationType.Follow:
-            text = t('follow', {
-                username: notification.user.username,
-            });
+            node = (
+                <p>
+                    {t('follow', {
+                        username: notification.user.username,
+                    })}
+                </p>
+            );
             break;
         case NotificationType.Unfollow:
-            text = t('unfollow', {
-                username: notification.user.username,
-            });
+            node = (
+                <p>
+                    {t('unfollow', {
+                        username: notification.user.username,
+                    })}
+                </p>
+            );
             break;
         case NotificationType.AddedInTeam:
-            text = t('added', {
-                username: notification.user.username,
-            });
+            node = (
+                <p>
+                    {t('added', {
+                        username: notification.user.username,
+                    })}{' '}
+                    <Link
+                        href={`?happeningId=${notification.notification.happeningId}`}
+                        className="underline"
+                    >
+                        {t('added_link')}
+                    </Link>
+                </p>
+            );
             break;
         case NotificationType.RemovedFromTeam:
-            text = t('removed', {
-                username: notification.user.username,
-            });
+            node = (
+                <p>
+                    {t('removed', {
+                        username: notification.user.username,
+                    })}{' '}
+                    <Link
+                        href={`?happeningId=${notification.notification.happeningId}`}
+                        className="underline"
+                    >
+                        {t('removed_link')}
+                    </Link>
+                </p>
+            );
             break;
         case NotificationType.NoEmptyServers:
-            text = t('no_empty_servers');
+            node = <p>{t('no_empty_servers')}</p>;
             break;
     }
 
@@ -71,7 +109,7 @@ export function Notification({ notification }: OwnProps) {
                 </Link>
             )}
             <div className="ml-[10px]">
-                <p className="align-top">{text}</p>
+                {node}
                 <span className="text-[12px] text-medium-emphasis align-top">
                     {timeAgo.format(new Date(notification.createdAt!))}
                 </span>
