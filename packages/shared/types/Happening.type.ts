@@ -34,7 +34,6 @@ type HappeningCommon = {
 };
 
 export type Run = HappeningCommon & {
-    //NOTE: stackoverflow answer, lets hope it wont break everything in future
     type: Happenings.Run;
     teamSize: number;
     _count: {
@@ -43,7 +42,6 @@ export type Run = HappeningCommon & {
 };
 
 export type Event = HappeningCommon & {
-    //NOTE: stackoverflow answer, lets hope it wont break everything in future
     type: Happenings.Event;
     title: string;
     thumbnail: string | null;

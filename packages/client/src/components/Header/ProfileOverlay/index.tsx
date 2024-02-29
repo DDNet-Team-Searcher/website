@@ -2,7 +2,7 @@ import { useLogoutMutation } from '@/features/api/users.api';
 import { clearData } from '@/store/slices/user';
 import { ExcludeSuccess } from '@/types/Response.type';
 import { LogoutUserResponse } from '@app/shared/types/api.type';
-import { useAppDispatch } from '@/utils/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import classNames from 'classnames';
@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MutableRefObject, Ref, forwardRef } from 'react';
 import { useTranslation } from '@/i18/client';
+import { Role } from '@app/shared/types/Role.type';
 
 const links = {
     '/profile': 'your_profile',
@@ -25,6 +26,7 @@ type OwnProps = {
 export const ProfileOverlay = forwardRef(
     ({ isHidden }: OwnProps, ref: Ref<HTMLUListElement>) => {
         const [logoutUser] = useLogoutMutation();
+        const role = useAppSelector(state => state.user.user.role);
         const dispatch = useAppDispatch();
         const handleFormError = useHandleFormError();
         const router = useRouter();
@@ -64,10 +66,11 @@ export const ProfileOverlay = forwardRef(
                         </Link>
                     </li>
                 ))}
-                {/*NOTE: make it visible only for certain users? */}
-                <li className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer">
-                    <Link href="/admin">Link for big bois</Link>
-                </li>
+                {(role === Role.Admin || role === Role.Mod) &&
+                    <li className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer">
+                        <Link href="/admin">Link for big bois</Link>
+                    </li>
+                }
                 <li
                     className="mt-4 last-of-type:mb-4 text-medium-emphasis hover:!text-high-emphasis cursor-pointer"
                     onClick={logout}
