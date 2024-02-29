@@ -1,20 +1,17 @@
-import classNames from 'classnames';
 import { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
+import { InputHTMLAttributes } from 'react';
+import classNames from 'classnames';
 import styles from './styles.module.css';
 
 type OwnProps = {
     label: string;
-    id?: string;
-    required?: boolean;
     datalist?: string[];
     className?: {
         container?: string;
     };
     register: UseFormRegisterReturn;
     errors?: FieldErrors;
-    type?: string;
-    [key: string]: any; //NOTE: idk how to remove this any :p
-};
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'className'>;
 
 export function InputWithLabel({
     id,
