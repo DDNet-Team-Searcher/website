@@ -94,6 +94,7 @@ export function HappeningInfoModal() {
                 visible: false,
             }),
         );
+        setActiveTab(0);
     };
 
     if (!happening) return <></>;
@@ -109,7 +110,7 @@ export function HappeningInfoModal() {
 
     const copyConnectData = async () => {
         if (happening?.connectString) {
-            await navigator.clipboard.writeText(happening?.connectString);
+            await navigator.clipboard.writeText(happening.connectString);
             alert(
                 'The needed thing was copied in your clipboard. Now just open client, press F1, paste this stuff and have a nice game!',
             );
