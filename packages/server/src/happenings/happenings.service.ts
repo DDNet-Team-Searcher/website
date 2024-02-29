@@ -326,10 +326,13 @@ export class HappeningsService {
         }
     }
 
-    async getRunById(runId: number, userId: number): Promise<Run | null> {
-        const run = await this.prismaService.happening.findFirst({
+    /*
+     * You better check the run id you pass in, or nothing good will happen
+     */
+    async getRunById(runId: number, userId: number): Promise<Run> {
+        const run = (await this.prismaService.happening.findFirst({
             where: {
-                type: 'Run',
+                type: HappeningType.Run,
                 id: runId,
             },
             select: {
@@ -364,11 +367,7 @@ export class HappeningsService {
                     },
                 },
             },
-        });
-
-        if (!run) {
-            return null;
-        }
+        }))!;
 
         const {
             id,
@@ -425,10 +424,13 @@ export class HappeningsService {
         };
     }
 
-    async getEventById(eventId: number, userId: number): Promise<Event | null> {
-        const event = await this.prismaService.happening.findFirst({
+    /*
+     * You better check the run id you pass in, or nothing good will happen
+     */
+    async getEventById(eventId: number, userId: number): Promise<Event> {
+        const event = (await this.prismaService.happening.findFirst({
             where: {
-                type: 'Event',
+                type: HappeningType.Event,
                 id: eventId,
             },
             select: {
@@ -464,11 +466,7 @@ export class HappeningsService {
                     },
                 },
             },
-        });
-
-        if (!event) {
-            return null;
-        }
+        }))!;
 
         const {
             id,
@@ -484,14 +482,13 @@ export class HappeningsService {
             endAt,
             connectString,
         } = event;
+        const isInterested = !!event.interestedPlayers.length || false;
+        const inTeam = event.interestedPlayers[0]?.inTeam || false;
         let thumbnail: string | null = null;
 
         if (event?.thumbnail) {
             thumbnail = `${process.env.BASE_URL}/${process.env.HAPPENING_PATH}/${event.thumbnail}`;
         }
-
-        const isInterested = !!event.interestedPlayers.length || false;
-        const inTeam = event.interestedPlayers[0]?.inTeam || false;
 
         return {
             id,
@@ -709,11 +706,9 @@ export class HappeningsService {
 
         for (const el of data) {
             if (el.type == HappeningType.Run) {
-                happenings.push((await this.getRunById(el.id, authedUserId))!);
+                happenings.push(await this.getRunById(el.id, authedUserId));
             } else if (el.type == HappeningType.Event) {
-                happenings.push(
-                    (await this.getEventById(el.id, authedUserId))!,
-                );
+                happenings.push(await this.getEventById(el.id, authedUserId));
             }
         }
 

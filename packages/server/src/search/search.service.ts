@@ -102,15 +102,13 @@ export class SearchService {
                     happening.id,
                     userId,
                 );
-
-                if (run) searchResults.push(run);
+                searchResults.push(run);
             } else if ((happening.type = 'Event')) {
                 const event = await this.happeningsService.getEventById(
                     happening.id,
                     userId,
                 );
-
-                if (event) searchResults.push(event);
+                searchResults.push(event);
             }
         }
 
@@ -203,8 +201,7 @@ export class SearchService {
 
         for (const { id } of runIds) {
             const run = await this.happeningsService.getRunById(id, userId);
-
-            if (run) searchResults.push(run);
+            searchResults.push(run);
         }
 
         return {
@@ -296,8 +293,7 @@ export class SearchService {
 
         for (const { id } of eventIds) {
             const event = await this.happeningsService.getEventById(id, userId);
-
-            if (event) searchResults.push(event);
+            searchResults.push(event);
         }
 
         return {

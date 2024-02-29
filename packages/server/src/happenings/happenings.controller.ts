@@ -78,7 +78,7 @@ export class HappeningsController {
 
             return {
                 status: 'success',
-                data: run!,
+                data: run,
             };
         } catch (e) {
             this.logger.error(new Error('failed to create a new run'));
@@ -110,7 +110,7 @@ export class HappeningsController {
 
             return {
                 status: 'success',
-                data: event!,
+                data: event,
             };
         } catch (e) {
             this.logger.error(new Error('failed to create a new event'));
@@ -305,7 +305,6 @@ export class HappeningsController {
     @Get('/runs')
     async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
         const ids = await this.happeningsService.getAllRunsIds();
-
         const runs: Run[] = [];
 
         for (const id of ids) {
@@ -313,10 +312,7 @@ export class HappeningsController {
                 id.id,
                 req.user.id,
             );
-
-            if (run) {
-                runs.push(run);
-            }
+            runs.push(run);
         }
 
         return {
@@ -338,10 +334,7 @@ export class HappeningsController {
                 id.id,
                 req.user.id,
             );
-
-            if (event) {
-                events.push(event);
-            }
+            events.push(event);
         }
 
         return {
@@ -402,15 +395,15 @@ export class HappeningsController {
             let happening: Happening;
 
             if (type == HappeningType.Run) {
-                happening = (await this.happeningsService.getRunById(
+                happening = await this.happeningsService.getRunById(
                     id,
                     req.user.id,
-                ))!;
+                );
             } else if (type === HappeningType.Event) {
-                happening = (await this.happeningsService.getEventById(
+                happening = await this.happeningsService.getEventById(
                     id,
                     req.user.id,
-                ))!;
+                );
             }
 
             return {
