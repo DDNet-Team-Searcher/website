@@ -7,9 +7,8 @@ import {
     CreateRunResponse,
     DeleteHappeningResponse,
     EndHappeningResponse,
-    GetAllEventsResponse,
-    GetAllRunsResponse,
     GetHappeningResponse,
+    GetHappeningsResponse,
     GetInterestedUsersResponse,
     GetReviewsResponse,
     SetIsInterestedInHappeningResponse,
@@ -74,11 +73,8 @@ export const happeningsApi = baseApi.injectEndpoints({
         getHappening: build.query<GetHappeningResponse, number>({
             query: (id) => `${PREFIX}/${id}`,
         }),
-        getAllRuns: build.query<GetAllRunsResponse, void>({
-            query: () => `${PREFIX}/runs`,
-        }),
-        getAllEvents: build.query<GetAllEventsResponse, void>({
-            query: () => `${PREFIX}/events`,
+        getHappenings: build.query<GetHappeningsResponse, void>({
+            query: () => PREFIX,
         }),
         getHappeningInterestedPlayers: build.query<
             GetInterestedUsersResponse,
@@ -119,8 +115,7 @@ export const {
     useDeleteHappeningMutation,
     useSetIsInterestedInHappeningMutation,
     useLazyGetHappeningQuery,
-    useGetAllRunsQuery,
-    useGetAllEventsQuery,
+    useGetHappeningsQuery,
     useGetHappeningInterestedPlayersQuery,
     useUpdateIsPlayerInTeamMutation,
     useGetReviewsQuery,

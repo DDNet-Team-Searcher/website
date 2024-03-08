@@ -83,9 +83,7 @@ export type DeleteHappeningResponse = ApiResponse<null, null>;
 
 export type GetHappeningResponse = ApiResponse<Happening, null>;
 
-export type GetAllRunsResponse = ApiResponse<Run[], null>;
-
-export type GetAllEventsResponse = ApiResponse<Event[], null>;
+export type GetHappeningsResponse = ApiResponse<Happening[], null>;
 
 export type InterestedPlayer = {
     inTeam: boolean;

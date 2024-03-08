@@ -37,9 +37,8 @@ import {
     CreateRunResponse,
     DeleteHappeningResponse,
     EndHappeningResponse,
-    GetAllEventsResponse,
-    GetAllRunsResponse,
     GetHappeningResponse,
+    GetHappeningsResponse,
     GetInterestedUsersResponse,
     SetIsInterestedInHappeningResponse,
     StartHappeningResponse,
@@ -302,49 +301,6 @@ export class HappeningsController {
 
     @Protected()
     @Innocent()
-    @Get('/runs')
-    async getRuns(@Req() req: AuthedRequest): Promise<GetAllRunsResponse> {
-        const ids = await this.happeningsService.getAllRunsIds();
-        const runs: Run[] = [];
-
-        for (const id of ids) {
-            const run = await this.happeningsService.getRunById(
-                id.id,
-                req.user.id,
-            );
-            runs.push(run);
-        }
-
-        return {
-            status: 'success',
-            data: runs,
-        };
-    }
-
-    @Protected()
-    @Innocent()
-    @Get('/events')
-    async getEvents(@Req() req: AuthedRequest): Promise<GetAllEventsResponse> {
-        const ids = await this.happeningsService.getAllEventsIds();
-
-        const events: Event[] = [];
-
-        for (const id of ids) {
-            const event = await this.happeningsService.getEventById(
-                id.id,
-                req.user.id,
-            );
-            events.push(event);
-        }
-
-        return {
-            status: 'success',
-            data: events,
-        };
-    }
-
-    @Protected()
-    @Innocent()
     @Get('/:id/interested')
     async getHappeningInterestedPlayers(
         @Param('id', ParseIntPipe) id: number,
@@ -416,5 +372,21 @@ export class HappeningsController {
             status: 'fail',
             data: null,
         });
+    }
+
+    @Protected()
+    @Innocent()
+    @Get()
+    async getHappenings(
+        @Req() req: AuthedRequest,
+    ): Promise<GetHappeningsResponse> {
+        const happenings = await this.happeningsService.getHappenings(
+            req.user.id,
+        );
+
+        return {
+            status: 'success',
+            data: happenings,
+        };
     }
 }

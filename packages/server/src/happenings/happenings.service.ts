@@ -510,32 +510,25 @@ export class HappeningsService {
         };
     }
 
-    async getAllRunsIds(): Promise<{ id: number }[]> {
-        return await this.prismaService.happening.findMany({
-            where: {
-                type: HappeningType.Run,
-                NOT: {
-                    status: Status.Finished,
-                },
-            },
+    async getHappenings(userId: number): Promise<HappeningT[]> {
+        const data = await this.prismaService.happening.findMany({
             select: {
                 id: true,
+                type: true,
             },
         });
-    }
 
-    async getAllEventsIds(): Promise<{ id: number }[]> {
-        return await this.prismaService.happening.findMany({
-            where: {
-                type: HappeningType.Event,
-                NOT: {
-                    status: Status.Finished,
-                },
-            },
-            select: {
-                id: true,
-            },
-        });
+        const happenings: HappeningT[] = [];
+
+        for (const { id, type } of data) {
+            if (type === HappeningType.Run) {
+                happenings.push(await this.getRunById(id, userId));
+            } else {
+                happenings.push(await this.getEventById(id, userId));
+            }
+        }
+
+        return happenings;
     }
 
     async getHappeningInterestedPlayers(

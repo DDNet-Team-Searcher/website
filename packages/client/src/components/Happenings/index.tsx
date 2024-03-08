@@ -1,11 +1,11 @@
-import { useGetAllEventsQuery } from '@/features/api/happenings.api';
+import { useGetHappeningsQuery } from '@/features/api/happenings.api';
 import { Happening } from '@/components/Happening';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { mergeHappenings } from '@/store/slices/happenings';
 
-export function Events() {
-    let { data, isLoading, isSuccess } = useGetAllEventsQuery();
+export function Happenings() {
+    const { data, isLoading, isSuccess } = useGetHappeningsQuery();
     const dispatch = useAppDispatch();
     const [isReady, setIsReady] = useState(false);
 
@@ -20,9 +20,7 @@ export function Events() {
         <>
             {isReady &&
                 data?.status === 'success' &&
-                data.data.map((event) => (
-                    <Happening key={event.id} id={event.id} />
-                ))}
+                data.data.map(({ id }) => <Happening key={id} id={id} />)}
         </>
     );
 }
