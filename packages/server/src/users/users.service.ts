@@ -3,7 +3,7 @@ import { NotificationType } from '@prisma/client';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Profile } from '@app/shared/types/Profile.type';
-import { User } from '@app/shared/types/User.type';
+import { SmolUser, User } from '@app/shared/types/User.type';
 import { User as SearchResultUser } from '@app/shared/types/SearchResult.type';
 import { createFile, deleteFile, FileTypeEnum } from 'src/utils/file.util';
 import { RegisterUserDTO } from './dto/register-user.dto';
@@ -524,5 +524,35 @@ export class UsersService {
                 },
             },
         });
+    }
+
+    async setRole(id: number, role: Role | null): Promise<void> {
+        await this.prismaService.user.update({
+            where: {
+                id,
+            },
+            data: {
+                role,
+            },
+        });
+    }
+
+    async getUsers(): Promise<SmolUser[]> {
+        const users = await this.prismaService.user.findMany({
+            select: {
+                id: true,
+                username: true,
+                avatar: true,
+                role: true,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        return users.map((user) => ({
+            ...user,
+            avatar: getAvatarUrl(user.avatar),
+        }));
     }
 }

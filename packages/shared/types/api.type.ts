@@ -4,7 +4,7 @@ import type { Profile } from './Profile.type';
 import type { Response as ApiResponse } from './Response.type';
 import type { ProfileReview, Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
-import { User } from './User.type';
+import { SmolUser, User } from './User.type';
 import { Report } from './Report.type';
 
 export type RegisterUserRequest = {
@@ -192,3 +192,7 @@ export type BanUserResponse = ApiResponse<null, { reason: string }>;
 export type BannedUsersResponse = ApiResponse<BannedUser[], null>;
 
 export type ReportsRespone = ApiResponse<Report[], null>;
+
+export type GetUsersResponse = ApiResponse<SmolUser[], null>;
+
+export type SetRoleResponse = ApiResponse<null, null>;

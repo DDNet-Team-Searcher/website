@@ -8,6 +8,7 @@ import {
     GetProfileResponse,
     GetProfileReviews,
     GetUserCredentialsResponse,
+    GetUsersResponse,
     LoginUserRequest,
     LoginUserResponse,
     LogoutUserResponse,
@@ -16,6 +17,7 @@ import {
     ReportUserRequest,
     ReportUserResponse,
     ReportsRespone,
+    SetRoleResponse,
     UnbanUserRequest,
     UnbanUserResponse,
     UpdateAvatarResponse,
@@ -157,6 +159,20 @@ export const usersAPI = baseApi.injectEndpoints({
                 url: `/reports`,
             }),
         }),
+        getUsers: build.query<GetUsersResponse, void>({
+            query: () => ({
+                url: `/users`,
+            }),
+        }),
+        setRole: build.mutation<
+            SetRoleResponse,
+            { userId: number; roleId: number }
+        >({
+            query: ({ userId, roleId }) => ({
+                url: `/user/${userId}/role/${roleId}`,
+                method: 'POST',
+            }),
+        }),
     }),
 });
 
@@ -179,4 +195,6 @@ export const {
     useUnbanUserMutation,
     useGetBannedUsersQuery,
     useGetReportsQuery,
+    useGetUsersQuery,
+    useSetRoleMutation,
 } = usersAPI;

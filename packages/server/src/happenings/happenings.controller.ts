@@ -24,7 +24,7 @@ import { HappeningsService } from './happenings.service';
 import { Protected } from 'src/decorators/protected.decorator';
 import { AuthorGuard } from 'src/guards/author.guard';
 import { Author } from 'src/decorators/author.decorator';
-import { Event, Happening, Run } from '@app/shared/types/Happening.type';
+import { Happening } from '@app/shared/types/Happening.type';
 import { HappeningType } from '@prisma/client';
 import { Validator } from 'class-validator';
 import { InnocentGuard } from 'src/guards/innocent.guard';

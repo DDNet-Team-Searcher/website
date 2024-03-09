@@ -17,3 +17,5 @@ export type User = {
         reason: string | null;
     };
 };
+
+export type SmolUser = Pick<User, 'id' | 'username' | 'role' | 'avatar'>;

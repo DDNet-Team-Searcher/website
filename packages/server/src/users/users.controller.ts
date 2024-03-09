@@ -45,11 +45,13 @@ import {
     GetProfileResponse,
     GetProfileReviews,
     GetUserCredentialsResponse,
+    GetUsersResponse,
     LoginUserResponse,
     LogoutUserResponse,
     RegisterUserResponse,
     ReportUserResponse,
     ReportsRespone,
+    SetRoleResponse,
     UnbanUserResponse,
     UpdateAvatarResponse,
     UpdateEmailRespone as UpdateEmailResponse,
@@ -492,7 +494,7 @@ export class UsersController {
     }
 
     @Protected()
-    @Permission(Role.Mod as RoleT.Mod)
+    @Permission(Role.Mod as RoleT)
     @Post('/user/:id/ban')
     async ban(
         @Param('id', ParseIntPipe) id: number,
@@ -520,7 +522,7 @@ export class UsersController {
     }
 
     @Protected()
-    @Permission(Role.Mod as RoleT.Mod)
+    @Permission(Role.Mod as RoleT)
     @Post('/user/:id/unban')
     async unban(
         @Param('id', ParseIntPipe) id: number,
@@ -546,7 +548,7 @@ export class UsersController {
     }
 
     @Protected()
-    @Permission(Role.Mod as RoleT.Mod)
+    @Permission(Role.Mod as RoleT)
     @Get('/users/banned')
     async bannedUsers(
         @Query('query') query?: string,
@@ -560,7 +562,7 @@ export class UsersController {
     }
 
     @Protected()
-    @Permission(Role.Mod as RoleT.Mod)
+    @Permission(Role.Mod as RoleT)
     @Get('/reports')
     async reports(@Query('query') query?: string): Promise<ReportsRespone> {
         const data = await this.reportsService.reports(query);
@@ -568,6 +570,66 @@ export class UsersController {
         return {
             status: 'success',
             data,
+        };
+    }
+
+    @Protected()
+    @Permission(Role.Admin as RoleT)
+    @Post('/user/:userId/role/:roleId')
+    async setRole(
+        @Param('userId', ParseIntPipe) userId: number,
+        @Param('roleId', ParseIntPipe) roleId: number,
+    ): Promise<SetRoleResponse> {
+        const exists = await this.usersService.exists({
+            where: {
+                id: userId,
+            },
+        });
+
+        if (!exists) {
+            throw new BadRequestException({
+                status: 'fail',
+                data: null,
+                message: "user doesn't exist",
+            });
+        }
+
+        switch (roleId) {
+            case 0:
+                await this.usersService.setRole(userId, null);
+                break;
+            case 1:
+                await this.usersService.setRole(userId, Role.Verified as RoleT);
+                break;
+            case 2:
+                await this.usersService.setRole(userId, Role.Mod as RoleT);
+                break;
+            case 3:
+                await this.usersService.setRole(userId, Role.Admin as RoleT);
+                break;
+            default:
+                throw new BadRequestException({
+                    status: 'fail',
+                    data: null,
+                    message: 'bad role id',
+                });
+        }
+
+        return {
+            status: 'success',
+            data: null,
+        };
+    }
+
+    @Protected()
+    @Permission(Role.Admin as RoleT)
+    @Get('/users')
+    async getUsers(): Promise<GetUsersResponse> {
+        const users = await this.usersService.getUsers();
+
+        return {
+            status: 'success',
+            data: users,
         };
     }
 }
