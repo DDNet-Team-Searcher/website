@@ -2,7 +2,6 @@ import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/ui/Button';
 import { PeopleIcon } from '@/components/ui/Icons/People';
 import { useFollowUserMutation } from '@/features/api/users.api';
-import { getTier } from '@/utils/getTier';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -13,7 +12,6 @@ type OwnProps = {
     user: {
         username: string;
         avatar: string | null;
-        tier: number;
         id: number;
         _count: {
             followers: number;
@@ -26,7 +24,6 @@ type OwnProps = {
 export function User({
     user: {
         username,
-        tier,
         id,
         isFollowing: isFollowingIDK,
         _count: { followers },
@@ -35,7 +32,6 @@ export function User({
 }: OwnProps) {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.user.user.id);
-    const tierName = getTier(tier);
     const [favoriteServer, setFavoriteServer] = useState<string | null>();
     const [followUser] = useFollowUserMutation();
     const [isFollowing, setIsFollowing] = useState(isFollowingIDK);
@@ -62,7 +58,6 @@ export function User({
                     {username}
                 </Link>
                 <p className="flex items-center text-medium-emphasis text-xs">
-                    <span>{tierName} tier</span>
                     <span className="mx-1 text-xl font-bold">∙</span>
                     <img
                         className="max-w-[30px]"

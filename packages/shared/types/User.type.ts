@@ -5,7 +5,6 @@ export type User = {
     id: number;
     username: string;
     email: string;
-    tier: number;
     createdAt: string;
     updatedAt: string;
     role: keyof typeof Role | null;

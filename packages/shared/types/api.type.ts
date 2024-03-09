@@ -10,7 +10,6 @@ import { Report } from './Report.type';
 export type RegisterUserRequest = {
     username: string;
     password: string;
-    tier: number;
     email: string;
 };
 

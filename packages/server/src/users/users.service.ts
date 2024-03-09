@@ -45,38 +45,30 @@ export class UsersService {
     }
 
     async getUserCredentials(id: number): Promise<User> {
-        const {
-            username,
-            tier,
-            email,
-            createdAt,
-            updatedAt,
-            role,
-            ...credentials
-        } = await this.prismaService.user.findFirstOrThrow({
-            where: {
-                id,
-            },
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                tier: true,
-                createdAt: true,
-                updatedAt: true,
-                role: true,
-                avatar: true,
-                bans: {
-                    where: {
-                        banned: true,
-                    },
-                    take: 1,
-                    select: {
-                        reason: true,
+        const { username, email, createdAt, updatedAt, role, ...credentials } =
+            await this.prismaService.user.findFirstOrThrow({
+                where: {
+                    id,
+                },
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    role: true,
+                    avatar: true,
+                    bans: {
+                        where: {
+                            banned: true,
+                        },
+                        take: 1,
+                        select: {
+                            reason: true,
+                        },
                     },
                 },
-            },
-        });
+            });
 
         const unreadNotificationsCount =
             await this.prismaService.notification.count({
@@ -102,7 +94,6 @@ export class UsersService {
         return {
             id,
             username,
-            tier,
             email,
             role,
             avatar: getAvatarUrl(credentials.avatar),
@@ -138,7 +129,6 @@ export class UsersService {
                 id: true,
                 username: true,
                 avatar: true,
-                tier: true,
                 _count: {
                     select: {
                         followers: true,
@@ -163,7 +153,6 @@ export class UsersService {
                 username: true,
                 avatar: true,
                 createdAt: true,
-                tier: true,
                 role: true,
                 reviews: {
                     take: 5,
@@ -203,7 +192,6 @@ export class UsersService {
             id: profileUserId,
             avatar,
             createdAt,
-            tier,
             role,
             username,
             _count: { followers, following },
@@ -217,7 +205,6 @@ export class UsersService {
         return {
             id: profileUserId,
             username,
-            tier,
             role,
             createdAt: createdAt.toString(),
             avatar: getAvatarUrl(avatar),

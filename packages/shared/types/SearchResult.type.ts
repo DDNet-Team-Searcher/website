@@ -3,7 +3,6 @@ import { Run, Event } from './Happening.type';
 export type User = {
     username: string;
     avatar: string | null;
-    tier: number;
     id: number;
     _count: {
         followers: number;

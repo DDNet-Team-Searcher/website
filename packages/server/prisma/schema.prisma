@@ -24,7 +24,6 @@ model User {
     avatar String? @db.VarChar(255)
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
-    tier Int @db.SmallInt
     role Role?
     activated Boolean @default(false)
     activationCode String @db.VarChar(255)
