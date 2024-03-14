@@ -95,7 +95,6 @@ export function Profile() {
 
     return (
         <Dropdown
-            id="profile"
             open={open}
             menu={{ items, onClick: handleMenuClick }}
             onOpenChange={handleOpenChange}

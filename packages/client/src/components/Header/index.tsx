@@ -167,7 +167,6 @@ export function Header() {
                     </div>
                     {/* authed user part */}
                     <Dropdown
-                        id="create_happenings"
                         open={open}
                         menu={{ items, onClick: handleMenuClick }}
                         onOpenChange={handleOpenChange}

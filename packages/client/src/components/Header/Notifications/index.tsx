@@ -24,7 +24,7 @@ export const Notifications = forwardRef(
         };
 
         return (
-            <div className="relative" data-id="notifications" ref={ref}>
+            <div className="relative" ref={ref}>
                 <div
                     className={classNames(
                         'absolute top-6 w-[450px] right-full bg-primary-3 text-high-emphasis z-[2] rounded-[10px]',
