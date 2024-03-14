@@ -1,34 +1,23 @@
 import { useEffect } from 'react';
 
-export const useOutsideClickHandler = <T extends HTMLElement>(
+export function useOutsideClickHandler<T extends HTMLElement>(
     ref: React.RefObject<T>,
     condition: boolean,
     callback: () => void,
-) => {
+): void {
+    const handleOutsideClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+
+        if (ref.current && !ref.current.contains(target) && condition) {
+            callback();
+        }
+    };
+
     useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            const dataset = ref.current?.dataset || {};
-            if (
-                condition &&
-                !(e?.target as Element).closest(
-                    Object.keys(dataset)
-                        .map((key) => `[data-${key}="${dataset[key]}"]`)
-                        .join(' ') || '',
-                )
-            ) {
-                callback();
-            }
-        };
-
-        const handler2 = () => {
-            document.addEventListener('click', handler);
-            document.removeEventListener('mouseup', handler2);
-        };
-
-        document.addEventListener('mouseup', handler2);
+        document.addEventListener('click', handleOutsideClick);
 
         return () => {
-            document.removeEventListener('click', handler);
+            document.removeEventListener('click', handleOutsideClick);
         };
-    }, [condition, ref, callback]);
-};
+    }, [condition]);
+}

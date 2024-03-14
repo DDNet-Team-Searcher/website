@@ -34,6 +34,7 @@ export function Dropdown({
             <ul
                 ref={ref}
                 data-id={id}
+                data-foo="bar"
                 className={classNames(
                     'absolute l-0 z-[1] min-w-[max(100%,200px)] bg-primary-2 top-[125%] rounded-[10px]',
                     { hidden: !open },
