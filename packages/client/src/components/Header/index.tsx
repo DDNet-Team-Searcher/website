@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { useAppSelector } from '@/utils/hooks/hooks';
 import { useRef, useState } from 'react';
 import { useGetCredentialsQuery } from '@/features/api/users.api';
-import { Avatar } from '../Avatar';
 import { useOutsideClickHandler } from '@/utils/hooks/useClickedOutside';
 import {
     CreateAndUpdateHappeningModal,
@@ -15,40 +14,33 @@ import {
 import { Notifications } from './Notifications';
 import { SearchIcon } from '../ui/Icons/Search';
 import { useRouter } from 'next/navigation';
-import { ProfileOverlay } from './ProfileOverlay';
+import { Profile } from './Profile';
 import { AddIcon } from '../ui/Icons/Add';
 import { NotificationIcon } from '../ui/Icons/Notification';
 import { Happenings } from '@app/shared/types/Happening.type';
 import { useTranslation } from '@/i18/client';
+import { Dropdown, Item } from '../ui/Dropdown';
 
 export function Header() {
     const ref = useRef<null | HTMLDivElement>(null);
     const inputRef = useRef<null | HTMLInputElement>(null);
     const notificationRef = useRef<null | HTMLDivElement>(null);
-    const [isCreateSelectionMenuHidden, setIsSelectionMenuHidden] =
-        useState(true);
-    const profileOverlayRef = useRef<null | HTMLUListElement>(null);
-    const [isProfileOverlayHidden, setIsProfileOverlayHidden] = useState(true);
     const isAuthed = useAppSelector((state) => state.user.isAuthed);
     const [currentHappening, setCurrentHappening] = useState<Happenings | null>(
         null,
     );
     const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-    const { username, avatar } = useAppSelector((state) => state.user.user);
+    const { username } = useAppSelector((state) => state.user.user);
     const [isNotificationOverlayVisible, setIsNotificationOverlayVisible] =
         useState(false);
-    useGetCredentialsQuery();
     const unreadNotificationsCount = useAppSelector(
         (state) => state.user.user._count.unreadNotifications,
     );
     const router = useRouter();
+    const [open, setOpen] = useState(false);
     const { t } = useTranslation('header');
+    useGetCredentialsQuery();
 
-    const onOutsideClick = () => {
-        setIsSelectionMenuHidden(true);
-    };
-
-    useOutsideClickHandler(ref, !isCreateSelectionMenuHidden, onOutsideClick);
     useOutsideClickHandler(
         notificationRef,
         isNotificationOverlayVisible,
@@ -56,23 +48,6 @@ export function Header() {
             setIsNotificationOverlayVisible(false);
         },
     );
-    useOutsideClickHandler(profileOverlayRef, !isProfileOverlayHidden, () => {
-        setIsProfileOverlayHidden(true);
-    });
-
-    const openProfileOverlay = () => {
-        setIsProfileOverlayHidden(false);
-    };
-
-    const createRun = () => {
-        setCurrentHappening(Happenings.Run);
-        setIsCreateModalVisible(true);
-    };
-
-    const createEvent = () => {
-        setCurrentHappening(Happenings.Event);
-        setIsCreateModalVisible(true);
-    };
 
     const onCreateHappeningModalClose = (cb: () => void) => {
         setCurrentHappening(null);
@@ -89,6 +64,36 @@ export function Header() {
                 )}`,
             );
         }
+    };
+
+    const itemClassname =
+        'text-[white] px-4 py-2.5 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-3';
+    const items: Item[] = [
+        {
+            key: '1',
+            label: <div className={itemClassname}>{t('create_event')}</div>,
+        },
+        {
+            key: '2',
+            label: <div className={itemClassname}>{t('create_run')}</div>,
+        },
+    ];
+
+    const handleMenuClick = (item: Item) => {
+        setIsCreateModalVisible(true);
+        setOpen(false);
+
+        switch (item.key) {
+            case '1':
+                setCurrentHappening(Happenings.Event);
+            case '2':
+                setCurrentHappening(Happenings.Run);
+                break;
+        }
+    };
+
+    const handleOpenChange = () => {
+        setOpen((prev) => !prev);
     };
 
     return (
@@ -161,44 +166,19 @@ export function Header() {
                         </div>
                     </div>
                     {/* authed user part */}
-                    <div className="relative ml-auto">
+                    <Dropdown
+                        id="create_happenings"
+                        open={open}
+                        menu={{ items, onClick: handleMenuClick }}
+                        onOpenChange={handleOpenChange}
+                    >
                         <Button
-                            styleType={
-                                isCreateSelectionMenuHidden
-                                    ? 'bordered'
-                                    : 'filled'
-                            }
+                            styleType={!open ? 'bordered' : 'filled'}
                             className={'p-[4px]'}
-                            onClick={() =>
-                                setIsSelectionMenuHidden(
-                                    !isCreateSelectionMenuHidden,
-                                )
-                            }
                         >
                             <AddIcon className="!m-0" color="#fff" />
                         </Button>
-                        <div
-                            ref={ref}
-                            data-id="header"
-                            className={classNames(
-                                'absolute l-0 z-[1] min-w-[max(100%,200px)] bg-primary-2 top-[125%] rounded-[10px]',
-                                { hidden: isCreateSelectionMenuHidden },
-                            )}
-                        >
-                            <div
-                                className="text-[white] px-4 py-2.5 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-3"
-                                onClick={createEvent}
-                            >
-                                {t('create_event')}
-                            </div>
-                            <div
-                                className="text-[white] px-4 py-2.5 rounded-[10px] transition-all duration-200 cursor-pointer hover:bg-primary-3"
-                                onClick={createRun}
-                            >
-                                {t('create_run')}
-                            </div>
-                        </div>
-                    </div>
+                    </Dropdown>
                     <Button
                         style={{ border: '0' }}
                         className="!p-0 max-w-[25px] w-full ml-5 relative"
@@ -230,19 +210,7 @@ export function Header() {
                         setIsVisible={setIsNotificationOverlayVisible}
                     />
                     <p className="text-[white] mx-5">{username}</p>
-                    <div className="relative">
-                        <Avatar
-                            className="cursor-pointer"
-                            onClick={openProfileOverlay}
-                            src={avatar}
-                            username={username || ''}
-                            size={30}
-                        />
-                        <ProfileOverlay
-                            ref={profileOverlayRef}
-                            isHidden={isProfileOverlayHidden}
-                        />
-                    </div>
+                    <Profile />
                 </div>
             </div>
         </header>
