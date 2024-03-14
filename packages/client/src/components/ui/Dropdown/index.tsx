@@ -15,6 +15,9 @@ type OwnProps = {
     onOpenChange: () => void;
     children: React.ReactNode;
     open: boolean;
+    className?: {
+        container?: string;
+    };
 };
 
 export function Dropdown({
@@ -22,6 +25,7 @@ export function Dropdown({
     menu: { items, onClick },
     open,
     onOpenChange,
+    className,
 }: OwnProps) {
     const ref = useRef<HTMLUListElement>(null);
     useOutsideClickHandler(ref, open, onOpenChange);
@@ -34,6 +38,7 @@ export function Dropdown({
                 className={classNames(
                     'absolute l-0 z-[1] min-w-[max(100%,200px)] bg-primary-2 top-[125%] rounded-[10px]',
                     { hidden: !open },
+                    { [className?.container || '']: className?.container },
                 )}
             >
                 {items.map((item) => (
