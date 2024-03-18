@@ -96,6 +96,7 @@ export function Form({ next, setEmail }: OwnProps) {
                             required: 'Field is required',
                         })}
                         errors={errors}
+                        type="password"
                         placeholder="Password"
                     />
                     <Input
@@ -108,6 +109,7 @@ export function Form({ next, setEmail }: OwnProps) {
                             required: 'Field is required',
                         })}
                         errors={errors}
+                        type="password"
                         placeholder="Confirm password"
                     />
                 </div>
