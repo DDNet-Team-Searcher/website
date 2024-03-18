@@ -46,7 +46,7 @@ export function Input({
                 {...props}
                 placeholder={placeholder}
                 className={classNames(
-                    'transition-all duration-300 border-[1px] bg-[rgba(0,0,0,.45)] border-[rgba(0,0,0,0)] rounded-[10px] py-2.5 px-[12px] text-[white] outline-0 focus:border-primary-1',
+                    'transition-all duration-300 border-[1px] bg-[rgba(0,0,0,.45)] border-[rgba(0,0,0,0)] rounded-[10px] py-2.5 px-[12px] text-[white] outline-none focus:border-primary-1',
                     {
                         [(classes && classes.input) || '']:
                             classes && !!classes.input,

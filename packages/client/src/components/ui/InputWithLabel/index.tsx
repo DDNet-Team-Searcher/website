@@ -48,7 +48,7 @@ export function InputWithLabel({
                 type={'text'}
                 className={
                     styles.input +
-                    ` w-full transition-all duration-300 bg-[rgba(0,0,0,.25)] outline-0 border-[1px] border-[rgba(0,0,0,0)] focus:border-primary-1 rounded-[5px] py-3 px-2.5 color-[white] mt-1 [&::-webkit-inner-spin-button]:hidden`
+                    ` w-full transition-all duration-300 bg-[rgba(0,0,0,.25)] outline-none border-[1px] border-[rgba(0,0,0,0)] focus:border-primary-1 rounded-[5px] py-3 px-2.5 color-[white] mt-1 [&::-webkit-inner-spin-button]:hidden`
                 }
                 list={datalist && id + '_1'}
                 {...props}

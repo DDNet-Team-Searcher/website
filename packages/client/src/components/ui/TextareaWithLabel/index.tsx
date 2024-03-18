@@ -32,7 +32,7 @@ export function TextareaWithLabel({
             <textarea
                 {...register}
                 className={classNames(
-                    'bg-[rgba(0,0,0,.25)] rounded-[5px] py-3 outline-0 transition-colors duration-300 border-[1px] border-[rgba(0,0,0,0)] focus:border-primary-1 px-2.5 text-high-emphasis mt-1',
+                    'bg-[rgba(0,0,0,.25)] rounded-[5px] py-3 outline-none transition-colors duration-300 border-[1px] border-[rgba(0,0,0,0)] focus:border-primary-1 px-2.5 text-high-emphasis mt-1',
                     { [className?.textarea || '']: className?.textarea },
                 )}
                 {...props}
