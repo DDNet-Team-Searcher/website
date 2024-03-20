@@ -94,15 +94,16 @@ export const happeningsApi = baseApi.injectEndpoints({
         getReviews: build.query<GetReviewsResponse, number>({
             query: (happeningId) => `${PREFIX}/${happeningId}/reviews`,
         }),
-        createReview: build.mutation<CreateReviewResponse, CreateReviewRequest>(
-            {
-                query: ({ happeningId, userId, data }) => ({
-                    url: `${PREFIX}/${happeningId}/reviews/${userId}`,
-                    method: 'POST',
-                    body: data,
-                }),
-            },
-        ),
+        createReview: build.mutation<
+            CreateReviewResponse,
+            { happeningId: number; userId: number; data: CreateReviewRequest }
+        >({
+            query: ({ happeningId, userId, data }) => ({
+                url: `${PREFIX}/${happeningId}/reviews/${userId}`,
+                method: 'POST',
+                body: data,
+            }),
+        }),
     }),
 });
 

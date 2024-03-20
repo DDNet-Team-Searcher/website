@@ -166,12 +166,8 @@ export type UpdateIsPlayerInTeamResponse = ApiResponse<
 export type SetIsInterestedInHappeningResponse = ApiResponse<null, null>;
 
 export type CreateReviewRequest = {
-    happeningId: number;
-    userId: number;
-    data: {
-        text: null | string;
-        rate: number;
-    };
+    text: null | string;
+    rate: number;
 };
 
 export type CreateReviewResponse = ApiResponse<null, CreateReviewRequest>;

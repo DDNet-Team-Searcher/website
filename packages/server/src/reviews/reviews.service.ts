@@ -7,6 +7,20 @@ import { ProfileReview, Review } from '@app/shared/types/Review.type';
 export class ReviewsService {
     constructor(private readonly prismaService: PrismaService) {}
 
+    async exists(
+        authedUserId: number,
+        userId: number,
+        happeningId: number,
+    ): Promise<boolean> {
+        return this.prismaService.exists(this.prismaService.review, {
+            where: {
+                happeningId,
+                authorId: authedUserId,
+                reviewedUserId: userId,
+            },
+        });
+    }
+
     async getReviewsByHappeningId(happeningId: number): Promise<Review[]> {
         const reviews = await this.prismaService.review.findMany({
             where: {

@@ -269,6 +269,19 @@ export class HappeningsService {
         return place;
     }
 
+    async happeningStatus(id: number): Promise<Status> {
+        const { status } = await this.prismaService.happening.findFirstOrThrow({
+            where: {
+                id,
+            },
+            select: {
+                status: true,
+            },
+        });
+
+        return status;
+    }
+
     async isUserInterestedHappening({
         userId,
         happeningId,

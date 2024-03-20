@@ -212,7 +212,6 @@ export function HappeningInfoModal() {
                             interestedPlayers?.data?.map((user, id) => (
                                 <InterestedPlayer
                                     key={id}
-                                    // reviews={reviews?.data || []}
                                     authedUserId={authedUserId as number}
                                     happening={happening}
                                     onChange={inputCb}

@@ -1,20 +1,20 @@
 import { Run, Event, Status } from '@app/shared/types/Happening.type';
-import { InterestedPlayer as InterestedPlayerT } from '@app/shared/types/api.type';
+import {
+    CreateReviewResponse,
+    InterestedPlayer as InterestedPlayerT,
+} from '@app/shared/types/api.type';
 import classNames from 'classnames';
 import { useState } from 'react';
 import Link from 'next/link';
-// import { useCreateReviewMutation } from '../../../../api/reviews-api';
 import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/ui/Button';
 import { TextareaWithLabel } from '@/components/ui/TextareaWithLabel';
 import { useForm } from 'react-hook-form';
-import { Input } from '@/components/ui/Input';
 import { RadioInput } from '@/components/ui/RadioInput';
 import { useCreateReviewMutation } from '@/features/api/happenings.api';
-// import { CreateReviewForm } from '../../../../types/CreateReviewForm.type';
-// import { composeValidators } from '../../../../utils/composeValidators';
-// import { required } from '../../../../utils/validators/required';
-// import { Review } from '@app/shared/types/Review.type';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { ExcludeSuccess } from '@/types/Response.type';
 
 type OwnProps = {
     user: InterestedPlayerT;
@@ -22,6 +22,11 @@ type OwnProps = {
     authedUserId: number;
     onChange: (...args: Array<any>) => () => void;
     alreadyReviewed: boolean;
+};
+
+type FormFields = {
+    rate: null | string;
+    text: string;
 };
 
 export function InterestedPlayer({
@@ -32,19 +37,21 @@ export function InterestedPlayer({
     alreadyReviewed,
 }: OwnProps) {
     const [isReviewFormVisible, setIsReviewFormVisible] = useState(false);
+    const handleFormerror = useHandleFormError();
+    const [reviewed, setReviewed] = useState(false);
     const [createReview] = useCreateReviewMutation();
-    const defaultValues = {
-        rate: null as null | string,
-        text: '',
-    };
-
     const {
         handleSubmit,
         register,
         formState: { errors },
-    } = useForm({ defaultValues });
+    } = useForm<FormFields>({
+        defaultValues: {
+            rate: null,
+            text: '',
+        },
+    });
 
-    const onSubmit = async (values: typeof defaultValues) => {
+    const onSubmit = async (values: FormFields) => {
         try {
             await createReview({
                 happeningId: happening.id,
@@ -54,8 +61,12 @@ export function InterestedPlayer({
                     rate: parseInt(values.rate!),
                 },
             }).unwrap();
-        } catch (e) {
-            console.log(e);
+            setIsReviewFormVisible(false);
+            setReviewed(true);
+        } catch (err) {
+            const error = (err as FetchBaseQueryError)
+                .data as ExcludeSuccess<CreateReviewResponse>;
+            handleFormerror(error);
         }
     };
 
@@ -86,10 +97,11 @@ export function InterestedPlayer({
                 <span className="ml-2.5">{user.user.username}</span>
                 <Button
                     className={classNames(
-                        'ml-auto !p-1.5 mr-1 !hidden group-hover:!block',
+                        'ml-auto !p-1.5 mr-1 hidden group-hover:block',
                         {
-                            'group-hover:!hidden':
+                            'group-hover:hidden':
                                 isReviewFormVisible ||
+                                reviewed ||
                                 user.user.id === authedUserId ||
                                 happening.status !== Status.Finished ||
                                 alreadyReviewed,
@@ -126,15 +138,6 @@ export function InterestedPlayer({
                                 subtitle=""
                                 id={'lol'}
                             />
-                            {/*
-                            <Field
-                                id={id.toString()}
-                                className="appearance-none w-5 h-5 rounded-full border-2 border-primary-1 after:relative after:block after:w-2.5 after:h-2.5 after:rounded-full after:top-[50%] after:translate-y-[-50%] after:left-[50%] after:translate-x-[-50%] checked:after:bg-primary-1"
-                                type="radio"
-                                name="rate"
-                                value={num.toString()}
-                            />
-                            */}
                             <label
                                 htmlFor={id.toString()}
                                 className="ml-1.5 cursor-pointer"
@@ -153,16 +156,6 @@ export function InterestedPlayer({
                         &#60;--- you have to choose smth here
                     </p>
                 </div>
-                {/*
-                <Field
-                    placeholder="Troll"
-                    className="mt-3"
-                    component={TextareaWithLabel}
-                    label="Describe your teammate however you want"
-                    id="text"
-                    name="text"
-                />
-                */}
                 <TextareaWithLabel
                     register={register('text')}
                     label="Describe your teammate however you want"
