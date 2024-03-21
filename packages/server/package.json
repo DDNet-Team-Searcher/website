@@ -38,6 +38,7 @@
         "cookie-parser": "^1.4.6",
         "ejs": "^3.1.9",
         "jsonwebtoken": "^9.0.1",
+        "long": "^5.2.3",
         "nest-winston": "^1.9.4",
         "nestjs-cls": "^3.6.0",
         "nestjs-i18n": "^10.4.0",

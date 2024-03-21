@@ -150,6 +150,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.1
         version: 9.0.1
+      long:
+        specifier: ^5.2.3
+        version: 5.2.3
       nest-winston:
         specifier: ^1.9.4
         version: 1.9.4(@nestjs/common@10.1.0)(winston@3.11.0)
