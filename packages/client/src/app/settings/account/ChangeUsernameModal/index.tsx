@@ -1,6 +1,6 @@
 import { useUpdateUsernameMutation } from '@/features/api/users.api';
 import { UpdateUsernameResponse } from '@app/shared/types/api.type';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';

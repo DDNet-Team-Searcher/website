@@ -1,5 +1,5 @@
 import { useRegisterMutation } from '@/features/api/users.api';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { RegisterUserResponse } from '@app/shared/types/api.type';
 import { useForm } from 'react-hook-form';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';

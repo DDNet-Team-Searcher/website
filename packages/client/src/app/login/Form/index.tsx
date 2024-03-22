@@ -10,7 +10,7 @@ import {
 } from '@/features/api/users.api';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { LoginUserResponse } from '@app/shared/types/api.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { setIsAuthed } from '@/store/slices/user';

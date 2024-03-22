@@ -1,5 +1,5 @@
 import { hint } from '@/store/slices/hints';
-import { Fail, ResError } from '@/types/Response.type';
+import { Fail, ResError } from '@app/shared/types/Response.type';
 import { UseFormSetError } from 'react-hook-form';
 import { useAppDispatch } from './hooks';
 

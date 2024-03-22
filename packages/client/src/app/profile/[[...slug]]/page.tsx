@@ -17,7 +17,7 @@ import { ReportModal } from './ReportModal';
 import { BanModal } from '@/components/BanModal';
 import { hint } from '@/store/slices/hints';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { BanUserResponse } from '@app/shared/types/api.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { Role } from '@app/shared/types/Role.type';

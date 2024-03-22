@@ -14,7 +14,7 @@ import { RadioInput } from '@/components/ui/RadioInput';
 import { useCreateReviewMutation } from '@/features/api/happenings.api';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 
 type OwnProps = {
     user: InterestedPlayerT;

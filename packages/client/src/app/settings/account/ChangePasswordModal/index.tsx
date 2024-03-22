@@ -1,6 +1,6 @@
 import { useUpdatePasswordMutation } from '@/features/api/users.api';
 import { UpdatePasswordResponse } from '@app/shared/types/api.type';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';

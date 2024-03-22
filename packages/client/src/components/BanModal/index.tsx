@@ -3,7 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import { TextareaWithLabel } from '@/components/ui/TextareaWithLabel';
 import { useBanUserMutation } from '@/features/api/users.api';
 import { hint } from '@/store/slices/hints';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { BanUserResponse } from '@app/shared/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';

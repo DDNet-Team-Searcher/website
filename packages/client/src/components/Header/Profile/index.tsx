@@ -1,6 +1,6 @@
 import { useLogoutMutation } from '@/features/api/users.api';
 import { clearData } from '@/store/slices/user';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { LogoutUserResponse } from '@app/shared/types/api.type';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';

@@ -8,7 +8,7 @@ import {
     CreateRunResponse,
     UpdateHappeningResponse,
 } from '@app/shared/types/api.type';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';

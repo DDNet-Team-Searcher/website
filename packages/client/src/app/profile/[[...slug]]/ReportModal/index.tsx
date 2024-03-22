@@ -4,7 +4,7 @@ import { RadioInput } from '@/components/ui/RadioInput';
 import { TextareaWithLabel } from '@/components/ui/TextareaWithLabel';
 import { useReportUserMutation } from '@/features/api/users.api';
 import { hint } from '@/store/slices/hints';
-import { ExcludeSuccess } from '@/types/Response.type';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { ReportUserResponse } from '@app/shared/types/api.type';
 import { useAppDispatch } from '@/utils/hooks/hooks';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
