@@ -6,6 +6,7 @@ import type { ProfileReview, Review } from './Review.type';
 import type { SearchResult } from './SearchResult.type';
 import { SmolUser, User } from './User.type';
 import { Report } from './Report.type';
+import { Server, ServerInfo } from './Server.type';
 
 export type RegisterUserRequest = {
     username: string;
@@ -191,3 +192,7 @@ export type ReportsRespone = ApiResponse<Report[], null>;
 export type GetUsersResponse = ApiResponse<SmolUser[], null>;
 
 export type SetRoleResponse = ApiResponse<null, null>;
+
+export type ServersResponse = ApiResponse<Server[], null>;
+
+export type ServerResponse = ApiResponse<Server, null>;

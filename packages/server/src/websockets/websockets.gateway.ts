@@ -1,9 +1,17 @@
+import { ServerInfo } from '@app/shared/types/Server.type';
 import { JwtService } from '@nestjs/jwt';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+    MessageBody,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
+    WsResponse,
+} from '@nestjs/websockets';
 import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 import { Server } from 'socket.io';
 import { Protected } from 'src/decorators/protected.decorator';
 import { WSAuthMiddleware } from 'src/middlewares/ws-auth.middleware';
+import { ServersService } from 'src/servers/servers.service';
 import { AuthSocket } from 'src/types/AuthSocket.type';
 
 @WebSocketGateway({
@@ -18,7 +26,10 @@ export class WebsocketsGateway implements NestGateway {
     server: Server;
     users: Map<number, string> = new Map();
 
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly jwtService: JwtService,
+        private readonly serversService: ServersService,
+    ) {}
 
     afterInit(server: Server) {
         const middleware = WSAuthMiddleware(this.jwtService);
@@ -31,6 +42,14 @@ export class WebsocketsGateway implements NestGateway {
 
     handleDisconnect(client: AuthSocket) {
         this.users.delete(client.user.id);
+    }
+
+    @SubscribeMessage('stats')
+    async stats(@MessageBody() body: string): Promise<WsResponse<ServerInfo>> {
+        return {
+            event: 'stats',
+            data: await this.serversService.stats(parseInt(body)),
+        };
     }
 
     sendNotification(userId: number, notification: object) {

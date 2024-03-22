@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Socket } from 'net';
+import { AddressInfo, Socket } from 'net';
 import { Request_Action, Request } from 'src/protos/request';
 import { Response, Response_ResponseCode } from 'src/protos/response';
 import { Origin } from 'src/protos/common';
 import { Status } from '@prisma/client';
+import { ServerInfo } from '@app/shared/types/Server.type';
+import { Server as ServerT } from '@app/shared/types/Server.type';
+
+const TIMEOUT_TIME_MS = 1000 * 1;
 
 type Host = {
     ip: string;
@@ -38,6 +42,16 @@ export class ServersService {
             const socket = new Socket();
 
             await new Promise<void>((res) => {
+                const timerId = setTimeout(() => {
+                    this.logger.warn(`Couldn't connect to ${ip}:${port}`);
+
+                    this.sockets.get(id)?.socket.destroy();
+                    this.sockets.delete(id);
+                    this.failed.set(servers[i].id, { ip, port });
+                    res();
+                    clearTimeout(timerId);
+                }, TIMEOUT_TIME_MS);
+
                 socket.connect(port, ip, async () => {
                     //TODO: fix this bs
                     this.logger.verbose(
@@ -60,6 +74,7 @@ export class ServersService {
                     server.used = used;
                     server.max = max;
 
+                    clearTimeout(timerId);
                     res();
                 });
 
@@ -68,10 +83,12 @@ export class ServersService {
 
                     this.sockets.delete(id);
                     this.failed.set(servers[i].id, { ip, port });
+                    clearTimeout(timerId);
                     res();
                 });
 
                 socket.on('close', () => {
+                    clearTimeout(timerId);
                     this.logger.verbose('Connection closed');
                 });
 
@@ -94,6 +111,14 @@ export class ServersService {
                 });
             });
         }
+    }
+
+    async exists(id: number): Promise<boolean> {
+        return this.prismaService.exists(this.prismaService.server, {
+            where: {
+                id,
+            },
+        });
     }
 
     getAllServers(): Promise<{ id: number; ip: string; port: number }[]> {
@@ -246,5 +271,70 @@ export class ServersService {
 
             socket.on('data', handler);
         });
+    }
+
+    async stats(id: number): Promise<ServerInfo> {
+        return new Promise<ServerInfo>((res) => {
+            const server = this.sockets.get(id);
+
+            if (!server) {
+                throw new Error('whoopsie daisy');
+            }
+
+            const socket = server.socket;
+
+            const request = Request.create({
+                action: Request_Action.STATS,
+                origin: Origin.NOT_DDNET,
+            });
+
+            socket.write(Request.encode(request).finish());
+
+            const handler = (bytes: Buffer) => {
+                const response = Response.decode(bytes);
+
+                if (
+                    response.code == Response_ResponseCode.OK &&
+                    response.data?.$case === 'stats'
+                ) {
+                    const system = response.data.stats.system;
+                    const happenings = response.data.stats.happenings;
+
+                    if (!system) {
+                        this.logger.error('Why da hell is system `undefined`');
+                        throw new Error('Yikes');
+                    }
+
+                    res({ system, happenings });
+                } else {
+                    console.log('Couldnt shutdown the server owo');
+                }
+
+                socket.removeListener('data', handler);
+            };
+
+            socket.on('data', handler);
+        });
+    }
+
+    getServer(id: number): ServerT | null {
+        if (this.sockets.has(id)) {
+            const ip = (this.sockets.get(id)!.socket.address() as AddressInfo)
+                .address;
+
+            return {
+                id,
+                ip,
+                online: true,
+            };
+        } else if (this.failed.has(id)) {
+            return {
+                id,
+                ip: this.failed.get(id)!.ip,
+                online: false,
+            };
+        }
+
+        return null;
     }
 }
