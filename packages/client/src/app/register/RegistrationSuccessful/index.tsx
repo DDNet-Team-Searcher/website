@@ -20,9 +20,9 @@ export function RegistrationSuccessful({ email }: OwnProps) {
                         Your account has been successfully created.
                     </p>
                     <p>
-                        We sent an email to {email}. You have to open the
-                        link from email to activate your account. Only then
-                        you will be able to log in.
+                        We sent an email to {email}. You have to open the link
+                        from email to activate your account. Only then you will
+                        be able to log in.
                     </p>
                 </div>
                 <img src="/successful-register.png" />
