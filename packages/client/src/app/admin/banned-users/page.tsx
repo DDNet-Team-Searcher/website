@@ -18,9 +18,7 @@ export default function BannedUsersPage() {
                 userId,
             }).unwrap();
             refetch();
-        } catch (e) {
-            //TODO: what do i do here?
-        }
+        } catch (e) {}
     };
 
     return (

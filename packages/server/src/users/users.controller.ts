@@ -150,7 +150,6 @@ export class UsersController {
     ): Promise<void> {
         const result = await this.usersService.activateAccount(code);
 
-        //TODO: do smth with these hardcoded urls
         if (result) {
             res.redirect('http://localhost:3000/login');
         } else {

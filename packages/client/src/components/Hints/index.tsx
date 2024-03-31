@@ -27,7 +27,6 @@ export function Hints() {
                                 alt="success icon"
                             />
                         )}
-                        {/* TODO: Add info hint*/}
                         <p className="ml-2.5 text-[white]/80">{hint.text}</p>
                     </div>
                 );

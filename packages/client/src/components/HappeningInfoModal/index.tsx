@@ -52,7 +52,6 @@ export function HappeningInfoModal() {
             parseInt(searchParams.get('happeningId') || '0') || null;
 
         if (happeningId) {
-            //TODO: check it only when all stuff is already loaded
             if (!happening) {
                 getHappening(happeningId)
                     .unwrap()

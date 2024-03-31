@@ -53,7 +53,6 @@ export class ServersService {
                 }, TIMEOUT_TIME_MS);
 
                 socket.connect(port, ip, async () => {
-                    //TODO: fix this bs
                     this.logger.verbose(
                         `TCP connection established with ${ip}:${port}`,
                     );

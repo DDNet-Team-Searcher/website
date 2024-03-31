@@ -26,12 +26,9 @@ export class AuthorGuard implements CanActivate {
         if (author !== undefined) {
             try {
                 const req = context.switchToHttp().getRequest();
-
                 const id = parseInt(req.params.id);
-
-                //TODO: fix my 1000iq trash solution
                 const something = await this.prismaService[
-                    author as 'happening'
+                    author as string
                 ].findFirst({
                     where: {
                         id,

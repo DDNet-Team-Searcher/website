@@ -136,7 +136,6 @@ export function Happening({ id }: OwnProps) {
         setIsEditHappeningModalVisible(false);
     };
 
-    //TODO: fix this type
     const happeningData: Record<string, any> = {
         id,
         place: happening.place,

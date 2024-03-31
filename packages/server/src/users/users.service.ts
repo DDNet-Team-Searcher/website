@@ -200,8 +200,6 @@ export class UsersService {
         const isFollowing = await this.isFollowing(userId, id);
         const isReported = await this.reportsService.isReported(id, userId);
 
-        //TODO: return boolean only to users who can ban
-        //return null for others
         return {
             id: profileUserId,
             username,

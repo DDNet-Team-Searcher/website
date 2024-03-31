@@ -66,7 +66,6 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
         }
     }, [errors, isDirty, textareaValue]);
 
-    //TODO: add sane reasons :justatest:
     const inputs = [
         {
             title: 'Retarded',
@@ -90,7 +89,6 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
         let reportReason: string = '';
 
         if (type === 'other') {
-            //TODO: check if the textarea is empty
             reportReason = reason;
         } else {
             reportReason = inputs.find((obj) => obj.value === type)!.title;
