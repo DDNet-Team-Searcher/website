@@ -6,11 +6,16 @@ import {
     useGetBannedUsersQuery,
     useUnbanUserMutation,
 } from '@/features/api/users.api';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
+import { ExcludeSuccess } from '@app/shared/types/Response.type';
+import { UnbanUserResponse } from '@app/shared/types/api.type';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import Link from 'next/link';
 
 export default function BannedUsersPage() {
     const { data, refetch } = useGetBannedUsersQuery();
     const [unban] = useUnbanUserMutation();
+    const handleFormError = useHandleFormError();
 
     const onClick = async (userId: number) => {
         try {
@@ -18,7 +23,12 @@ export default function BannedUsersPage() {
                 userId,
             }).unwrap();
             refetch();
-        } catch (e) {}
+        } catch (err) {
+            const error = (err as FetchBaseQueryError)
+                .data as ExcludeSuccess<UnbanUserResponse>;
+
+            handleFormError(error);
+        }
     };
 
     return (
