@@ -64,9 +64,9 @@ export class NotificationsService {
                     },
                 });
 
-                const author = await this.prismaService.user.findFirst({
+                const user = await this.prismaService.user.findFirst({
                     where: {
-                        id: happening?.authorId || -1,
+                        id: notification.userId,
                     },
                     select: {
                         username: true,
@@ -77,8 +77,8 @@ export class NotificationsService {
                 return {
                     user: {
                         id: happening?.authorId || null,
-                        username: author?.username || null,
-                        avatar: getAvatarUrl(author?.avatar || null),
+                        username: user?.username || null,
+                        avatar: getAvatarUrl(user?.avatar || null),
                     },
                     id: notification.id,
                     type: notification.type as
@@ -98,7 +98,7 @@ export class NotificationsService {
             }
             case NotificationType.Unfollow:
             case NotificationType.Follow: {
-                const author = await this.prismaService.user.findFirst({
+                const user = await this.prismaService.user.findFirst({
                     where: {
                         id: (notification.notification as FollowNotification)
                             .userId,
@@ -113,8 +113,8 @@ export class NotificationsService {
                     user: {
                         id: (notification.notification as FollowNotification)
                             .userId,
-                        username: author?.username || null,
-                        avatar: getAvatarUrl(author?.avatar || null),
+                        username: user?.username || null,
+                        avatar: getAvatarUrl(user?.avatar || null),
                     },
                     id: notification.id,
                     type: notification.type as NotifType.Follow,
@@ -128,7 +128,7 @@ export class NotificationsService {
                 const happening = await this.prismaService.happening.findFirst({
                     where: {
                         id: (
-                            notification.notification as AddedInTeamNotification
+                            notification.notification as InterestedInHappeningNotification
                         ).happeningId,
                     },
                     select: {
@@ -139,9 +139,11 @@ export class NotificationsService {
                     },
                 });
 
-                const author = await this.prismaService.user.findFirst({
+                const user = await this.prismaService.user.findFirst({
                     where: {
-                        id: happening?.authorId || -1,
+                        id: (
+                            notification.notification as InterestedInHappeningNotification
+                        ).userId,
                     },
                     select: {
                         username: true,
@@ -152,8 +154,8 @@ export class NotificationsService {
                 return {
                     user: {
                         id: happening?.authorId || null,
-                        username: author?.username || null,
-                        avatar: getAvatarUrl(author?.avatar || null),
+                        username: user?.username || null,
+                        avatar: getAvatarUrl(user?.avatar || null),
                     },
                     id: notification.id,
                     type: notification.type as NotifType.InterestedInHappening,

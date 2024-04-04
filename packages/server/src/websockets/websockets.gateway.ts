@@ -31,16 +31,16 @@ export class WebsocketsGateway implements NestGateway {
         private readonly serversService: ServersService,
     ) {}
 
-    afterInit(server: Server) {
+    afterInit(server: Server): void {
         const middleware = WSAuthMiddleware(this.jwtService);
         server.use(middleware);
     }
 
-    handleConnection(client: AuthSocket) {
+    handleConnection(client: AuthSocket): void {
         this.users.set(client.user.id, client.id);
     }
 
-    handleDisconnect(client: AuthSocket) {
+    handleDisconnect(client: AuthSocket): void {
         this.users.delete(client.user.id);
     }
 
@@ -52,7 +52,7 @@ export class WebsocketsGateway implements NestGateway {
         };
     }
 
-    sendNotification(userId: number, notification: object) {
+    sendNotification(userId: number, notification: object): void {
         if (this.users.has(userId)) {
             this.server
                 .to(this.users.get(userId)!)
