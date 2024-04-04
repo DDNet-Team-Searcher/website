@@ -68,16 +68,24 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
 
     const inputs = [
         {
-            title: 'Retarded',
-            value: 'retarded',
+            title: 'Spamming',
+            value: 'spamming',
         },
         {
-            title: 'Racist',
-            value: 'racist',
+            title: 'Impersonation',
+            value: 'impersonation',
         },
         {
-            title: 'Has inappropriate content on page',
+            title: 'Harrasment',
+            value: 'harrasment',
+        },
+        {
+            title: 'Inappropriate content',
             value: 'inappropriate_content',
+        },
+        {
+            title: 'Misinformation',
+            value: 'misinformation',
         },
         {
             title: 'Other (write yourself)',
