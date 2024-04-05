@@ -86,6 +86,7 @@ export function Header() {
         switch (item.key) {
             case '1':
                 setCurrentHappening(Happenings.Event);
+                break;
             case '2':
                 setCurrentHappening(Happenings.Run);
                 break;
