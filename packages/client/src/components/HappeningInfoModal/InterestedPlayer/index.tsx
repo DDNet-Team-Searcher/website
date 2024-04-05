@@ -133,9 +133,7 @@ export function InterestedPlayer({
                         >
                             <RadioInput
                                 register={register('rate')}
-                                value={num}
-                                title=""
-                                subtitle=""
+                                value={num.toString()}
                                 id={'lol'}
                             />
                             <label

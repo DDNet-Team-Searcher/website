@@ -21,6 +21,7 @@ import { TextareaWithLabel } from '../ui/TextareaWithLabel';
 import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 import { Carousel, CarouselRef } from '../ui/Carousel';
 import { Happenings } from '@app/shared/types/Happening.type';
+import { useTranslation } from '@/i18/client';
 
 export enum ModalMode {
     Create,
@@ -51,19 +52,6 @@ type OwnProps = {
     happeningId?: number;
 };
 
-const inputs = [
-    {
-        title: 'Somewhere else.',
-        subtitle: 'You can get team and go play on official DDnet servers.',
-        value: 'THERE',
-    },
-    {
-        title: 'Our own shitty servers.',
-        subtitle: 'You will have less change to get ddosed.',
-        value: 'HERE',
-    },
-];
-
 //NOTE: I literally spent few fukcing hours thinking about how to name this
 //component but i couldnt come up with something good :pepeW:
 export function CreateAndUpdateHappeningModal({
@@ -84,6 +72,7 @@ export function CreateAndUpdateHappeningModal({
     const carouselRef = useRef<CarouselRef>(null);
     const [cur, setCur] = useState(0);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const { t } = useTranslation('common');
     let defaultValues: FormFields = {
         place: '',
         mapName: '',
@@ -104,6 +93,23 @@ export function CreateAndUpdateHappeningModal({
             ...data,
         };
     }
+
+    const inputs = [
+        {
+            title: t('happening_form.fields.place.options.internal.title'),
+            subtitle: t(
+                'happening_form.fields.place.options.internal.subtitle',
+            ),
+            value: 'HERE',
+        },
+        {
+            title: t('happening_form.fields.place.options.external.title'),
+            subtitle: t(
+                'happening_form.fields.place.options.external.subtitle',
+            ),
+            value: 'THERE',
+        },
+    ];
 
     const {
         handleSubmit,
@@ -272,15 +278,29 @@ export function CreateAndUpdateHappeningModal({
         setPreviewUrl(null);
     };
 
+    let title: string = '';
+
+    if (mode == ModalMode.Create) {
+        if (type === Happenings.Run) {
+            title = t('happening_form.create_run');
+        } else if (type === Happenings.Event) {
+            title = t('happening_form.create_event');
+        }
+    } else if (mode == ModalMode.Edit) {
+        if (type === Happenings.Run) {
+            title = t('happening_form.update_run');
+        } else if (type === Happenings.Event) {
+            title = t('happening_form.update_event');
+        }
+    }
+
     return (
         <Modal
             visible={isVisible}
             onClose={() => onClose(clearErrors)}
             width={'600px'}
         >
-            <p className="text-3xl m-0 pt-6 px-5">
-                {mode == ModalMode.Create ? 'Create' : 'Edit'} your own {type}
-            </p>
+            <p className="text-3xl m-0 pt-6 px-5">{title}</p>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="px-6 pb-6 !max-h-[75vh] overflow-y-auto">
                     <Carousel ref={carouselRef} controls={false}>
@@ -289,10 +309,10 @@ export function CreateAndUpdateHappeningModal({
                                 className="text-xl mt-5"
                                 style={{ margin: '40px 0 0' }}
                             >
-                                Where&apos;s your {type}?
+                                {t('happening_form.step1_title')}
                             </p>
                             <p className={'text-sm mt-1 text-high-emphasis'}>
-                                So noone gets lost on where to go?
+                                {t('happening_form.step1_subtitle')}
                             </p>
 
                             {inputs.map((val, id) => (
@@ -301,14 +321,9 @@ export function CreateAndUpdateHappeningModal({
                                     key={id}
                                 >
                                     <RadioInput
-                                        title={'Our own servers.'}
                                         value={val.value}
-                                        subtitle={
-                                            'You will have less change to get ddosed.'
-                                        }
                                         id={val.value}
                                         register={register('place')}
-                                        className={{ wrapper: 'mt-5' }}
                                     />
                                     <label
                                         htmlFor={val.value}
@@ -333,14 +348,14 @@ export function CreateAndUpdateHappeningModal({
                         <div>
                             <div>
                                 <p className={'text-xl mt-5'}>
-                                    Tell us more about your {type}
+                                    {t('happening_form.step2_title')}
                                 </p>
                                 <p
                                     className={
                                         'text-sm mt-1 text-high-emphasis'
                                     }
                                 >
-                                    Fill fields down below!
+                                    {t('happening_form.step2_subtitle')}
                                 </p>
                                 <div className="flex justify-between mt-4">
                                     {type === Happenings.Event ? (
@@ -350,8 +365,12 @@ export function CreateAndUpdateHappeningModal({
                                                 container: 'max-w-[256px]',
                                             }}
                                             register={register('title')}
-                                            label="event title"
-                                            placeholder="How would you name event?"
+                                            label={t(
+                                                'happening_form.fields.title.title',
+                                            )}
+                                            placeholder={t(
+                                                'happening_form.fields.title.placeholder',
+                                            )}
                                             required
                                         />
                                     ) : (
@@ -361,8 +380,12 @@ export function CreateAndUpdateHappeningModal({
                                                 container: 'max-w-[256px]',
                                             }}
                                             register={register('mapName')}
-                                            label="map name"
-                                            placeholder="Map you're gonna play?"
+                                            label={t(
+                                                'happening_form.fields.map.title',
+                                            )}
+                                            placeholder={t(
+                                                'happening_form.fields.map.placeholder',
+                                            )}
                                             required
                                         />
                                     )}
@@ -373,8 +396,12 @@ export function CreateAndUpdateHappeningModal({
                                                 container: 'max-w-[256px]',
                                             }}
                                             register={register('mapName')}
-                                            label="map name"
-                                            placeholder="Map you're gonna play?"
+                                            label={t(
+                                                'happening_form.fields.map.title',
+                                            )}
+                                            placeholder={t(
+                                                'happening_form.fields.map.placeholder',
+                                            )}
                                             required
                                         />
                                     ) : (
@@ -384,8 +411,12 @@ export function CreateAndUpdateHappeningModal({
                                                 container: 'max-w-[256px]',
                                             }}
                                             register={register('teamSize')}
-                                            label="team size"
-                                            placeholder="What team size do you want?"
+                                            label={t(
+                                                'happening_form.fields.team_size.title',
+                                            )}
+                                            placeholder={t(
+                                                'happening_form.fields.team_size.placeholder',
+                                            )}
                                             required
                                             type="number"
                                             min={2}
@@ -400,7 +431,9 @@ export function CreateAndUpdateHappeningModal({
                                             container: 'max-w-[256px]',
                                         }}
                                         register={register('startDate')}
-                                        label="start date"
+                                        label={t(
+                                            'happening_form.fields.start_date.title',
+                                        )}
                                         required
                                         type="date"
                                     />
@@ -410,7 +443,9 @@ export function CreateAndUpdateHappeningModal({
                                             container: 'max-w-[256px]',
                                         }}
                                         register={register('startTime')}
-                                        label="start time"
+                                        label={t(
+                                            'happening_form.fields.start_time.title',
+                                        )}
                                         required
                                         type="time"
                                         pattern="[0-9]{2}:[0-9]{2}"
@@ -429,7 +464,7 @@ export function CreateAndUpdateHappeningModal({
                                         htmlFor="show-end-fields"
                                         className="text-[12px] uppercase ml-2.5"
                                     >
-                                        Add end date & time
+                                        {t('happening_form.add_end_time')}
                                     </label>
                                 </div>
                             )}
@@ -441,7 +476,9 @@ export function CreateAndUpdateHappeningModal({
                                             container: 'max-w-[256px]',
                                         }}
                                         register={register('endDate')}
-                                        label="end date"
+                                        label={t(
+                                            'happening_form.fields.end_date.title',
+                                        )}
                                         required
                                         type="date"
                                     />
@@ -451,7 +488,9 @@ export function CreateAndUpdateHappeningModal({
                                             container: 'max-w-[256px]',
                                         }}
                                         register={register('endTime')}
-                                        label="end time"
+                                        label={t(
+                                            'happening_form.fields.end_time.title',
+                                        )}
                                         required
                                         type="time"
                                         pattern="[0-9]{2}:[0-9]{2}"
@@ -461,8 +500,12 @@ export function CreateAndUpdateHappeningModal({
                             <TextareaWithLabel
                                 className={{ container: 'mt-5' }}
                                 register={register('description')}
-                                label="Description"
-                                placeholder="Here you can describe a teammate of dream, are weebs people or whatever you want"
+                                label={t(
+                                    'happening_form.fields.description.title',
+                                )}
+                                placeholder={t(
+                                    'happening_form.fields.description.placeholder',
+                                )}
                             />
                             {type == Happenings.Event && (
                                 <div>
@@ -502,7 +545,9 @@ export function CreateAndUpdateHappeningModal({
                                                     type="button"
                                                     styleType="filled"
                                                 >
-                                                    Upload cover image
+                                                    {t(
+                                                        'happening_form.upload_thumbnail',
+                                                    )}
                                                 </Button>
                                             </>
                                         )}
@@ -517,7 +562,9 @@ export function CreateAndUpdateHappeningModal({
                                                     className="mt-2"
                                                     onClick={removeThumbnail}
                                                 >
-                                                    Remove thumbnail
+                                                    {t(
+                                                        'happening_form.remove_thumbnail',
+                                                    )}
                                                 </Button>
                                             </>
                                         )}
@@ -532,12 +579,12 @@ export function CreateAndUpdateHappeningModal({
                         styleType={'bordered'}
                         onClick={() => onClose(clearErrors)}
                     >
-                        Close
+                        {t('close')}
                     </Button>
                     <div className="flex">
                         {cur > 0 && (
                             <Button styleType="bordered" onClick={prev}>
-                                Back
+                                {t('back')}
                             </Button>
                         )}
                         {cur == (carouselRef.current?.count() || 0) ? (
@@ -547,8 +594,11 @@ export function CreateAndUpdateHappeningModal({
                                 type="submit" /*disabled={isSubmitButtonDisabled}*/
                                 className="ml-5"
                             >
-                                {mode == ModalMode.Create ? 'Create' : 'Update'}{' '}
-                                {type}
+                                {t(
+                                    mode == ModalMode.Create
+                                        ? 'create'
+                                        : 'update',
+                                )}
                             </Button>
                         ) : (
                             <Button
@@ -556,7 +606,7 @@ export function CreateAndUpdateHappeningModal({
                                 styleType="filled"
                                 onClick={next}
                             >
-                                Next
+                                {t('next')}
                             </Button>
                         )}
                     </div>

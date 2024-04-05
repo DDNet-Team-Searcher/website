@@ -134,11 +134,7 @@ export function ReportModal({ visible, onClose, userId }: OwnProps) {
                                 key={id}
                             >
                                 <RadioInput
-                                    title={'Our own servers.'}
                                     value={val.value}
-                                    subtitle={
-                                        'You will have less change to get ddosed.'
-                                    }
                                     id={val.value}
                                     register={register('type', {
                                         required: true,

@@ -1,0 +1,62 @@
+{
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "create": "Create",
+    "update": "Update",
+    "happening_form": {
+        "create_event": "Create your own event",
+        "create_run": "Create your own run",
+        "update_event": "Update event",
+        "update_run": "Update run",
+        "step1_title": "Where's your happening?",
+        "step1_subtitle": "So noone gets lost on where to go?",
+        "step2_title": "Tell us more about your happening",
+        "step2_subtitle": "Fill fields down below!",
+        "add_end_time": "Add end date & time",
+        "upload_thumbnail": "Upload thumbnail",
+        "remove_thumbnail": "Remove thumbnail",
+        "fields": {
+            "place": {
+                "options": {
+                    "internal": {
+                        "title": "Our own servers.",
+                        "subtitle": "You can get team and go play on official DDnet servers."
+                    },
+                    "external": {
+                        "title": "Somewhere else.",
+                        "subtitle": "You will have less change to get ddosed."
+                    }
+                }
+            },
+            "title": {
+                "title": "Event title",
+                "placeholder": "How would you name event?"
+            },
+            "map": {
+                "title": "Map name",
+                "placeholder": "Map you're gonna play?"
+            },
+            "team_size": {
+                "title": "Team size",
+                "placeholder": "What team size do you want?"
+            },
+            "start_date": {
+                "title": "Start date"
+            },
+            "start_time": {
+                "title": "Start time"
+            },
+            "end_date": {
+                "title": "End date"
+            },
+            "end_time": {
+                "title": "End time"
+            },
+            "description": {
+                "title": "Description",
+                "placeholder": "Here you can describe a teammate of dream, are weebs people or whatever you want"
+            }
+        }
+    }
+}
