@@ -7,6 +7,7 @@ import {
     ForbiddenException,
     Get,
     HttpException,
+    HttpStatus,
     InternalServerErrorException,
     Ip,
     Logger,
@@ -151,9 +152,13 @@ export class UsersController {
         const result = await this.usersService.activateAccount(code);
 
         if (result) {
-            res.redirect('http://localhost:3000/login');
+            res.redirect(`${process.env.CLIENT_URL}/login`);
         } else {
-            res.redirect('http://localhost:3000/login');
+            res.status(HttpStatus.NOT_FOUND).send({
+                status: 'fail',
+                data: null,
+                message: 'Activation code not found',
+            });
         }
     }
 
