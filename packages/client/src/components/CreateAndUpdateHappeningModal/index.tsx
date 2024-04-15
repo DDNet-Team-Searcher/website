@@ -77,8 +77,8 @@ export function CreateAndUpdateHappeningModal({
         place: '',
         mapName: '',
         teamSize: '',
-        startDate: '',
-        startTime: '',
+        startDate: new Date().toISOString().substring(0, 10),
+        startTime: new Date().toISOString().substring(11, 16),
         description: '',
 
         // event's fields
@@ -88,11 +88,14 @@ export function CreateAndUpdateHappeningModal({
         thumbnail: null,
     };
 
-    if (mode == ModalMode.Edit && data) {
-        defaultValues = {
-            ...data,
-        };
-    }
+    useEffect(() => {
+        if (mode == ModalMode.Edit && data) {
+            for (const [key, value] of Object.entries(data)) {
+                //this is fine...
+                setValue(key as any, value);
+            }
+        }
+    }, [mode, data]);
 
     const inputs = [
         {
@@ -118,6 +121,7 @@ export function CreateAndUpdateHappeningModal({
         formState: { errors },
         clearErrors,
         watch,
+        setError,
     } = useForm({
         defaultValues,
     });
@@ -127,7 +131,7 @@ export function CreateAndUpdateHappeningModal({
         setIsEndFieldsVisible(e.target.checked);
     };
 
-    const onSubmit = async (values: typeof defaultValues) => {
+    const onSubmit = async (values: FormFields) => {
         if (mode === ModalMode.Create) {
             if (type === Happenings.Event) {
                 try {
@@ -165,7 +169,7 @@ export function CreateAndUpdateHappeningModal({
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<CreateEventResponse>;
 
-                    handleFormError(error);
+                    handleFormError(error, setError);
                 }
             } else if (type === Happenings.Run) {
                 try {
@@ -184,7 +188,7 @@ export function CreateAndUpdateHappeningModal({
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<CreateRunResponse>;
 
-                    handleFormError(error);
+                    handleFormError(error, setError);
                 }
             }
         } else if (mode === ModalMode.Edit) {
@@ -227,7 +231,7 @@ export function CreateAndUpdateHappeningModal({
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<UpdateHappeningResponse>;
 
-                    handleFormError(error);
+                    handleFormError(error, setError);
                 }
             } else if (type === Happenings.Run) {
                 const runData = {
@@ -251,7 +255,7 @@ export function CreateAndUpdateHappeningModal({
                     const error = (err as FetchBaseQueryError)
                         .data as ExcludeSuccess<UpdateHappeningResponse>;
 
-                    handleFormError(error);
+                    handleFormError(error, setError);
                 }
             }
         }

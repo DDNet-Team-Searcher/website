@@ -150,6 +150,14 @@ export function Happening({ id }: OwnProps) {
     };
 
     if (type === Happenings.Event) {
+        if (happening.thumbnail) {
+            fetch(happening.thumbnail).then(async (response) => {
+                const ct = response.headers.get('content-type');
+                const blob = await response.blob();
+                const file = new File([blob], 'foo', { type: ct! });
+                happeningData.thumbnail = file;
+            });
+        }
         happeningData.title = happening.title;
         happeningData.endDate = happening.endAt
             ? new Date(happening.endAt).toISOString().substring(0, 10)
