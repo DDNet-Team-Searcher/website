@@ -136,16 +136,17 @@ export function Happening({ id }: OwnProps) {
         setIsEditHappeningModalVisible(false);
     };
 
-    const happeningData: Record<string, any> = {
-        id,
-        place: happening.place,
+    const happeningData: FormFields = {
         mapName,
-        teamSize: '69',
+        description: happening.description || '',
+        place: happening.place,
         startDate: new Date(happening.startAt).toISOString().substring(0, 10),
         startTime: new Date(happening.startAt).toISOString().substring(11, 16),
-        description: happening.description || '',
-
         thumbnail: null,
+        teamSize: '',
+        title: '',
+        endDate: '',
+        endTime: '',
     };
 
     if (type === Happenings.Event) {
@@ -156,6 +157,8 @@ export function Happening({ id }: OwnProps) {
         happeningData.endTime = happening.endAt
             ? new Date(happening.endAt).toISOString().substring(11, 16)
             : '';
+    } else if (type === Happenings.Run) {
+        happeningData.teamSize = happening.teamSize.toString();
     }
 
     const openHappeningInfoModal = () => {
