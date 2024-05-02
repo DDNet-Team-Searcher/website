@@ -36,7 +36,7 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "cookie-parser": "^1.4.6",
-        "ejs": "^3.1.9",
+        "ejs": "^3.1.10",
         "jsonwebtoken": "^9.0.1",
         "long": "^5.2.3",
         "nest-winston": "^1.9.4",
