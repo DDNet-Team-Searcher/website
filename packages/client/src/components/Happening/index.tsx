@@ -13,7 +13,10 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { ExcludeSuccess } from '@app/shared/types/Response.type';
 import { useAppDispatch, useAppSelector } from '@/utils/hooks/hooks';
 import { hint } from '@/store/slices/hints';
-import { StartHappeningResponse } from '@app/shared/types/api.type';
+import {
+    SetIsInterestedInHappeningResponse,
+    StartHappeningResponse,
+} from '@app/shared/types/api.type';
 import {
     useDeleteHappeningMutation,
     useLazyEndHappeningQuery,
@@ -34,6 +37,7 @@ import {
     setStatus,
 } from '@/store/slices/happenings';
 import { StartTime } from './StartTime';
+import { useHandleFormError } from '@/utils/hooks/useHandleFormError';
 
 type OwnProps = {
     id: number;
@@ -51,6 +55,7 @@ export function Happening({ id }: OwnProps) {
         useSetIsInterestedInHappeningMutation();
     const [isEditHappeningModalVisible, setIsEditHappeningModalVisible] =
         useState(false);
+    const handleFormError = useHandleFormError();
     const { mapName, isInterested } = happening;
     const authorId = happening.author.id;
     const description = cropString(
@@ -73,19 +78,9 @@ export function Happening({ id }: OwnProps) {
             );
         } catch (err: unknown) {
             const error = (err as FetchBaseQueryError)
-                .data as ExcludeSuccess<StartHappeningResponse>;
+                .data as ExcludeSuccess<SetIsInterestedInHappeningResponse>;
 
-            if (
-                error.status === 'fail' &&
-                error.data.reason == 'NO_EMPTY_SERVERS'
-            ) {
-                dispatch(
-                    hint({
-                        type: 'error',
-                        text: error.message!,
-                    }),
-                );
-            }
+            handleFormError(error);
 
             console.log(err);
         }
@@ -128,6 +123,18 @@ export function Happening({ id }: OwnProps) {
                 }),
             );
         } catch (err: unknown) {
+            const error = (err as FetchBaseQueryError)
+                .data as ExcludeSuccess<SetIsInterestedInHappeningResponse>;
+
+            if (error.status === 'fail') {
+                dispatch(
+                    hint({
+                        type: 'error',
+                        text: error.message!,
+                    }),
+                );
+            }
+
             console.log(err);
         }
     };

@@ -48,7 +48,7 @@ export const Notifications = forwardRef(
                         ))}
                         {notifications.length == 0 && (
                             <p className="mt-[15px]">
-                                You don't have any notifications yet!
+                                You don&apos;t have any notifications yet!
                             </p>
                         )}
                     </ul>

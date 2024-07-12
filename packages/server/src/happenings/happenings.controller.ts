@@ -7,6 +7,7 @@ import {
     HttpException,
     InternalServerErrorException,
     Logger,
+    NotAcceptableException,
     NotFoundException,
     Param,
     ParseIntPipe,
@@ -287,11 +288,21 @@ export class HappeningsController {
                 happeningId: id,
             });
 
-        await this.happeningsService.setIsUserInterestedInHappening(
-            id,
-            req.user.id,
-            !isInterested,
-        );
+        const authorId = await this.happeningsService.getHappeningAuthorId(id);
+
+        if (authorId == req.user.id) {
+            throw new NotAcceptableException({
+                status: 'fail',
+                message:
+                    "Can't be uninterested in own happening! You can delete it if you are no longer interested in it",
+            });
+        } else {
+            await this.happeningsService.setIsUserInterestedInHappening(
+                id,
+                req.user.id,
+                !isInterested,
+            );
+        }
 
         return {
             status: 'success',

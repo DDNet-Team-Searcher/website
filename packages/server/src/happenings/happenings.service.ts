@@ -716,4 +716,18 @@ export class HappeningsService {
 
         return happenings;
     }
+
+    async getHappeningAuthorId(id: number): Promise<number> {
+        const { authorId } =
+            await this.prismaService.happening.findFirstOrThrow({
+                where: {
+                    id,
+                },
+                select: {
+                    authorId: true,
+                },
+            });
+
+        return authorId;
+    }
 }
