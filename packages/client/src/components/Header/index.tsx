@@ -156,7 +156,7 @@ export function Header() {
                             <form onSubmit={search}>
                                 <input
                                     ref={inputRef}
-                                    placeholder="Deez nuts"
+                                    placeholder="Search"
                                     className="rounded-full bg-primary-3 px-5 py-1 text-high-emphasis placeholder:text-low-emphasis"
                                 />
                                 <SearchIcon

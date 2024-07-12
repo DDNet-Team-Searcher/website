@@ -36,6 +36,9 @@ export default function ServersPage() {
                         </p>
                     </div>
                 ))}
+            {data && data.status === 'success' && data.data.length == 0 && (
+                <p className="text-high-emphasis text-center">No servers :(</p>
+            )}
         </div>
     );
 }
