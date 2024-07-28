@@ -9,7 +9,7 @@
         "build": "npx prisma generate --schema ./prisma/schema.prisma && pnpm run proto:generate && nest build",
         "format": "prettier \"src/**/*.ts\"",
         "start": "nest start",
-        "start:dev": "npx prisma generate && npx prisma db push --schema ./prisma/schema.prisma && nest start --watch",
+        "start:dev": "npx prisma generate && pnpm run proto:generate && npx prisma db push --schema ./prisma/schema.prisma && nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

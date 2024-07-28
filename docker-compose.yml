@@ -2,9 +2,16 @@ version: '3'
 
 services:
   db:
-    extends:
-      file: db.yml
-      service: db
+    image: "postgres:latest"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ddts
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/deez
   web:
     build: .
     depends_on:

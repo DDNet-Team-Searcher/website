@@ -2,6 +2,8 @@ node_modules
 
 packages/client/node_modules
 packages/client/.next
+packages/client/tsconfig.tsbuildinfo
+packages/client/src/locales/**/messages.js
 
 packages/server/node_modules
 packages/server/dist
@@ -14,6 +16,9 @@ packages/server/public/avatars/*
 !packages/server/public/happenings
 packages/server/public/happenings/*
 !packages/server/public/happenings/.gitkeep
+packages/server/src/protos/*.ts
+packages/server/logs/*
+!packages/server/logs/.gitkeep
 
 naked-tees
 hentai
