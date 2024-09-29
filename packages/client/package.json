@@ -10,7 +10,7 @@
         "format": "prettier \"src/**/*.{js,ts,tsx}\""
     },
     "dependencies": {
-        "@app/shared": "^1.0.0",
+        "@app/shared": "workspace:*",
         "@reduxjs/toolkit": "^1.9.5",
         "@types/node": "20.4.4",
         "@types/react": "18.2.15",

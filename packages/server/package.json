@@ -21,7 +21,7 @@
         "proto:generate": "protoc --plugin=\"./node_modules/.bin/protoc-gen-ts_proto\" --ts_proto_opt=esModuleInterop=true --experimental_allow_proto3_optional --ts_proto_opt=oneof=unions --ts_proto_out=\"./src/protos\" --proto_path=\"./protos\" protos/*.proto"
     },
     "dependencies": {
-        "@app/shared": "^1.0.0",
+        "@app/shared": "workspace:*",
         "@nestjs-modules/mailer": "^1.10.3",
         "@nestjs/common": "^10.1.0",
         "@nestjs/config": "^3.0.0",
