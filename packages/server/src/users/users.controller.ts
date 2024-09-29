@@ -20,6 +20,7 @@ import {
     Req,
     Res,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -68,7 +69,11 @@ import { ReviewsService } from 'src/reviews/reviews.service';
 import { HappeningsService } from 'src/happenings/happenings.service';
 import { CreateReportDTO } from './dto/create-report.dto';
 import { BanDTO } from './dto/ban.dto';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { InnocentGuard } from 'src/guards/innocent.guard';
 
+@UseGuards(PermissionGuard)
+@UseGuards(InnocentGuard)
 @Controller()
 export class UsersController {
     constructor(

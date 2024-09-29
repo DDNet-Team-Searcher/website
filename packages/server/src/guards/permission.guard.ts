@@ -1,4 +1,3 @@
-import { Role } from '@app/shared/types/Role.type';
 import {
     CanActivate,
     ExecutionContext,
@@ -7,6 +6,7 @@ import {
     Injectable,
     InternalServerErrorException,
 } from '@nestjs/common';
+import { Role } from '@app/shared/types/Role.type';
 import { Reflector } from '@nestjs/core';
 import { UsersService } from 'src/users/users.service';
 
@@ -41,7 +41,7 @@ export class PermissionGuard implements CanActivate {
                 const req = context.switchToHttp().getRequest();
                 const userRole = await this.usersService.role(req.user.id);
 
-                if (rolePrecedence(userRole) >= rolePrecedence(role)) {
+                if (rolePrecedence(role) >= rolePrecedence(userRole)) {
                     throw new ForbiddenException();
                 }
 

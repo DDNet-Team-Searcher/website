@@ -4,6 +4,7 @@ import {
     NotFoundException,
     Param,
     ParseIntPipe,
+    UseGuards,
 } from '@nestjs/common';
 import { ServersService } from './servers.service';
 import { AddressInfo } from 'net';
@@ -13,7 +14,9 @@ import { Permission } from 'src/decorators/permission.decorator';
 import { Protected } from 'src/decorators/protected.decorator';
 import { Role } from '@prisma/client';
 import { Role as RoleT } from '@app/shared/types/Role.type';
+import { PermissionGuard } from 'src/guards/permission.guard';
 
+@UseGuards(PermissionGuard)
 @Controller('/servers')
 export class ServersController {
     constructor(private readonly serversService: ServersService) {}
